@@ -1,5 +1,6 @@
 package net.joedoe.views;
 
+import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -18,12 +19,7 @@ import static net.joedoe.GameInfo.OFFSET;
 public class MainFrame extends BorderPane {
     private Stage window;
     @SuppressWarnings("FieldCanBeLocal")
-    private CheckBox checkBox;
-    @SuppressWarnings("FieldCanBeLocal")
-    private Button solve;
-    @SuppressWarnings("FieldCanBeLocal")
-    private Button next;
-    @SuppressWarnings("FieldCanBeLocal")
+    private Grid grid;
     private Label status;
 
     public MainFrame(Stage window) {
@@ -59,7 +55,9 @@ public class MainFrame extends BorderPane {
     private StackPane createGrid() {
         StackPane stackPane = new StackPane();
         stackPane.setPadding(new Insets(OFFSET, OFFSET, 0, OFFSET));
-        stackPane.getChildren().add(new Grid());
+        grid = new Grid();
+        grid.setListener(this::handle);
+        stackPane.getChildren().add(grid);
         return stackPane;
     }
 
@@ -67,9 +65,12 @@ public class MainFrame extends BorderPane {
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(OFFSET, OFFSET, OFFSET, OFFSET));
         vBox.setSpacing(OFFSET);
-        checkBox = new CheckBox("Anzahl fehlender Brücken anzeigen");
-        solve = new Button("Automatisch lösen");
-        next = new Button("Nächste Brücke");
+        CheckBox checkBox = new CheckBox("Anzahl fehlender Brücken anzeigen");
+        checkBox.setOnAction(e -> grid.setShowMissingBridges(checkBox.isSelected()));
+        Button solve = new Button("Automatisch lösen");
+        solve.setOnAction(e -> status.setText(solve.getText()));
+        Button next = new Button("Nächste Brücke");
+        next.setOnAction(e -> status.setText(next.getText()));
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
         hBox.setSpacing(10);
@@ -89,5 +90,11 @@ public class MainFrame extends BorderPane {
         window.close();
 //        else
 //            alert.close();
+    }
+
+    private void handle(Event event) {
+        Isle isle = (Isle) event.getSource();
+        int bridges = isle.getBridges();
+        status.setText("This isle has " + bridges + " bridges.");
     }
 }

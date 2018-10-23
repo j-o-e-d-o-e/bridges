@@ -1,19 +1,17 @@
 package net.joedoe.views;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.joedoe.GameInfo.RADIUS;
-
 class Grid extends GridPane {
-    @SuppressWarnings("FieldCanBeLocal")
-    private List<StackPane> circles = new ArrayList<>();
+    private List<Isle> isles = new ArrayList<>();
+    private EventHandler<Event> listener;
 
     Grid() {
         setAlignment(Pos.CENTER);
@@ -22,14 +20,28 @@ class Grid extends GridPane {
 //        grid.setHgap(offset * 2);
 //        grid.getStyleClass().add("grid");
         setGridLinesVisible(true);
-        for (int i = 0; i < 5; i++) {
-            StackPane stack = new StackPane();
-            Circle circle = new Circle(RADIUS, Color.GREEN);
-            Text text = new Text(Integer.toString((int) (Math.random() * 8) + 1));
-            stack.getChildren().addAll(circle, text);
-            GridPane.setConstraints(stack, 5 - i, 5 - i);
-            circles.add(stack);
+        for (int i = 0; i < 20; i++) {
+            if (i % 2 != 0)
+                continue;
+            Isle isle = new Isle();
+            isle.setBridges(i);
+            isle.setOnMouseClicked(e -> {
+                isle.getCircle().setFill(Color.RED);
+                listener.handle(e);
+            });
+            GridPane.setConstraints(isle, i, i);
+            isles.add(isle);
         }
-        getChildren().addAll(circles);
+        getChildren().addAll(isles);
+    }
+
+    void setListener(EventHandler<Event> listener) {
+        this.listener = listener;
+    }
+
+    void setShowMissingBridges(boolean showMissingBridges) {
+        for (Isle isle : isles) {
+            isle.setText(showMissingBridges);
+        }
     }
 }

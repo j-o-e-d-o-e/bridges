@@ -11,7 +11,7 @@ public class Main extends Application {
     public void start(Stage window) {
         window.setTitle("Joerg Doerwald / M-Nr. 6995349");
         MainFrame main = new MainFrame(window);
-        Scene scene = new Scene(main, 480, 600);
+        Scene scene = new Scene(main, 768, 1024);
         window.setScene(scene);
         window.setOnCloseRequest(e -> {
             e.consume();

@@ -7,8 +7,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-import static net.joedoe.GameInfo.CIRCLE_COLOR;
-import static net.joedoe.GameInfo.CIRCLE_RADIUS;
+import static net.joedoe.utils.GameInfo.CIRCLE_COLOR;
+import static net.joedoe.utils.GameInfo.CIRCLE_RADIUS;
 
 public class Isle extends StackPane implements GridEntity {
     private Circle circle;

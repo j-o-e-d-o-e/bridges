@@ -1,47 +1,45 @@
 package net.joedoe.entities;
 
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import net.joedoe.utils.Direction;
 
-import java.util.ArrayList;
-import java.util.List;
+import static net.joedoe.utils.GameInfo.*;
 
-import static net.joedoe.GameInfo.ONE_TILE;
+public class Bridge extends Pane {
+    private int row;
+    private int column;
 
-@SuppressWarnings("unused")
-public class Bridge extends StackPane {
-    private int row, column;
-    private Direction direction;
-    @SuppressWarnings("FieldCanBeLocal")
-    private List<Line> lines = new ArrayList<>();
-
-    public Bridge(GridEntity startIsle, GridEntity endIsle, Direction direction) {
-        int startX = startIsle.getRow();
-        int startY = startIsle.getColumn();
-        int endX = endIsle.getRow();
-        int endY = endIsle.getColumn();
-        if (direction == Direction.RIGHT) {
-            Line line = new Line(ONE_TILE * 5, ONE_TILE * 2, ONE_TILE, ONE_TILE * 2);
+    public Bridge(GridEntity startIsle, GridEntity endIsle) {
+//        setBorder(new Border(new BorderStroke(Color.YELLOW, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        Line line;
+        if (startIsle.getRow() == endIsle.getRow() && startIsle.getColumn() > endIsle.getColumn()) { // LEFT
+            row = startIsle.getRow();
+            column = startIsle.getColumn() - 1;
+            int length = column - endIsle.getColumn() - 1;
+            line = new Line(ONE_TILE, CIRCLE_RADIUS - BRIDGE_OFFSET, -ONE_TILE * length, CIRCLE_RADIUS - BRIDGE_OFFSET);
             line.setStroke(Color.RED);
-            lines.add(line);
+        } else if (startIsle.getRow() == endIsle.getRow() && startIsle.getColumn() < endIsle.getColumn()) { // RIGHT
+            row = startIsle.getRow();
+            column = startIsle.getColumn() + 1;
+            int length = endIsle.getColumn() - column;
+            line = new Line(0, CIRCLE_RADIUS + BRIDGE_OFFSET, ONE_TILE * length, CIRCLE_RADIUS + BRIDGE_OFFSET);
+            line.setStroke(Color.PINK);
+        } else if (startIsle.getColumn() == endIsle.getColumn() && startIsle.getRow() < endIsle.getRow()) { // DOWN
+            row = startIsle.getRow() + 1;
+            column = startIsle.getColumn();
+            int length = endIsle.getRow() - row;
+            line = new Line(CIRCLE_RADIUS - BRIDGE_OFFSET, 0, CIRCLE_RADIUS - BRIDGE_OFFSET, ONE_TILE * length);
+            line.setStroke(Color.BLUE);
+        } else { // UP
+            row = startIsle.getRow() - 1;
+            column = startIsle.getColumn();
+            int length = row - endIsle.getRow() - 1;
+            line = new Line(CIRCLE_RADIUS + BRIDGE_OFFSET, ONE_TILE, CIRCLE_RADIUS + BRIDGE_OFFSET, -ONE_TILE * length);
+            line.setStroke(Color.LIGHTBLUE);
         }
-
-//            for (int i = 0; i <= startX; i++)
-//                for (int j = 0; j <= endX; j++) {
-//                    Line line = new Line((startX * ONE_TILE) >> 1, (startY + j) * ONE_TILE, ONE_TILE, ONE_TILE);
-//                    line.setStroke(Color.RED);
-//                    lines.add(line);
-//                }
-//        else
-//            for (int i = 0; i <= startX; i++)
-//                for (int j = 0; j <= endX; j++) {
-//                    Line line = new Line(startX + j, startY, ONE_TILE, ONE_TILE);
-//                    line.setStroke(Color.RED);
-//                    lines.add(line);
-//                }
-        getChildren().addAll(lines);
+        getChildren().add(line);
     }
 
     public int getColumn() {

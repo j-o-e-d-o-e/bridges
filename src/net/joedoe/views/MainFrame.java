@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.joedoe.entities.Isle;
 
-import static net.joedoe.GameInfo.OFFSET;
+import static net.joedoe.utils.GameInfo.OFFSET;
 
 
 public class MainFrame extends BorderPane {

@@ -3,14 +3,13 @@ package net.joedoe.views;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import net.joedoe.entities.Isle;
 
@@ -20,13 +19,13 @@ import static net.joedoe.GameInfo.OFFSET;
 public class MainFrame extends BorderPane {
     private Stage window;
     @SuppressWarnings("FieldCanBeLocal")
-    private Grid grid;
+    private Grid1 grid1;
     private Label status;
 
     public MainFrame(Stage window) {
         this.window = window;
         setTop(createMenuBar());
-        setCenter(createGrid());
+        setCenter(createBoard());
         setBottom(createControls());
     }
 
@@ -52,22 +51,50 @@ public class MainFrame extends BorderPane {
         return menuBar;
     }
 
+    private Node createBoard() {
+        //outerPane for padding only
+        StackPane outerPane = new StackPane();
+        outerPane.setPadding(new Insets(OFFSET, OFFSET, 0, OFFSET));
 
-    private StackPane createGrid() {
-        StackPane stackPane = new StackPane();
-        stackPane.setPadding(new Insets(OFFSET, OFFSET, 0, OFFSET));
-        grid = new Grid();
-        grid.setListener(this::handle);
-        stackPane.getChildren().add(grid);
-        return stackPane;
+        //innerPane for setting border containing board
+        GridPane innerPane = new GridPane();
+        innerPane.setAlignment(Pos.CENTER);
+        innerPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+//        innerPane.setBackground(new Background(new BackgroundFill(Color.YELLOW, new CornerRadii(2), new Insets(2))));
+        Grid grid = new Grid();
+//        innerPane.setCenter(new Isle(3,3,3));
+//        innerPane.setCenter(new Grid1());
+//        innerPane.getChildren().add(grid);
+        innerPane.getChildren().add(new Grid1());
+
+        outerPane.getChildren().add(innerPane);
+        return outerPane;
     }
 
-    private VBox createControls() {
+//    private Node createBoard() {
+//        StackPane stackPane = new StackPane();
+////        Pane stackPane = new Pane();
+////        BorderPane stackPane = new BorderPane();
+//        stackPane.setPadding(new Insets(OFFSET, OFFSET, 0, OFFSET));
+//        StackPane pane = new StackPane();
+//        pane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+//        pane.setAlignment(Pos.CENTER);
+//        Board board = new Board();
+//        board.setListener(this::handle);
+////        pane.getChildren().add(board);
+//        stackPane.getChildren().add(pane);
+////        grid1 = new Grid1();
+////        grid1.setListener(this::handle);
+////        stackPane.getChildren().add(grid1);
+//        return stackPane;
+//    }
+
+    private Node createControls() {
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(OFFSET, OFFSET, OFFSET, OFFSET));
         vBox.setSpacing(OFFSET);
         CheckBox checkBox = new CheckBox("Anzahl fehlender Brücken anzeigen");
-        checkBox.setOnAction(e -> grid.setShowMissingBridges(checkBox.isSelected()));
+        checkBox.setOnAction(e -> grid1.setShowMissingBridges(checkBox.isSelected()));
         Button solve = new Button("Automatisch lösen");
         solve.setOnAction(e -> status.setText(solve.getText()));
         Button next = new Button("Nächste Brücke");

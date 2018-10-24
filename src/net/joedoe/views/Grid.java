@@ -31,11 +31,8 @@ class Grid extends GridPane {
 
     private void addIsles() {
         for (Isle isle : isles) {
-            isle.setOnMouseClicked(e -> {
-                isle.getCircle().setFill(Color.RED);
-                listener.handle(e);
-            });
             GridPane.setConstraints(isle, isle.getColumn(), isle.getRow());
+            isle.setListener(e -> listener.handle(e));
             add(isle, isle.getColumn(), isle.getRow());
         }
     }

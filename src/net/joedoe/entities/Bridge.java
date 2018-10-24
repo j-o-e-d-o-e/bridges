@@ -1,9 +1,8 @@
 package net.joedoe.entities;
 
-import javafx.scene.layout.*;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import net.joedoe.utils.Direction;
 
 import static net.joedoe.utils.GameInfo.*;
 

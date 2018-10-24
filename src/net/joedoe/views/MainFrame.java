@@ -51,7 +51,7 @@ public class MainFrame extends BorderPane {
         //outerPane for padding only
         StackPane outerPane = new StackPane();
         outerPane.setPadding(new Insets(OFFSET, OFFSET, 0, OFFSET));
-        Grid grid = new Grid();
+        grid = new Grid();
         grid.setListener(this::handle);
         outerPane.getChildren().add(grid);
         return outerPane;

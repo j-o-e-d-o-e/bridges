@@ -29,13 +29,6 @@ class Grid extends GridPane {
         addBridges();
     }
 
-    private void addBridges() {
-        Isle isle1 = isles.get(0);
-        Isle isle2 = isles.get(1);
-        add(new Line(0, 0, 250, 250), 1, 1);
-//        add(new Line(),isle1.getColumn(),isle1.getRow(), isle2.getColumn(), isle2.getRow());
-    }
-
     private void addIsles() {
         isles.addAll(MockData.ISLES);
         for (Isle isle : isles) {
@@ -44,10 +37,18 @@ class Grid extends GridPane {
                 listener.handle(e);
             });
             GridPane.setConstraints(isle, isle.getColumn(), isle.getRow());
-            // add isles on lines, not in boxes:
-            // add(isle, isle.getColumn(), isle.getRow(), 2, 2);
+            // add(isle, isle.getColumn(), isle.getRow(), 2, 2); // add isles on lines, not in boxes
             add(isle, isle.getColumn(), isle.getRow());
         }
+    }
+
+    private void addBridges() {
+        Isle isle1 = isles.get(0);
+        Isle isle2 = isles.get(1);
+//        isle1.getLayoutX()
+        Line line = new Line(isle1.getLayoutX(), isle1.getLayoutY(), isle2.getLayoutX(), isle2.getLayoutY());
+        line.setStroke(Color.RED);
+        add(line, 8, 8);
     }
 
     void setListener(EventHandler<Event> listener) {

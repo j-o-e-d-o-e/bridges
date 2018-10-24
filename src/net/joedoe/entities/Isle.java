@@ -29,6 +29,10 @@ public class Isle extends StackPane implements GridEntity {
         circle = new Circle(CIRCLE_RADIUS, CIRCLE_COLOR);
         text = new Text(Integer.toString(row) + "/" + Integer.toString(column));
         getChildren().addAll(circle, text);
+        addListener();
+    }
+
+    private void addListener() {
         setOnMouseClicked(e -> {
             if (clicked) {
                 circle.setFill(GameInfo.CIRCLE_COLOR);

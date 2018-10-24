@@ -8,8 +8,10 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.joedoe.entities.Isle;
 
@@ -18,8 +20,8 @@ import static net.joedoe.GameInfo.OFFSET;
 
 public class MainFrame extends BorderPane {
     private Stage window;
-    @SuppressWarnings("FieldCanBeLocal")
-    private Grid1 grid1;
+    @SuppressWarnings({"FieldCanBeLocal", "unused"})
+    private Grid grid;
     private Label status;
 
     public MainFrame(Stage window) {
@@ -32,19 +34,13 @@ public class MainFrame extends BorderPane {
     private MenuBar createMenuBar() {
         MenuBar menuBar = new MenuBar();
         Menu menu = new Menu("Datei");
-        menu.setAccelerator(new KeyCodeCombination(KeyCode.D, KeyCombination.ALT_ANY));
         MenuItem newGame = new MenuItem("Neues Rätsel");
-        newGame.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.ALT_ANY));
         MenuItem reset = new MenuItem("Rätsel neu starten");
-        reset.setAccelerator(new KeyCodeCombination(KeyCode.R, KeyCombination.ALT_ANY));
         MenuItem loadGame = new MenuItem("Rätsel laden");
-        loadGame.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.ALT_ANY));
         MenuItem save = new MenuItem("Rätsel speichern");
-        save.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.ALT_ANY));
         MenuItem saveAs = new MenuItem("Rätsel speichern unter");
-        saveAs.setAccelerator(new KeyCodeCombination(KeyCode.A, KeyCombination.ALT_ANY));
         MenuItem exit = new MenuItem("Beenden");
-        exit.setAccelerator(new KeyCodeCombination(KeyCode.B, KeyCombination.ALT_ANY));
+        exit.setAccelerator(new KeyCodeCombination(KeyCode.X, KeyCombination.ALT_ANY));
         exit.setOnAction(e -> close());
         menu.getItems().addAll(newGame, reset, loadGame, save, saveAs, exit);
         menuBar.getMenus().add(menu);
@@ -55,54 +51,26 @@ public class MainFrame extends BorderPane {
         //outerPane for padding only
         StackPane outerPane = new StackPane();
         outerPane.setPadding(new Insets(OFFSET, OFFSET, 0, OFFSET));
-
-        //innerPane for setting border containing board
-        GridPane innerPane = new GridPane();
-        innerPane.setAlignment(Pos.CENTER);
-        innerPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-//        innerPane.setBackground(new Background(new BackgroundFill(Color.YELLOW, new CornerRadii(2), new Insets(2))));
         Grid grid = new Grid();
-//        innerPane.setCenter(new Isle(3,3,3));
-//        innerPane.setCenter(new Grid1());
-//        innerPane.getChildren().add(grid);
-        innerPane.getChildren().add(new Grid1());
-
-        outerPane.getChildren().add(innerPane);
+        grid.setListener(this::handle);
+        outerPane.getChildren().add(grid);
         return outerPane;
     }
-
-//    private Node createBoard() {
-//        StackPane stackPane = new StackPane();
-////        Pane stackPane = new Pane();
-////        BorderPane stackPane = new BorderPane();
-//        stackPane.setPadding(new Insets(OFFSET, OFFSET, 0, OFFSET));
-//        StackPane pane = new StackPane();
-//        pane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-//        pane.setAlignment(Pos.CENTER);
-//        Board board = new Board();
-//        board.setListener(this::handle);
-////        pane.getChildren().add(board);
-//        stackPane.getChildren().add(pane);
-////        grid1 = new Grid1();
-////        grid1.setListener(this::handle);
-////        stackPane.getChildren().add(grid1);
-//        return stackPane;
-//    }
 
     private Node createControls() {
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(OFFSET, OFFSET, OFFSET, OFFSET));
         vBox.setSpacing(OFFSET);
         CheckBox checkBox = new CheckBox("Anzahl fehlender Brücken anzeigen");
-        checkBox.setOnAction(e -> grid1.setShowMissingBridges(checkBox.isSelected()));
-        Button solve = new Button("Automatisch lösen");
-        solve.setOnAction(e -> status.setText(solve.getText()));
-        Button next = new Button("Nächste Brücke");
-        next.setOnAction(e -> status.setText(next.getText()));
+        checkBox.setOnAction(e -> grid.setShowMissingBridges(checkBox.isSelected()));
+        Button solveBtn = new Button("Automatisch lösen");
+        solveBtn.setOnAction(e -> status.setText(solveBtn.getText()));
+        Button nextBtn = new Button("Nächste Brücke");
+        nextBtn.setOnAction(e -> status.setText(nextBtn.getText()));
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
         hBox.setSpacing(10);
-        hBox.getChildren().addAll(solve, next);
+        hBox.getChildren().addAll(solveBtn, nextBtn);
         status = new Label("Das Rätsel ist noch nicht gelöst!");
         vBox.getChildren().addAll(checkBox, hBox, status);
         return vBox;

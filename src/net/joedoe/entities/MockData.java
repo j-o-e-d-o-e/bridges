@@ -14,5 +14,5 @@ public class MockData {
             new Isle(5, 5, 4),
             new Isle(5, 7, 3),
             new Isle(8, 7, 2),
-            new Isle(8, 2, 1));
+            new Isle(8, 1, 1));
 }

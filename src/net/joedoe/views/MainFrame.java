@@ -63,13 +63,13 @@ public class MainFrame extends BorderPane {
         vBox.setSpacing(OFFSET);
         CheckBox checkBox = new CheckBox("Anzahl fehlender Brücken anzeigen");
         checkBox.setOnAction(e -> grid.setShowMissingBridges(checkBox.isSelected()));
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER);
+        hBox.setSpacing(OFFSET);
         Button solveBtn = new Button("Automatisch lösen");
         solveBtn.setOnAction(e -> status.setText(solveBtn.getText()));
         Button nextBtn = new Button("Nächste Brücke");
         nextBtn.setOnAction(e -> status.setText(nextBtn.getText()));
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER);
-        hBox.setSpacing(10);
         hBox.getChildren().addAll(solveBtn, nextBtn);
         status = new Label("Das Rätsel ist noch nicht gelöst!");
         vBox.getChildren().addAll(checkBox, hBox, status);
@@ -90,7 +90,7 @@ public class MainFrame extends BorderPane {
 
     private void handle(Event event) {
         Isle isle = (Isle) event.getSource();
-        int bridges = isle.getBridges();
+        int bridges = isle.getBridgeCount();
         status.setText("This isle has " + bridges + " bridges.");
     }
 }

@@ -6,7 +6,6 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import net.joedoe.entities.Bridge;
-import net.joedoe.entities.GridEntity;
 import net.joedoe.entities.Isle;
 import net.joedoe.entities.MockData;
 
@@ -38,35 +37,35 @@ class Grid extends GridPane {
     }
 
     private void addBridges() {
-        addBridge(isles.get(0), isles.get(1));
-        addBridge(isles.get(1), isles.get(0));
+        isles.get(0).addBridge(new Bridge(isles.get(0), isles.get(1)));
+        isles.get(1).addBridge(new Bridge(isles.get(1), isles.get(0)));
 
-        addBridge(isles.get(1), isles.get(2));
-        addBridge(isles.get(2), isles.get(1));
+//        addBridge(isles.get(1), isles.get(2));
+//        addBridge(isles.get(2), isles.get(1));
 
-        addBridge(isles.get(2), isles.get(3));
-        addBridge(isles.get(3), isles.get(2));
+//        addBridge(isles.get(2), isles.get(3));
+//        addBridge(isles.get(3), isles.get(2));
 
-        addBridge(isles.get(3), isles.get(4));
-        addBridge(isles.get(4), isles.get(3));
+//        addBridge(isles.get(3), isles.get(4));
+//        addBridge(isles.get(4), isles.get(3));
 
-        addBridge(isles.get(4), isles.get(5));
-        addBridge(isles.get(5), isles.get(4));
+//        addBridge(isles.get(4), isles.get(5));
+//        addBridge(isles.get(5), isles.get(4));
 
-        addBridge(isles.get(5), isles.get(6));
-        addBridge(isles.get(6), isles.get(5));
+//        addBridge(isles.get(5), isles.get(6));
+//        addBridge(isles.get(6), isles.get(5));
 
-        addBridge(isles.get(7), isles.get(6));
-        addBridge(isles.get(6), isles.get(7));
-
-        addBridge(isles.get(2), isles.get(7));
-        addBridge(isles.get(7), isles.get(2));
+//        addBridge(isles.get(7), isles.get(6));
+//        addBridge(isles.get(6), isles.get(7));
+//
+//        addBridge(isles.get(2), isles.get(7));
+//        addBridge(isles.get(7), isles.get(2));
     }
 
-    private void addBridge(GridEntity startIsle, GridEntity endIsle) {
-        Bridge bridge = new Bridge(startIsle, endIsle);
-        add(bridge, bridge.getColumn(), bridge.getRow());
-    }
+//    private Bridge addBridge(GridEntity startIsle, GridEntity endIsle) {
+//        Bridge bridge = new Bridge(startIsle, endIsle);
+//        add(bridge, bridge.getColumn(), bridge.getRow());
+//    }
 
     void setListener(EventHandler<Event> listener) {
         this.listener = listener;

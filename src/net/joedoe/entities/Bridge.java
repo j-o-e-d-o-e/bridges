@@ -7,7 +7,9 @@ import javafx.scene.shape.Line;
 import static net.joedoe.utils.GameInfo.*;
 
 public class Bridge extends Pane {
+    @SuppressWarnings("FieldCanBeLocal")
     private int row;
+    @SuppressWarnings("FieldCanBeLocal")
     private int column;
 
     public Bridge(GridEntity startIsle, GridEntity endIsle) {
@@ -17,35 +19,36 @@ public class Bridge extends Pane {
             row = startIsle.getRow();
             column = startIsle.getColumn() - 1;
             int length = column - endIsle.getColumn() - 1;
-            line = new Line(ONE_TILE, CIRCLE_RADIUS - BRIDGE_OFFSET, -ONE_TILE * length, CIRCLE_RADIUS - BRIDGE_OFFSET);
+            line = new Line(ONE_TILE + BRIDGE_EXTRA, (ONE_TILE >> 1) - BRIDGE_OFFSET, -ONE_TILE * length - BRIDGE_EXTRA, (ONE_TILE >> 1) - BRIDGE_OFFSET);
             line.setStroke(Color.RED);
         } else if (startIsle.getRow() == endIsle.getRow() && startIsle.getColumn() < endIsle.getColumn()) { // RIGHT
+//            System.out.println("RIGHT");
             row = startIsle.getRow();
             column = startIsle.getColumn() + 1;
             int length = endIsle.getColumn() - column;
-            line = new Line(0, CIRCLE_RADIUS + BRIDGE_OFFSET, ONE_TILE * length, CIRCLE_RADIUS + BRIDGE_OFFSET);
-            line.setStroke(Color.PINK);
+            line = new Line(-BRIDGE_EXTRA, (ONE_TILE >> 1) + BRIDGE_OFFSET, ONE_TILE * length + BRIDGE_EXTRA, (ONE_TILE >> 1) + BRIDGE_OFFSET);
+            line.setStroke(Color.RED);
         } else if (startIsle.getColumn() == endIsle.getColumn() && startIsle.getRow() < endIsle.getRow()) { // DOWN
             row = startIsle.getRow() + 1;
             column = startIsle.getColumn();
             int length = endIsle.getRow() - row;
-            line = new Line(CIRCLE_RADIUS - BRIDGE_OFFSET, 0, CIRCLE_RADIUS - BRIDGE_OFFSET, ONE_TILE * length);
+            line = new Line((ONE_TILE >> 1) - BRIDGE_OFFSET, -BRIDGE_EXTRA, (ONE_TILE >> 1) - BRIDGE_OFFSET, ONE_TILE * length + BRIDGE_EXTRA);
             line.setStroke(Color.BLUE);
         } else { // UP
             row = startIsle.getRow() - 1;
             column = startIsle.getColumn();
             int length = row - endIsle.getRow() - 1;
-            line = new Line(CIRCLE_RADIUS + BRIDGE_OFFSET, ONE_TILE, CIRCLE_RADIUS + BRIDGE_OFFSET, -ONE_TILE * length);
+            line = new Line((ONE_TILE >> 1) + BRIDGE_OFFSET, ONE_TILE + BRIDGE_EXTRA, (ONE_TILE >> 1) + BRIDGE_OFFSET, -ONE_TILE * length - BRIDGE_EXTRA);
             line.setStroke(Color.LIGHTBLUE);
         }
         getChildren().add(line);
     }
 
-    public int getColumn() {
-        return column;
-    }
+//    public int getColumn() {
+//        return column;
+//    }
 
-    public int getRow() {
-        return row;
-    }
+//    public int getRow() {
+//        return row;
+//    }
 }

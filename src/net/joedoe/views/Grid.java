@@ -10,11 +10,10 @@ import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.entities.Mocks;
 import net.joedoe.utils.Direction;
-import net.joedoe.utils.GameInfo;
 
 import java.util.stream.IntStream;
 
-import static net.joedoe.utils.GameInfo.ONE_TILE;
+import static net.joedoe.utils.GameInfo.*;
 
 public class Grid extends GridPane {
     private GridController gridController;
@@ -44,8 +43,37 @@ public class Grid extends GridPane {
         Isle endIsle = gridController.searchForIsle(startIsle, direction);
         if (endIsle != null) {
             Bridge bridge = new Bridge(startIsle, direction, endIsle);
-            listener.handle(new StatusEvent(null, endIsle.toString()));
-            add(bridge.getLine(), bridge.getColumn(), bridge.getRow());
+            Line line = null;
+            if (direction == Direction.RIGHT) {
+                int length = Math.abs(bridge.getStartColumn() - bridge.getEndColumn());
+                line = new Line(0, 0, ONE_TILE * length - CIRCLE_RADIUS * 2, 0);
+                line.setTranslateX(BRIDGE_EXTRA + 2 * CIRCLE_RADIUS);
+                line.setTranslateY(BRIDGE_OFFSET);
+                line.setStroke(Color.RED);
+            }
+            if (direction == Direction.LEFT) {
+                int length = Math.abs(bridge.getStartColumn() - bridge.getEndColumn());
+                line = new Line(0, 0, ONE_TILE * length - CIRCLE_RADIUS * 2, 0);
+                line.setTranslateX(-ONE_TILE * (length - 1) - BRIDGE_EXTRA);
+                line.setTranslateY(-BRIDGE_OFFSET);
+                line.setStroke(Color.PURPLE);
+            }
+            if (direction == Direction.DOWN) {
+                int length = Math.abs(bridge.getStartRow() - bridge.getEndRow());
+//                line = new Line(0, 0, 0, ONE_TILE * length + BRIDGE_EXTRA);
+                line = new Line(0, 0, 0, ONE_TILE + BRIDGE_EXTRA);
+                line.setTranslateX(CIRCLE_RADIUS);
+                line.setTranslateY(ONE_TILE - BRIDGE_EXTRA);
+                line.setStroke(Color.BLUE);
+            }
+            if (direction == Direction.UP) {
+                int length = Math.abs(bridge.getStartRow() - bridge.getEndRow());
+                line = new Line(0, 0, 0, ONE_TILE + BRIDGE_EXTRA);
+                line.setTranslateX(CIRCLE_RADIUS);
+                line.setTranslateY(ONE_TILE - BRIDGE_EXTRA);
+                line.setStroke(Color.DARKBLUE);
+            }
+            if (line != null) add(line, bridge.getStartColumn(), bridge.getStartRow());
         }
     }
 

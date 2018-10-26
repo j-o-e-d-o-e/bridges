@@ -3,7 +3,7 @@ package net.joedoe.entities;
 import java.util.Arrays;
 import java.util.List;
 
-public class MockData {
+public class Mocks {
     public static final int ROWS = 9;
     public static final int COLS = 9;
     public static final List<Isle> ISLES = Arrays.asList(

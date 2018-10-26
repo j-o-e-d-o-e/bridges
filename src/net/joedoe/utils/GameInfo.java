@@ -11,3 +11,4 @@ public class GameInfo {
     public static final int BRIDGE_EXTRA = 10;
 }
 //todo: Grid as Pane (isles on vertices) or StackPane (isles within squares)?
+//todo: separate View and Entity for isles and bridges!

@@ -1,6 +1,5 @@
 package net.joedoe.views;
 
-import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -13,14 +12,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import net.joedoe.entities.Isle;
 
 import static net.joedoe.utils.GameInfo.OFFSET;
 
-
 public class MainFrame extends BorderPane {
     private Stage window;
-    @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private Grid grid;
     private Label status;
 
@@ -76,6 +72,9 @@ public class MainFrame extends BorderPane {
         return vBox;
     }
 
+    private void handle(StatusEvent e) {
+        status.setText(e.getMessage());
+    }
 
     public void close() {
 //        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -86,11 +85,5 @@ public class MainFrame extends BorderPane {
         window.close();
 //        else
 //            alert.close();
-    }
-
-    private void handle(Event event) {
-        Isle isle = (Isle) event.getSource();
-        int bridges = isle.getBridgeCount();
-        status.setText("This isle has " + bridges + " bridges.");
     }
 }

@@ -1,15 +1,15 @@
 package net.joedoe.entities;
 
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
+import net.joedoe.views.IsleListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.joedoe.utils.GameInfo.*;
+import static net.joedoe.utils.GameInfo.CIRCLE_COLOR;
+import static net.joedoe.utils.GameInfo.CIRCLE_RADIUS;
 
 public class Isle extends StackPane implements GridEntity {
     @SuppressWarnings("FieldCanBeLocal")
@@ -17,10 +17,7 @@ public class Isle extends StackPane implements GridEntity {
     private Label text;
     private int bridgeCount, missingBridgeCount, row, column;
     private boolean showMissingBridges;
-    @SuppressWarnings("unused")
-    private boolean clicked;
-    @SuppressWarnings({"FieldCanBeLocal", "unused"})
-    private EventHandler<Event> listener;
+    private  IsleListener listener;
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private List<Bridge> bridges = new ArrayList<>();
 
@@ -34,46 +31,8 @@ public class Isle extends StackPane implements GridEntity {
         circle = new Circle(CIRCLE_RADIUS, CIRCLE_COLOR);
         text = new Label(Integer.toString(row) + "/" + Integer.toString(column));
         getChildren().addAll(circle, text);
-        addListener();
+        setOnMouseClicked(e -> listener.handle(e));
     }
-
-    private void addListener() {
-        setOnMouseClicked(e -> {
-//            System.out.println(e.getButton());
-            if (ONE_TILE / 2 < e.getX() && e.getX() < ONE_TILE && 0 < e.getY() && e.getY() < ONE_TILE
-                    && Math.abs(e.getY() - (ONE_TILE >> 1)) < Math.abs(e.getX() - (ONE_TILE >> 1))) {
-                System.out.println("EAST");
-                return;
-            }
-            if (0 < e.getX() && e.getX() < ONE_TILE / 2 && 0 < e.getY() && e.getY() < ONE_TILE
-                    && Math.abs(e.getY() - (ONE_TILE >> 1)) < Math.abs(e.getX() - (ONE_TILE >> 1))) {
-                System.out.println("WEST");
-                return;
-            }
-            if (0 < e.getX() && e.getX() < ONE_TILE && ONE_TILE / 2 < e.getY() && e.getY() < ONE_TILE
-                    && Math.abs(e.getY() - (ONE_TILE >> 1)) > Math.abs(e.getX() - (ONE_TILE >> 1))) {
-                System.out.println("SOUTH");
-                return;
-            }
-            if (0 < e.getX() && e.getX() < ONE_TILE && 0 < e.getY() && e.getY() < ONE_TILE / 2
-                    && Math.abs(e.getY() - (ONE_TILE >> 1)) > Math.abs(e.getX() - (ONE_TILE >> 1))) {
-                System.out.println("NORTH");
-            }
-        });
-    }
-
-//    private void addListener() {
-//        setOnMouseClicked(e -> {
-//            if (clicked) {
-//                circle.setFill(GameInfo.CIRCLE_COLOR);
-//                clicked = false;
-//            } else {
-//                circle.setFill(Color.RED);
-//                clicked = true;
-//            }
-//            listener.handle(e);
-//        });
-//    }
 
     public void setText(boolean showMissingBridges) {
         this.showMissingBridges = showMissingBridges;
@@ -83,16 +42,16 @@ public class Isle extends StackPane implements GridEntity {
             text.setText(Integer.toString(bridgeCount));
     }
 
-    public int getBridgeCount() {
-        if (showMissingBridges)
-            return missingBridgeCount;
-        return bridgeCount;
-    }
-
-    public void addBridge(Bridge bridge) {
-        bridges.add(bridge);
-    }
-
+//    public int getBridgeCount() {
+//        if (showMissingBridges)
+//            return missingBridgeCount;
+//        return bridgeCount;
+//    }
+//
+//    public void addBridge(Bridge bridge) {
+//        bridges.add(bridge);
+//    }
+//
 //    public void removeBridge(int index) {
 //        bridges.remove(index);
 //    }
@@ -105,7 +64,12 @@ public class Isle extends StackPane implements GridEntity {
         return column;
     }
 
-    public void setListener(EventHandler<Event> listener) {
+    public void setListener(IsleListener listener) {
         this.listener = listener;
+    }
+
+    @Override
+    public String toString() {
+        return "Isle{" + "row=" + row + ", column=" + column + '}';
     }
 }

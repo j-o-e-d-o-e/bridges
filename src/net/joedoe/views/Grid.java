@@ -4,11 +4,13 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import net.joedoe.controllers.GridController;
 import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.entities.Mocks;
 import net.joedoe.utils.Direction;
+import net.joedoe.utils.GameInfo;
 
 import java.util.stream.IntStream;
 
@@ -42,8 +44,8 @@ public class Grid extends GridPane {
         Isle endIsle = gridController.searchForIsle(startIsle, direction);
         if (endIsle != null) {
             Bridge bridge = new Bridge(startIsle, direction, endIsle);
-            add(bridge, bridge.getColumn(), bridge.getRow());
             listener.handle(new StatusEvent(null, endIsle.toString()));
+            add(bridge.getLine(), bridge.getColumn(), bridge.getRow());
         }
     }
 

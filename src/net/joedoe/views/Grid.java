@@ -22,7 +22,7 @@ public class Grid extends GridPane {
     private EventHandler<StatusEvent> listener;
 
     Grid() {
-        this.gridController = new GridController(this);
+        gridController = new GridController();
         setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         setAlignment(Pos.CENTER);
         setGridLinesVisible(true);

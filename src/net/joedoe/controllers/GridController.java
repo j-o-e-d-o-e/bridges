@@ -11,13 +11,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GridController {
-    private Grid grid;
     private List<Isle> isles = Mocks.ISLES;
 
     private final static Logger LOGGER = Logger.getLogger(GridController.class.getName());
 
-    public GridController(Grid grid) {
-        this.grid = grid;
+    public GridController() {
         LOGGER.setLevel(Level.OFF);
     }
 

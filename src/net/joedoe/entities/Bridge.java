@@ -1,6 +1,5 @@
 package net.joedoe.entities;
 
-import javafx.scene.shape.Line;
 import net.joedoe.utils.Alignment;
 import net.joedoe.utils.Direction;
 
@@ -9,17 +8,35 @@ public class Bridge {
     private Alignment alignment;
 
     public Bridge(GridEntity startIsle, Direction direction, GridEntity endIsle) {
-        if (direction == Direction.LEFT || direction == Direction.RIGHT)
-            alignment = Alignment.HORIZONTAL;
-        else
+        if (direction == Direction.UP) {
             alignment = Alignment.VERTICAL;
-        startRow = startIsle.getRow();
-        endRow = endIsle.getRow();
-        startColumn = startIsle.getColumn();
-        endColumn = endIsle.getColumn();
-
+            startRow = startIsle.getRow() - 1;
+            endRow = endIsle.getRow() + 1;
+            startColumn = startIsle.getColumn();
+            endColumn = startColumn;
+        }
+        if (direction == Direction.LEFT) {
+            alignment = Alignment.HORIZONTAL;
+            startRow = startIsle.getRow();
+            endRow = startRow;
+            startColumn = startIsle.getColumn() - 1;
+            endColumn = endIsle.getColumn() + 1;
+        }
+        if (direction == Direction.DOWN) {
+            alignment = Alignment.VERTICAL;
+            startRow = startIsle.getRow() + 1;
+            endRow = endIsle.getRow() - 1;
+            startColumn = startIsle.getColumn();
+            endColumn = startColumn;
+        }
+        if (direction == Direction.RIGHT) {
+            alignment = Alignment.HORIZONTAL;
+            startRow = startIsle.getRow();
+            endRow = startRow;
+            startColumn = startIsle.getColumn() + 1;
+            endColumn = endIsle.getColumn() - 1;
+        }
     }
-
 
     public int getStartRow() {
         return startRow;

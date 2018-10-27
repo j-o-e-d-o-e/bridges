@@ -4,7 +4,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import net.joedoe.controllers.GridController;
 import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
@@ -15,37 +14,34 @@ import java.util.stream.IntStream;
 
 import static net.joedoe.utils.GameInfo.ONE_TILE;
 
-public class Grid extends GridPane {
+class Grid extends GridPane {
     private GridController gridController;
     //for update status label in main frame
-    private EventHandler<StatusEvent> listener;
+    private EventHandler<StatusEvent> statusListener;
+    private IsleListener isleListener;
 
     Grid() {
-        gridController = new GridController();
-        setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        setAlignment(Pos.CENTER);
         setGridLinesVisible(true);
+        setAlignment(Pos.CENTER);
+        setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         IntStream.range(0, Mocks.ROWS).mapToObj(i -> new RowConstraints(ONE_TILE)).forEach(row -> getRowConstraints().add(row));
         IntStream.range(0, Mocks.COLS).mapToObj(i -> new ColumnConstraints(ONE_TILE)).forEachOrdered(column -> getColumnConstraints().add(column));
+        gridController = new GridController();
+        isleListener = new IsleListener(this);
         addIsles();
     }
 
     private void addIsles() {
         for (Isle isle : gridController.getIsles()) {
-            GridPane.setConstraints(isle, isle.getColumn(), isle.getRow());
-            isle.setListener(new IsleListener(this));
-            add(isle, isle.getColumn(), isle.getRow());
+            isle.getPane().setOnMouseClicked(e -> isleListener.handle(e));
+            add(isle.getPane(), isle.getColumn(), isle.getRow());
         }
     }
 
-    @SuppressWarnings("WeakerAccess")
-    public void addBridge(Isle startIsle, Direction direction) {
-        Isle endIsle = gridController.searchForIsle(startIsle, direction);
-        if (endIsle != null) {
-            Bridge bridge = new Bridge(startIsle, direction, endIsle);
-            Line line = LineFactory.createLine(bridge, direction);
-            add(line, bridge.getStartColumn(), bridge.getStartRow());
-        }
+    void addBridge(Isle startIsle, Direction direction) {
+        Bridge bridge = gridController.createBridge(startIsle, direction);
+        if (bridge != null)
+            add(bridge.getLine(), bridge.getStartColumn(), bridge.getStartRow());
     }
 
     void setShowMissingBridges(boolean showMissingBridges) {
@@ -55,10 +51,14 @@ public class Grid extends GridPane {
     }
 
     void removeBridge(Isle isle, Direction direction) {
-        System.out.println(isle + " " + direction);
+        Bridge bridge = isle.getBridge(direction);
+        if (bridge != null) {
+            getChildren().remove(bridge.getLine());
+            isle.removeBridge(bridge);
+        }
     }
 
-    void setListener(EventHandler<StatusEvent> listener) {
-        this.listener = listener;
+    void setStatusListener(EventHandler<StatusEvent> statusListener) {
+        this.statusListener = statusListener;
     }
 }

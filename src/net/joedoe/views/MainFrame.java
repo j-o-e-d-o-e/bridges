@@ -48,7 +48,7 @@ public class MainFrame extends BorderPane {
         StackPane outerPane = new StackPane();
         outerPane.setPadding(new Insets(OFFSET, OFFSET, 0, OFFSET));
         grid = new Grid();
-        grid.setListener(this::handle);
+        grid.setStatusListener(this::handle);
         outerPane.getChildren().add(grid);
         return outerPane;
     }

@@ -1,10 +1,10 @@
 package net.joedoe.controllers;
 
+import net.joedoe.entities.Bridge;
 import net.joedoe.entities.GridEntity;
 import net.joedoe.entities.Isle;
 import net.joedoe.entities.Mocks;
 import net.joedoe.utils.Direction;
-import net.joedoe.views.Grid;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -19,7 +19,15 @@ public class GridController {
         LOGGER.setLevel(Level.OFF);
     }
 
-    public Isle searchForIsle(GridEntity startIsle, Direction direction) {
+    public Bridge createBridge(Isle startIsle, Direction direction) {
+        Isle endIsle = searchForIsle(startIsle, direction);
+        if (endIsle == null) return null;
+        Bridge bridge = new Bridge(startIsle, direction, endIsle);
+        startIsle.addBridge(bridge);
+        return bridge;
+    }
+
+    private Isle searchForIsle(GridEntity startIsle, Direction direction) {
         LOGGER.info(startIsle.toString() + " " + direction);
         for (Isle isle : isles) {
             if (isle != startIsle) {

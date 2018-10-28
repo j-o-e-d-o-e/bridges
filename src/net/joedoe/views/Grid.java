@@ -16,12 +16,11 @@ import static net.joedoe.utils.GameInfo.ONE_TILE;
 
 class Grid extends GridPane {
     private GridController gridController;
-    //for update status label in main frame
     private EventHandler<StatusEvent> statusListener;
     private IsleListener isleListener;
 
     Grid() {
-        setGridLinesVisible(true);
+//        setGridLinesVisible(true);
         setAlignment(Pos.CENTER);
         setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         IntStream.range(0, Mocks.ROWS).mapToObj(i -> new RowConstraints(ONE_TILE)).forEach(row -> getRowConstraints().add(row));
@@ -42,19 +41,20 @@ class Grid extends GridPane {
         Bridge bridge = gridController.createBridge(startIsle, direction);
         if (bridge != null)
             add(bridge.getLine(), bridge.getStartColumn(), bridge.getStartRow());
+        if (gridController.gameSolved())
+            statusListener.handle(new StatusEvent(null, "Gelöst!"));
+    }
+
+    void removeBridge(Isle startIsle, Direction direction) {
+        Bridge bridge = gridController.removeBridge(startIsle, direction);
+        if (bridge != null) {
+            getChildren().remove(bridge.getLine());
+        }
     }
 
     void setShowMissingBridges(boolean showMissingBridges) {
         for (Isle isle : gridController.getIsles()) {
             isle.setText(showMissingBridges);
-        }
-    }
-
-    void removeBridge(Isle isle, Direction direction) {
-        Bridge bridge = isle.getBridge(direction);
-        if (bridge != null) {
-            getChildren().remove(bridge.getLine());
-            isle.removeBridge(bridge);
         }
     }
 

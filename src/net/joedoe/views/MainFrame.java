@@ -13,7 +13,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import static net.joedoe.utils.GameInfo.OFFSET;
+import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 
 public class MainFrame extends BorderPane {
     private Stage window;
@@ -46,7 +46,7 @@ public class MainFrame extends BorderPane {
     private Node createBoard() {
         //outerPane for padding only
         StackPane outerPane = new StackPane();
-        outerPane.setPadding(new Insets(OFFSET, OFFSET, 0, OFFSET));
+        outerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, 0, CONTAINER_OFFSET));
         grid = new Grid();
         grid.setStatusListener(this::handle);
         outerPane.getChildren().add(grid);
@@ -55,13 +55,14 @@ public class MainFrame extends BorderPane {
 
     private Node createControls() {
         VBox vBox = new VBox();
-        vBox.setPadding(new Insets(OFFSET, OFFSET, OFFSET, OFFSET));
-        vBox.setSpacing(OFFSET);
+        vBox.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
+        vBox.setSpacing(CONTAINER_OFFSET);
         CheckBox checkBox = new CheckBox("Anzahl fehlender Brücken anzeigen");
+        checkBox.setSelected(true);
         checkBox.setOnAction(e -> grid.setShowMissingBridges(checkBox.isSelected()));
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
-        hBox.setSpacing(OFFSET);
+        hBox.setSpacing(CONTAINER_OFFSET);
         Button solveBtn = new Button("Automatisch lösen");
         solveBtn.setOnAction(e -> status.setText(solveBtn.getText()));
         Button nextBtn = new Button("Nächste Brücke");

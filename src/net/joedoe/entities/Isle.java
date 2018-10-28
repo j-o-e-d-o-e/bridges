@@ -1,25 +1,98 @@
 package net.joedoe.entities;
 
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import net.joedoe.utils.Direction;
+import net.joedoe.utils.GameInfo;
 import net.joedoe.views.IslePane;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Isle implements GridEntity {
+public class Isle {
     private IslePane pane;
-    private int bridgeCount, missingBridgeCount, row, column;
-    private boolean showMissingBridges;
+    private int bridgeCount, missingBridgeCount;
+    private int row, column;
+    private boolean showMissingBridges, showFinished, showAlert;
     private List<Bridge> bridges = new ArrayList<>();
 
     Isle(int row, int column, int bridgeCount) {
         this.row = row;
         this.column = column;
         this.bridgeCount = bridgeCount;
-        this.missingBridgeCount = bridgeCount - ((int) (Math.random() * bridgeCount) + 1);
+        this.missingBridgeCount = bridgeCount;
+        showMissingBridges = true;
         pane = new IslePane(this);
-        pane.setText(Integer.toString(row) + "/" + Integer.toString(column));
+        pane.setText(Integer.toString(missingBridgeCount));
+    }
+
+    public void addBridge(Bridge bridge) {
+        bridges.add(bridge);
+        missingBridgeCount--;
+        if (showMissingBridges)
+            pane.setText(Integer.toString(missingBridgeCount));
+        if (missingBridgeCount == 0) {
+            pane.setColor(Color.LIGHTGREEN);
+            showFinished = true;
+        }
+        if (missingBridgeCount < 0) {
+            pane.setColor(Color.CORAL);
+            showAlert = true;
+        }
+    }
+
+    public void removeBridge(Bridge bridge) {
+        bridges.remove(bridge);
+        missingBridgeCount++;
+        if (showMissingBridges)
+            pane.setText(Integer.toString(missingBridgeCount));
+        setCircleColor();
+    }
+
+    public Bridge getBridge(Direction direction) {
+        for (Bridge bridge : bridges)
+            if (bridge.getDirection() == direction)
+                return bridge;
+        return null;
+    }
+
+    public List<Bridge> getBridges() {
+        return bridges;
+    }
+
+    public void increaseMissingBridges() {
+        missingBridgeCount++;
+        if (showMissingBridges)
+            pane.setText(Integer.toString(missingBridgeCount));
+        setCircleColor();
+    }
+
+    private void setCircleColor() {
+        if (showAlert && missingBridgeCount == 0) {
+            showAlert = false;
+            pane.setColor(Color.GREEN);
+        } else if (showFinished && missingBridgeCount > 0) {
+            showFinished = false;
+            pane.setColor(GameInfo.CIRCLE_COLOR);
+        }
+    }
+
+    public void decreaseMissingBridges() {
+        missingBridgeCount--;
+        if (showMissingBridges)
+            pane.setText(Integer.toString(missingBridgeCount));
+        if (missingBridgeCount == 0) {
+            pane.setColor(Color.LIGHTGREEN);
+            showFinished = true;
+        }
+        if (missingBridgeCount < 0) {
+            pane.setColor(Color.CORAL);
+            showAlert = true;
+        }
+    }
+
+    public int getMissingBridgeCount() {
+        return missingBridgeCount;
     }
 
     public void setText(boolean showMissingBridges) {
@@ -28,20 +101,6 @@ public class Isle implements GridEntity {
             pane.setText(Integer.toString(missingBridgeCount));
         else
             pane.setText(Integer.toString(bridgeCount));
-    }
-
-    public int getBridgeCount() {
-        if (showMissingBridges)
-            return missingBridgeCount;
-        return bridgeCount;
-    }
-
-    public void addBridge(Bridge bridge) {
-        bridges.add(bridge);
-    }
-
-    public void removeBridge(Bridge bridge) {
-        bridges.remove(bridge);
     }
 
     public int getRow() {
@@ -59,12 +118,5 @@ public class Isle implements GridEntity {
     @Override
     public String toString() {
         return "Isle{" + "row=" + row + ", column=" + column + '}';
-    }
-
-    public Bridge getBridge(Direction direction) {
-        for (Bridge bridge : bridges)
-            if (bridge.getDirection() == direction)
-                return bridge;
-        return null;
     }
 }

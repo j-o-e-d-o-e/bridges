@@ -4,19 +4,19 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Mocks {
-    public static final int ROWS = 12;
-    public static final int COLS = 12;
+    public static final int ROWS = 7;
+    public static final int COLS = 7;
     public static final List<Isle> ISLES = Arrays.asList(
-            new Isle(0, 0, 8),
-            new Isle(0, 2, 7),
-            new Isle(1, 11, 6),
-            new Isle(1, 8, 6),
-            new Isle(2, 2, 6),
-            new Isle(2, 5, 5),
-            new Isle(5, 5, 4),
-            new Isle(4, 7, 3),
-            new Isle(8, 7, 2),
-            new Isle(8, 2, 1),
-            new Isle(11, 2, 1),
-            new Isle(11, 2, 1));
+            new Isle(0, 0, 3),
+            new Isle(0, 4, 5),
+            new Isle(0, 6, 4),
+            new Isle(1, 1, 2),
+            new Isle(1, 3, 3),
+            new Isle(3, 0, 4),
+            new Isle(3, 3, 3),
+            new Isle(5, 0, 2),
+            new Isle(5, 3, 1),
+            new Isle(6, 1, 3),
+            new Isle(6, 4, 5),
+            new Isle(6, 6, 3));
 }

@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import net.joedoe.entities.Isle;
 
-import static net.joedoe.utils.GameInfo.CIRCLE_COLOR;
+import static net.joedoe.utils.GameInfo.STD_COLOR;
 import static net.joedoe.utils.GameInfo.CIRCLE_RADIUS;
 
 public class IslePane extends StackPane {
@@ -16,7 +16,7 @@ public class IslePane extends StackPane {
 
     public IslePane(Isle isle) {
         this.isle = isle;
-        circle = new Circle(CIRCLE_RADIUS, CIRCLE_COLOR);
+        circle = new Circle(CIRCLE_RADIUS, STD_COLOR);
         label = new Label();
         getChildren().addAll(circle, label);
     }

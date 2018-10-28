@@ -9,6 +9,10 @@ import net.joedoe.views.IslePane;
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.joedoe.utils.GameInfo.ALERT_COLOR;
+import static net.joedoe.utils.GameInfo.SOLVED_COLOR;
+import static net.joedoe.utils.GameInfo.STD_COLOR;
+
 public class Isle {
     private IslePane pane;
     private int bridgeCount, missingBridgeCount;
@@ -32,11 +36,11 @@ public class Isle {
         if (showMissingBridges)
             pane.setText(Integer.toString(missingBridgeCount));
         if (missingBridgeCount == 0) {
-            pane.setColor(Color.LIGHTGREEN);
+            pane.setColor(SOLVED_COLOR);
             showFinished = true;
         }
         if (missingBridgeCount < 0) {
-            pane.setColor(Color.CORAL);
+            pane.setColor(ALERT_COLOR);
             showAlert = true;
         }
     }
@@ -70,10 +74,10 @@ public class Isle {
     private void setCircleColor() {
         if (showAlert && missingBridgeCount == 0) {
             showAlert = false;
-            pane.setColor(Color.GREEN);
+            pane.setColor(SOLVED_COLOR);
         } else if (showFinished && missingBridgeCount > 0) {
             showFinished = false;
-            pane.setColor(GameInfo.CIRCLE_COLOR);
+            pane.setColor(STD_COLOR);
         }
     }
 
@@ -82,11 +86,11 @@ public class Isle {
         if (showMissingBridges)
             pane.setText(Integer.toString(missingBridgeCount));
         if (missingBridgeCount == 0) {
-            pane.setColor(Color.LIGHTGREEN);
+            pane.setColor(SOLVED_COLOR);
             showFinished = true;
         }
         if (missingBridgeCount < 0) {
-            pane.setColor(Color.CORAL);
+            pane.setColor(ALERT_COLOR);
             showAlert = true;
         }
     }

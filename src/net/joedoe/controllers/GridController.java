@@ -5,12 +5,15 @@ import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.entities.Mocks;
 import net.joedoe.utils.Direction;
+import net.joedoe.utils.GameInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import static net.joedoe.utils.GameInfo.STD_COLOR;
 
 public class GridController {
     private List<Isle> isles = Mocks.ISLES;
@@ -39,7 +42,7 @@ public class GridController {
                 if (!collides(bridge)) {
                     startIsle.addBridge(bridge);
                     endIsle.decreaseMissingBridges();
-                    bridges.forEach(b -> b.setColor(Color.GREY));
+                    bridges.forEach(b -> b.setColor(STD_COLOR));
                     bridges.add(bridge);
                     return bridge;
                 }
@@ -61,7 +64,7 @@ public class GridController {
         Isle endIsle = bridge.getEndIsle();
         endIsle.increaseMissingBridges();
         bridges.remove(bridge);
-        bridges.forEach(b -> b.setColor(Color.GREY));
+        bridges.forEach(b -> b.setColor(STD_COLOR));
         return bridge;
     }
 
@@ -174,6 +177,8 @@ public class GridController {
     }
 
     public boolean gameSolved() {
-        return isles.stream().allMatch(isle -> isle.getMissingBridgeCount() == 0);
+        boolean solved = isles.stream().allMatch(isle -> isle.getMissingBridgeCount() == 0);
+        if (solved) bridges.forEach(bridge -> bridge.setColor(Color.GREY));
+        return solved;
     }
 }

@@ -1,17 +1,13 @@
 package net.joedoe.entities;
 
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import net.joedoe.utils.Direction;
-import net.joedoe.utils.GameInfo;
 import net.joedoe.views.IslePane;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.joedoe.utils.GameInfo.ALERT_COLOR;
-import static net.joedoe.utils.GameInfo.SOLVED_COLOR;
-import static net.joedoe.utils.GameInfo.STD_COLOR;
+import static net.joedoe.utils.GameInfo.*;
 
 public class Isle {
     private IslePane pane;
@@ -20,7 +16,7 @@ public class Isle {
     private boolean showMissingBridges, showFinished, showAlert;
     private List<Bridge> bridges = new ArrayList<>();
 
-    Isle(int row, int column, int bridgeCount) {
+    public Isle(int row, int column, int bridgeCount) {
         this.row = row;
         this.column = column;
         this.bridgeCount = bridgeCount;

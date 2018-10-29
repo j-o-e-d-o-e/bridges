@@ -5,7 +5,6 @@ import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.entities.Mocks;
 import net.joedoe.utils.Direction;
-import net.joedoe.utils.GameInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -170,6 +169,10 @@ public class GridController {
                 }
         }
         return false;
+    }
+
+    public Isle getIsle(int index) {
+        return isles.get(index);
     }
 
     public List<Isle> getIsles() {

@@ -21,9 +21,9 @@ public class GridControllerTest {
     }
 
     @Test
-    public void sortDirectionUp() {
+    public void findIsleUP() {
         //given
-        Isle startIsle = isles.get(0); //8
+        Isle startIsle = isles.get(8);
 
         //when
         Isle endIsle = gridController.findIsle(startIsle, Direction.UP);
@@ -34,9 +34,9 @@ public class GridControllerTest {
     }
 
     @Test
-    public void sortDirectionLeft() {
+    public void findIsleLEFT() {
         //given
-        Isle startIsle = isles.get(2);
+        Isle startIsle = isles.get(11);
 
         //when
         Isle endIsle = gridController.findIsle(startIsle, Direction.LEFT);
@@ -47,7 +47,7 @@ public class GridControllerTest {
     }
 
     @Test
-    public void sortDirectionDown() {
+    public void findIsleDOWN() {
         //given
         Isle startIsle = isles.get(4);
 
@@ -60,9 +60,9 @@ public class GridControllerTest {
     }
 
     @Test
-    public void sortDirectionRight() {
+    public void findIsleRIGHT() {
         //given
-        Isle startIsle = isles.get(0);
+        Isle startIsle = isles.get(9);
 
         //when
         Isle endIsle = gridController.findIsle(startIsle, Direction.RIGHT);

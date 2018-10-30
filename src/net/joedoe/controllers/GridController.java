@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 public class GridController {
     private List<Isle> isles = Mocks.ISLES;
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private List<Bridge> bridges = new ArrayList<>();
 
     private final static Logger LOGGER = Logger.getLogger(GridController.class.getName());
@@ -45,25 +46,31 @@ public class GridController {
     public Isle findIsle(Isle startIsle, Direction direction) {
         LOGGER.info(startIsle.toString() + " " + direction);
         if (direction == Direction.UP || direction == Direction.DOWN) {
-            List<Isle> candidates = isles.stream().filter(isle -> isle != startIsle
-                    && isle.getColumn() == startIsle.getColumn()).sorted().collect(Collectors.toList());
+            List<Isle> candidates = isles.stream().filter(isle -> isle.getColumn() == startIsle.getColumn()
+                    && isle != startIsle).collect(Collectors.toList());
             if (candidates.size() == 0) return null;
-            if (direction == Direction.UP)
-                if (candidates.size() == 1)
-                    return candidates.get(0);
-                else
-                    return candidates.get(candidates.size() - 1);
-            else
-                return candidates.get(0);
+            if (direction == Direction.UP) {
+                candidates = candidates.stream().filter(
+                        c -> c.getRow() < startIsle.getRow()).sorted().collect(Collectors.toList());
+                if (candidates.size() == 0) return null;
+                return candidates.get(candidates.size() - 1);
+            } else {
+                return candidates.stream().filter(
+                        c -> c.getRow() > startIsle.getRow()).sorted().findFirst().orElse(null);
+            }
         } else {
-            List<Isle> candidates = isles.stream().filter(isle -> isle != startIsle
-                    && isle.getRow() == startIsle.getRow()).sorted().collect(Collectors.toList());
+            List<Isle> candidates = isles.stream().filter(isle -> isle.getRow() == startIsle.getRow()
+                    && isle != startIsle).collect(Collectors.toList());
             if (candidates.size() == 0) return null;
-            if (direction == Direction.LEFT)
-                return candidates.get(0);
-            else if (candidates.size() == 1)
-                return candidates.get(0);
-            return candidates.get(candidates.size() - 1);
+            if (direction == Direction.LEFT) {
+                return candidates.stream().filter(
+                        c -> c.getColumn() < startIsle.getColumn()).sorted().findFirst().orElse(null);
+            } else {
+                candidates = candidates.stream().filter(
+                        c -> c.getColumn() > startIsle.getColumn()).sorted().collect(Collectors.toList());
+                if (candidates.size() == 0) return null;
+                return candidates.get(candidates.size() - 1);
+            }
         }
     }
 
@@ -142,10 +149,6 @@ public class GridController {
 //        }
 //        return false;
 //    }
-
-    public Isle getIsle(int index) {
-        return isles.get(index);
-    }
 
     public List<Isle> getIsles() {
         return isles;

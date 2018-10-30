@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Isle implements Comparable<Isle> {
-    private int bridgeCount;
     private int row, column;
+    private int bridgeCount;
     private List<Bridge> bridges = new ArrayList<>();
 
     Isle(int row, int column, int bridgeCount) {

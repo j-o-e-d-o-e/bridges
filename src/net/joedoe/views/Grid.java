@@ -56,6 +56,17 @@ class Grid extends GridPane {
         }
     }
 
+    void removeBridge(IslePane pane, Direction direction) {
+        Bridge bridge = gridController.removeBridge(pane.getX(), pane.getY(), direction);
+        if (bridge != null) {
+            BridgeLine line = lines.stream().filter(l -> l.getX1() == bridge.getStartRow()
+                    && l.getX2() == bridge.getEndRow()
+                    && l.getY1() == bridge.getStartColumn()
+                    && l.getY2() == bridge.getEndColumn()).findFirst().orElse(null);
+            getChildren().remove(line);
+        }
+    }
+
     private void updatePanes() {
         for (IslePane pane : panes) {
             int bridgeCount = gridController.getMissingBridgeCount(pane.getX(), pane.getY());
@@ -80,17 +91,6 @@ class Grid extends GridPane {
         if (gridController.gameSolved()) {
             lines.get(lines.size() - 1).setStroke(STD_COLOR);
             statusListener.handle(new StatusEvent(null, "Gelöst!"));
-        }
-    }
-
-    void removeBridge(IslePane pane, Direction direction) {
-        Bridge bridge = gridController.removeBridge(pane.getX(), pane.getY(), direction);
-        if (bridge != null) {
-            BridgeLine line = lines.stream().filter(l -> l.getX1() == bridge.getStartRow()
-                    && l.getX2() == bridge.getEndRow()
-                    && l.getY1() == bridge.getStartColumn()
-                    && l.getY2() == bridge.getEndColumn()).findFirst().orElse(null);
-            getChildren().remove(line);
         }
     }
 

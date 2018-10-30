@@ -4,32 +4,41 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import net.joedoe.entities.Isle;
 
-import static net.joedoe.utils.GameInfo.STD_COLOR;
 import static net.joedoe.utils.GameInfo.CIRCLE_RADIUS;
+import static net.joedoe.utils.GameInfo.STD_COLOR;
 
 public class IslePane extends StackPane {
-    private Isle isle;
+    private int x, y;
     private Circle circle;
     private Label label;
 
-    public IslePane(Isle isle) {
-        this.isle = isle;
+    IslePane(int x, int y, int bridgeCount) {
+        this.x = x;
+        this.y = y;
         circle = new Circle(CIRCLE_RADIUS, STD_COLOR);
-        label = new Label();
+        label = new Label(Integer.toString(bridgeCount));
         getChildren().addAll(circle, label);
     }
 
-    public void setText(String text) {
+    void setText(String text) {
         label.setText(text);
     }
 
-    Isle getIsle() {
-        return isle;
+    void setColor(Color color) {
+        circle.setFill(color);
     }
 
-    public void setColor(Color color) {
-        circle.setFill(color);
+    int getX() {
+        return x;
+    }
+
+    int getY() {
+        return y;
+    }
+
+    @Override
+    public String toString() {
+        return "IslePane{" + "x=" + x + ", y=" + y + '}';
     }
 }

@@ -1,8 +1,6 @@
 package tests.controllers;
 
-import javafx.embed.swing.JFXPanel;
 import net.joedoe.controllers.GridController;
-import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.utils.Direction;
 import org.junit.Before;
@@ -10,127 +8,67 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNull;
+import static org.junit.Assert.assertEquals;
 
 public class GridControllerTest {
     private GridController gridController;
-    private Isle startIsle;
-    private Isle endIsle;
-    private Direction direction;
-    private Direction oppositeDirection;
+    private List<Isle> isles;
 
     @Before
     public void setUp() {
-        //workaround for initialization error
-        new JFXPanel(); // todo: separate entities and views more clearly
         gridController = new GridController();
-        startIsle = gridController.getIsle(0);
-        endIsle = gridController.getIsle(1);
-        direction = Direction.RIGHT;
-        oppositeDirection = Direction.LEFT;
+        isles = gridController.getIsles();
     }
 
     @Test
-    public void createBridge() {
-        //when
-        Bridge bridge = gridController.createBridge(startIsle, direction);
-
-        //then
-        assertEquals(endIsle, bridge.getEndIsle());
-    }
-
-    @Test
-    public void createBridgeFromEndIsle() {
+    public void sortDirectionUp() {
         //given
-        startIsle.addBridge(new Bridge(startIsle, direction, endIsle));
+        Isle startIsle = isles.get(0); //8
 
         //when
-        Bridge bridge = gridController.createBridge(startIsle, direction);
+        Isle endIsle = gridController.findIsle(startIsle, Direction.UP);
 
         //then
-        assertEquals(startIsle, bridge.getEndIsle());
+        assertEquals(startIsle.getColumn(), endIsle.getColumn());
+        assertEquals(3, endIsle.getRow());
     }
 
     @Test
-    public void createBridgeReturnsNullNoEndIsleFound() {
+    public void sortDirectionLeft() {
         //given
-        Direction direction = Direction.UP;
+        Isle startIsle = isles.get(2);
 
         //when
-        Bridge bridge = gridController.createBridge(startIsle, direction);
+        Isle endIsle = gridController.findIsle(startIsle, Direction.LEFT);
 
         //then
-        assertNull(bridge);
+        assertEquals(startIsle.getRow(), endIsle.getRow());
+        assertEquals(4, endIsle.getColumn());
     }
 
     @Test
-    public void createBridgeReturnsNullAlreadyTwoBridges() {
+    public void sortDirectionDown() {
         //given
-        startIsle.addBridge(new Bridge(startIsle, direction, endIsle));
-        endIsle.addBridge(new Bridge(endIsle, oppositeDirection, startIsle));
+        Isle startIsle = isles.get(4);
 
         //when
-        Bridge bridge = gridController.createBridge(startIsle, direction);
+        Isle endIsle = gridController.findIsle(startIsle, Direction.DOWN);
 
         //then
-        assertNull(bridge);
+        assertEquals(startIsle.getColumn(), endIsle.getColumn());
+        assertEquals(3, endIsle.getRow());
     }
 
     @Test
-    public void createBridgeReturnsNullCrossingBridge() {
+    public void sortDirectionRight() {
         //given
-        direction = Direction.RIGHT;
-        gridController.createBridge(gridController.getIsle(3), Direction.DOWN);
-        startIsle = gridController.getIsle(5);
-        List<Bridge> bridges = startIsle.getBridges();
+        Isle startIsle = isles.get(0);
 
         //when
-        Bridge bridge = gridController.createBridge(startIsle, direction);
+        Isle endIsle = gridController.findIsle(startIsle, Direction.RIGHT);
 
         //then
-        assertNull(bridge);
-        assertEquals(0, bridges.size());
-    }
-
-    @SuppressWarnings("Duplicates")
-    @Test
-    public void removeBridge() {
-        //given
-        List<Bridge> isles = startIsle.getBridges();
-        Bridge bridge = new Bridge(startIsle, direction, endIsle);
-        startIsle.addBridge(bridge);
-
-        //when
-        Bridge removedBridge = gridController.removeBridge(startIsle, direction);
-
-        //then
-        assertEquals(bridge, removedBridge);
-        assertEquals(0, isles.size());
-    }
-
-    @SuppressWarnings("Duplicates")
-    @Test
-    public void removeBridgeFromOppositeIsle() {
-        //given
-        List<Bridge> isles = endIsle.getBridges();
-        Bridge bridge = new Bridge(endIsle, oppositeDirection, startIsle);
-        endIsle.addBridge(bridge);
-
-        //when
-        Bridge removedBridge = gridController.removeBridge(startIsle, direction);
-
-        //then
-        assertEquals(bridge, removedBridge);
-        assertEquals(0, isles.size());
-    }
-
-    @Test
-    public void removeBridgeNoBridges() {
-        //when
-        Bridge bridge = gridController.removeBridge(startIsle, direction);
-
-        //then
-        assertNull(bridge);
+        assertEquals(startIsle.getRow(), endIsle.getRow());
+        assertEquals(4, endIsle.getColumn());
     }
 }

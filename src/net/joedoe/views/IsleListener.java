@@ -3,7 +3,6 @@ package net.joedoe.views;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import net.joedoe.entities.Isle;
 import net.joedoe.utils.Direction;
 
 import static net.joedoe.utils.GameInfo.ONE_TILE;
@@ -17,34 +16,34 @@ public class IsleListener implements EventHandler<MouseEvent> {
 
     @Override
     public void handle(MouseEvent e) {
-        Isle isle = ((IslePane) e.getSource()).getIsle();
+        IslePane pane = ((IslePane) e.getSource());
         if (0 < e.getX() && e.getX() < ONE_TILE && 0 < e.getY() && e.getY() < ONE_TILE / 2
                 && Math.abs(e.getY() - (ONE_TILE >> 1)) > Math.abs(e.getX() - (ONE_TILE >> 1))) {
             if (e.getButton() == MouseButton.PRIMARY)
-                grid.addBridge(isle, Direction.UP);
+                grid.addBridge(pane, Direction.UP);
             if (e.getButton() == MouseButton.SECONDARY)
-                grid.removeBridge(isle, Direction.UP);
+                grid.removeBridge(pane, Direction.UP);
         }
         if (0 < e.getX() && e.getX() < ONE_TILE / 2 && 0 < e.getY() && e.getY() < ONE_TILE
                 && Math.abs(e.getY() - (ONE_TILE >> 1)) < Math.abs(e.getX() - (ONE_TILE >> 1))) {
             if (e.getButton() == MouseButton.PRIMARY)
-                grid.addBridge(isle, Direction.LEFT);
+                grid.addBridge(pane, Direction.LEFT);
             if (e.getButton() == MouseButton.SECONDARY)
-                grid.removeBridge(isle, Direction.LEFT);
+                grid.removeBridge(pane, Direction.LEFT);
         }
         if (0 < e.getX() && e.getX() < ONE_TILE && ONE_TILE / 2 < e.getY() && e.getY() < ONE_TILE
                 && Math.abs(e.getY() - (ONE_TILE >> 1)) > Math.abs(e.getX() - (ONE_TILE >> 1))) {
             if (e.getButton() == MouseButton.PRIMARY)
-                grid.addBridge(isle, Direction.DOWN);
+                grid.addBridge(pane, Direction.DOWN);
             if (e.getButton() == MouseButton.SECONDARY)
-                grid.removeBridge(isle, Direction.DOWN);
+                grid.removeBridge(pane, Direction.DOWN);
         }
         if (ONE_TILE / 2 < e.getX() && e.getX() < ONE_TILE && 0 < e.getY() && e.getY() < ONE_TILE
                 && Math.abs(e.getY() - (ONE_TILE >> 1)) < Math.abs(e.getX() - (ONE_TILE >> 1))) {
             if (e.getButton() == MouseButton.PRIMARY)
-                grid.addBridge(isle, Direction.RIGHT);
+                grid.addBridge(pane, Direction.RIGHT);
             if (e.getButton() == MouseButton.SECONDARY)
-                grid.removeBridge(isle, Direction.RIGHT);
+                grid.removeBridge(pane, Direction.RIGHT);
         }
     }
 }

@@ -1,7 +1,5 @@
 package net.joedoe.entities;
 
-import net.joedoe.utils.Alignment;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,11 +22,21 @@ public class Isle implements Comparable<Isle> {
         bridges.remove(bridge);
     }
 
-    public Bridge getBridge(Alignment alignment) {
-        for (Bridge bridge : bridges)
-            if (bridge.getStartIsle() == this && bridge.getAlignment() == alignment)
-                return bridge;
-        return null;
+    public Bridge getBridge(Isle isle, boolean outgoing) {
+        if (outgoing)
+            return bridges.stream().filter(bridge -> bridge.getStartIsle() == this
+                    && bridge.getEndIsle() == isle).findFirst().orElse(null);
+        else
+            return bridges.stream().filter(bridge -> bridge.getStartIsle() == isle
+                    && bridge.getEndIsle() == this).findFirst().orElse(null);
+    }
+
+    public List<Bridge> getBridges() {
+        return bridges;
+    }
+
+    public boolean hasNoBridge(Isle isle) {
+        return bridges.stream().noneMatch(bridge -> bridge.getStartIsle() == this && bridge.getEndIsle() == isle);
     }
 
     public int getBridgeCount() {

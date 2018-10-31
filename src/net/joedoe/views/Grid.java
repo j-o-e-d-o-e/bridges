@@ -59,10 +59,13 @@ class Grid extends GridPane {
     void removeBridge(IslePane pane, Direction direction) {
         Bridge bridge = gridController.removeBridge(pane.getX(), pane.getY(), direction);
         if (bridge != null) {
-            BridgeLine line = lines.stream().filter(l -> l.getX1() == bridge.getStartRow()
-                    && l.getX2() == bridge.getEndRow()
-                    && l.getY1() == bridge.getStartColumn()
-                    && l.getY2() == bridge.getEndColumn()).findFirst().orElse(null);
+            updatePanes();
+            updateLines();
+            BridgeLine line = lines.stream().filter(l -> l.getX1() == bridge.getStartColumn()
+                    && l.getX2() == bridge.getEndColumn()
+                    && l.getY1() == bridge.getStartRow()
+                    && l.getY2() == bridge.getEndRow()).findFirst().orElse(null);
+            lines.remove(line);
             getChildren().remove(line);
         }
     }

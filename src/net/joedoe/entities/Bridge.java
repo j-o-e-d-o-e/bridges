@@ -7,14 +7,14 @@ public class Bridge {
     private Isle startIsle, endIsle;
     private Alignment alignment;
 
-    public Bridge(Isle startIsle, Isle endIsle, Alignment alignment) {
+    public Bridge(Isle startIsle, Isle endIsle) {
         this.startIsle = startIsle;
         this.endIsle = endIsle;
-        this.alignment = alignment;
         startRow = startIsle.getRow();
         endRow = endIsle.getRow();
         startColumn = startIsle.getColumn();
         endColumn = endIsle.getColumn();
+        this.alignment = Alignment.calculcateAlignment(startRow, endRow, startColumn, endColumn);
     }
 
     public int getStartRow() {
@@ -33,7 +33,6 @@ public class Bridge {
         return endColumn;
     }
 
-    @SuppressWarnings("unused")
     public Alignment getAlignment() {
         return alignment;
     }
@@ -44,5 +43,10 @@ public class Bridge {
 
     public Isle getEndIsle() {
         return endIsle;
+    }
+
+    @Override
+    public String toString() {
+        return "Bridge{" + "startIsle=" + startIsle + ", endIsle=" + endIsle + '}';
     }
 }

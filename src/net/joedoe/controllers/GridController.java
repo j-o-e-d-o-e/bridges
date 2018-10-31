@@ -3,6 +3,7 @@ package net.joedoe.controllers;
 import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.entities.Mocks;
+import net.joedoe.utils.Alignment;
 import net.joedoe.utils.Direction;
 
 import java.util.ArrayList;
@@ -13,7 +14,6 @@ import java.util.stream.Collectors;
 
 public class GridController {
     private List<Isle> isles = Mocks.ISLES;
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private List<Bridge> bridges = new ArrayList<>();
 
     private final static Logger LOGGER = Logger.getLogger(GridController.class.getName());
@@ -34,6 +34,7 @@ public class GridController {
             bridge = new Bridge(endIsle, startIsle);
         else
             return null;
+        if (collides(bridge)) return null;
         startIsle.addBridge(bridge);
         endIsle.addBridge(bridge);
         bridges.add(bridge);
@@ -44,7 +45,7 @@ public class GridController {
         Isle startIsle = getIsle(row, column);
         if (startIsle == null) return null;
         Isle endIsle = findIsle(startIsle, direction);
-        if(endIsle == null) return null;
+        if (endIsle == null) return null;
         Bridge bridge = startIsle.getBridge(endIsle, true);
         if (bridge == null)
             bridge = endIsle.getBridge(startIsle, true);
@@ -61,84 +62,36 @@ public class GridController {
             List<Isle> candidates = isles.stream().filter(isle -> isle.getColumn() == startIsle.getColumn()
                     && isle != startIsle).collect(Collectors.toList());
             if (candidates.size() == 0) return null;
-            if (direction == Direction.UP) {
-                candidates = candidates.stream().filter(
-                        c -> c.getRow() < startIsle.getRow()).sorted().collect(Collectors.toList());
-                if (candidates.size() == 0) return null;
-                return candidates.get(candidates.size() - 1);
-            } else {
+            if (direction == Direction.UP)
+                return candidates.stream().filter(
+                        c -> c.getRow() < startIsle.getRow()).sorted().reduce((first, last) -> last).orElse(null);
+            else
                 return candidates.stream().filter(
                         c -> c.getRow() > startIsle.getRow()).sorted().findFirst().orElse(null);
-            }
         } else {
             List<Isle> candidates = isles.stream().filter(isle -> isle.getRow() == startIsle.getRow()
                     && isle != startIsle).collect(Collectors.toList());
             if (candidates.size() == 0) return null;
-            if (direction == Direction.LEFT) {
+            if (direction == Direction.LEFT)
                 return candidates.stream().filter(
                         c -> c.getColumn() < startIsle.getColumn()).sorted().findFirst().orElse(null);
-            } else {
-                candidates = candidates.stream().filter(
-                        c -> c.getColumn() > startIsle.getColumn()).sorted().collect(Collectors.toList());
-                if (candidates.size() == 0) return null;
-                return candidates.get(candidates.size() - 1);
-            }
+            else
+                return candidates.stream().filter(
+                        c -> c.getColumn() > startIsle.getColumn()).sorted().reduce((first, last) -> last).orElse(null);
         }
     }
 
-//    private boolean collides(Bridge newBridge) {
-//        if (newBridge.getDirection() == Direction.UP || newBridge.getDirection() == Direction.DOWN) {
-//            int column = newBridge.getStartColumn();
-//            List<Bridge> horizontalBridges = bridges.stream().filter(
-//                    bridge -> ((bridge.getDirection() == Direction.LEFT
-//                            && column < bridge.getStartColumn() + 1 && column > bridge.getEndColumn() - 1)
-//                            || (bridge.getDirection() == Direction.RIGHT
-//                            && column > bridge.getStartColumn() - 1 && column < bridge.getEndColumn() + 1)))
-//                    .collect(Collectors.toCollection(ArrayList::new));
-//            if (newBridge.getDirection() == Direction.UP)
-//                for (int row = newBridge.getStartRow() + 1; row >= newBridge.getEndRow() - 1; row--) {
-//                    for (Bridge bridge : horizontalBridges) {
-//                        if (row == bridge.getStartRow()) {
-//                            return true;
-//                        }
-//                    }
-//                }
-//            if (newBridge.getDirection() == Direction.DOWN)
-//                for (int row = newBridge.getStartRow() - 1; row <= newBridge.getEndRow() + 1; row++) {
-//                    for (Bridge bridge : horizontalBridges) {
-//                        if (row == bridge.getStartRow()) {
-//                            return true;
-//                        }
-//                    }
-//                }
-//        }
-//        if (newBridge.getDirection() == Direction.LEFT || newBridge.getDirection() == Direction.RIGHT) {
-//            int row = newBridge.getStartRow();
-//            List<Bridge> verticalBridges = bridges.stream().filter(
-//                    bridge -> ((bridge.getDirection() == Direction.UP
-//                            && row < bridge.getStartRow() + 1 && row > bridge.getEndRow() - 1)
-//                            || (bridge.getDirection() == Direction.DOWN
-//                            && row > bridge.getStartRow() - 1 && row < bridge.getEndRow() + 1)))
-//                    .collect(Collectors.toCollection(ArrayList::new));
-//            if (newBridge.getDirection() == Direction.LEFT)
-//                for (int column = newBridge.getStartColumn() + 1; column >= newBridge.getEndColumn() - 1; column--) {
-//                    for (Bridge bridge : verticalBridges) {
-//                        if (column == bridge.getStartColumn()) {
-//                            return true;
-//                        }
-//                    }
-//                }
-//            if (newBridge.getDirection() == Direction.RIGHT)
-//                for (int column = newBridge.getStartColumn() - 1; column <= newBridge.getEndColumn() + 1; column++) {
-//                    for (Bridge bridge : verticalBridges) {
-//                        if (column == bridge.getStartColumn()) {
-//                            return true;
-//                        }
-//                    }
-//                }
-//        }
-//        return false;
-//    }
+    public boolean collides(Bridge newBridge) {
+        if (newBridge.getAlignment() == Alignment.HORIZONTAL) {
+            int row = newBridge.getStartRow();
+            return bridges.stream().anyMatch(bridge -> bridge.getAlignment() == Alignment.VERTICAL
+                    && bridge.getStartRow() < row && bridge.getEndRow() > row);
+        } else {
+            int column = newBridge.getStartColumn();
+            return bridges.stream().anyMatch(bridge -> bridge.getAlignment() == Alignment.HORIZONTAL
+                    && bridge.getStartColumn() < column && bridge.getEndColumn() > column);
+        }
+    }
 
     public Isle getIsle(int row, int column) {
         return isles.stream().filter(isle -> isle.getRow() == row
@@ -147,10 +100,6 @@ public class GridController {
 
     public List<Isle> getIsles() {
         return isles;
-    }
-
-    public List<Bridge> getBridges() {
-        return bridges;
     }
 
     public boolean gameSolved() {

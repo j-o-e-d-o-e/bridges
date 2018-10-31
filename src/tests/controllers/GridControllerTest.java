@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class GridControllerTest {
     private GridController gridController;
@@ -79,7 +80,9 @@ public class GridControllerTest {
         //given
         Direction direction = Direction.DOWN;
         Isle startIsle = gridController.getIsle(0, 0);
+        startIsle.getBridges().clear();
         Isle endIsle = gridController.getIsle(3, 0);
+        endIsle.getBridges().clear();
         Bridge added = gridController.addBridge(startIsle.getRow(), startIsle.getColumn(), direction);
 
         //when
@@ -90,6 +93,19 @@ public class GridControllerTest {
         assertEquals(0, startIsle.getBridges().size());
         assertEquals(0, endIsle.getBridges().size());
     }
+
+//    @Test
+//    public void collides() {
+//        //given
+//        gridController.addBridge(3, 0, Direction.RIGHT);
+//        Bridge newBridge = new Bridge(gridController.getIsle(6, 1), gridController.getIsle(1, 1));
+//
+//        //when
+//        boolean collides = gridController.collides(newBridge);
+//
+//        //then
+//        assertTrue(collides);
+//    }
 
     @Test
     public void findIsleUP() {

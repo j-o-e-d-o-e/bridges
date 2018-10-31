@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Isle implements Comparable<Isle> {
+    private Coordinate coordinate;
     private int row, column;
     private int bridgeCount;
     private List<Bridge> bridges = new ArrayList<>();
 
     Isle(int row, int column, int bridgeCount) {
+        coordinate = new Coordinate(row, column);
         this.row = row;
         this.column = column;
         this.bridgeCount = bridgeCount;
@@ -73,5 +75,9 @@ public class Isle implements Comparable<Isle> {
             else
                 return -1;
         return 0;
+    }
+
+    public Coordinate getCoordinate() {
+        return coordinate;
     }
 }

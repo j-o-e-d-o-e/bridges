@@ -3,6 +3,7 @@ package net.joedoe.entities;
 import net.joedoe.utils.Alignment;
 
 public class Bridge {
+    private Coordinate start, end;
     private int startRow, endRow, startColumn, endColumn;
     private Isle startIsle, endIsle;
     private Alignment alignment;
@@ -14,6 +15,8 @@ public class Bridge {
         endRow = endIsle.getRow();
         startColumn = startIsle.getColumn();
         endColumn = endIsle.getColumn();
+        start = new Coordinate(startRow, startColumn);
+        end = new Coordinate(endRow, endColumn);
         this.alignment = Alignment.calculcateAlignment(startRow, endRow, startColumn, endColumn);
     }
 

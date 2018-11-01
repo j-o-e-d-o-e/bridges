@@ -56,17 +56,10 @@ public class Isle implements Comparable<Isle> {
 
     @Override
     public int compareTo(Isle isle) {
-        if (isle.getY() == getY())
-            if (isle.getX() > getX())
-                return 1;
-            else
-                return -1;
-        else if (isle.getX() == getX())
-            if (isle.getY() < getY())
-                return 1;
-            else
-                return -1;
-        return 0;
+        if (isle.getY() + isle.getX() < getY() + getX())
+            return 1;
+        else
+            return -1;
     }
 
     @Override

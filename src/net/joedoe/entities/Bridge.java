@@ -78,8 +78,4 @@ public class Bridge {
     public Coordinate getStart() {
         return start;
     }
-
-    public Coordinate getEnd() {
-        return end;
-    }
 }

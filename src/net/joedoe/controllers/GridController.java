@@ -7,10 +7,10 @@ import net.joedoe.utils.Alignment;
 import net.joedoe.utils.Direction;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public class GridController {
     private List<Isle> isles = new ArrayList<>();
@@ -27,6 +27,7 @@ public class GridController {
         for (int[] values : Mocks.ISLES) {
             isles.add(new Isle(values[0], values[1], values[2]));
         }
+        Collections.sort(isles);
     }
 
     public Bridge addBridge(int y, int x, Direction direction) {
@@ -63,32 +64,32 @@ public class GridController {
         return bridge;
     }
 
+    /*Returns the nearest isle to the specified isle in the specified direction
+     * @param isle - the isle for which is nearest isle is to be found
+     * @param direction - the direction where to look for the nearest isle
+     * */
     public Isle findIsle(Isle isle, Direction direction) {
         LOGGER.info(isle.toString() + " " + direction);
-        if (direction == Direction.UP || direction == Direction.DOWN) {
-            List<Isle> candidates = isles.stream().filter(i -> i.getX() == isle.getX()
-                    && i != isle).collect(Collectors.toList());
-            if (candidates.size() == 0) return null;
-            if (direction == Direction.UP)
-                return candidates.stream().filter(
-                        c -> c.getY() < isle.getY()).sorted().reduce((first, last) -> last).orElse(null);
-            else
-                return candidates.stream().filter(
-                        c -> c.getY() > isle.getY()).sorted().findFirst().orElse(null);
-        } else {
-            List<Isle> candidates = isles.stream().filter(i -> i.getY() == isle.getY()
-                    && i != isle).collect(Collectors.toList());
-            if (candidates.size() == 0) return null;
-            if (direction == Direction.LEFT)
-                return candidates.stream().filter(
-                        c -> c.getX() < isle.getX()).sorted().findFirst().orElse(null);
-            else
-                return candidates.stream().filter(
-                        c -> c.getX() > isle.getX()).sorted().reduce((first, last) -> last).orElse(null);
-        }
+        if (direction == Direction.UP) {
+            List<Isle> reversed = new ArrayList<>(isles);
+            Collections.reverse(reversed);
+            return reversed.stream().filter(i -> i.getX() == isle.getX()
+                    && i.getY() < isle.getY()).findFirst().orElse(null);
+        } else if (direction == Direction.LEFT) {
+            List<Isle> reversed = new ArrayList<>(isles);
+            Collections.reverse(reversed);
+            return reversed.stream().filter(i -> i.getY() == isle.getY()
+                    && i.getX() < isle.getX()).findFirst().orElse(null);
+        } else if (direction == Direction.DOWN)
+            return isles.stream().filter(i -> i.getX() == isle.getX()
+                    && i.getY() > isle.getY()).findFirst().orElse(null);
+        else
+            return isles.stream().filter(i -> i.getY() == isle.getY()
+                    && i.getX() > isle.getX()).findFirst().orElse(null);
     }
 
     public boolean collides(Bridge bridge) {
+        LOGGER.info(bridge.toString());
         if (bridge.getAlignment() == Alignment.HORIZONTAL) {
             int y = bridge.getStartY();
             return bridges.stream().anyMatch(b -> b.getAlignment() == Alignment.VERTICAL
@@ -110,7 +111,7 @@ public class GridController {
         return isles;
     }
 
-    public List<Bridge> getBridges(){
+    public List<Bridge> getBridges() {
         return bridges;
     }
 

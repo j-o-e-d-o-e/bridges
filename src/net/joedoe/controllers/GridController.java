@@ -13,13 +13,20 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class GridController {
-    private List<Isle> isles = Mocks.ISLES;
+    private List<Isle> isles = new ArrayList<>();
     private List<Bridge> bridges = new ArrayList<>();
 
     private final static Logger LOGGER = Logger.getLogger(GridController.class.getName());
 
     public GridController() {
+        addIsles();
         LOGGER.setLevel(Level.OFF);
+    }
+
+    private void addIsles() {
+        for (int[] values : Mocks.ISLES) {
+            isles.add(new Isle(values[0], values[1], values[2]));
+        }
     }
 
     public Bridge addBridge(int y, int x, Direction direction) {
@@ -81,7 +88,6 @@ public class GridController {
         }
     }
 
-    @SuppressWarnings("WeakerAccess")
     public boolean collides(Bridge bridge) {
         if (bridge.getAlignment() == Alignment.HORIZONTAL) {
             int y = bridge.getStartY();
@@ -102,6 +108,10 @@ public class GridController {
 
     public List<Isle> getIsles() {
         return isles;
+    }
+
+    public List<Bridge> getBridges(){
+        return bridges;
     }
 
     public boolean gameSolved() {

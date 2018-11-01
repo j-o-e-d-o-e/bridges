@@ -7,7 +7,10 @@ import net.joedoe.utils.Direction;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class GridControllerTest {
     private GridController gridController;
@@ -79,9 +82,7 @@ public class GridControllerTest {
         //given
         Direction direction = Direction.DOWN;
         Isle startIsle = gridController.getIsle(0, 0);
-        startIsle.getBridges().clear();
         Isle endIsle = gridController.getIsle(3, 0);
-        endIsle.getBridges().clear();
         Bridge added = gridController.addBridge(startIsle.getY(), startIsle.getX(), direction);
 
         //when
@@ -143,5 +144,35 @@ public class GridControllerTest {
         //then
         assertEquals(startIsle.getY(), endIsle.getY());
         assertEquals(4, endIsle.getX());
+    }
+
+    @Test
+    public void collidesHORIZONTAL() {
+        //given
+        Bridge vertical = new Bridge(new Isle(6, 1, 1), new Isle(1, 1, 1));
+        List<Bridge> bridges = gridController.getBridges();
+        bridges.add(vertical);
+
+        //when
+        Bridge horizontal = new Bridge(new Isle(3, 0, 1), new Isle(3, 3, 1));
+        boolean collides = gridController.collides(horizontal);
+
+        //then
+        assertTrue(collides);
+    }
+
+    @Test
+    public void collidesVERTICAL() {
+        //given
+        Bridge horizontal = new Bridge(new Isle(3, 0, 1), new Isle(3, 3, 1));
+        List<Bridge> bridges = gridController.getBridges();
+        bridges.add(horizontal);
+
+        //when
+        Bridge vertical = new Bridge(new Isle(6, 1, 1), new Isle(1, 1, 1));
+        boolean collides = gridController.collides(vertical);
+
+        //then
+        assertTrue(collides);
     }
 }

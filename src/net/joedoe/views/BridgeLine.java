@@ -7,23 +7,23 @@ import net.joedoe.utils.Alignment;
 import static net.joedoe.utils.GameInfo.*;
 
 class BridgeLine extends Line {
-    private int x1, x2, y1, y2;
+    private int xStart, xEnd, yStart, yEnd;
 
-    BridgeLine(int x1, int x2, int y1, int y2, Alignment alignment) {
-        this.x1 = x1;
-        this.x2 = x2;
-        this.y1 = y1;
-        this.y2 = y2;
+    BridgeLine(int yStart, int xStart, int yEnd, int xEnd) {
+        this.yStart = yStart;
+        this.xStart = xStart;
+        this.yEnd = yEnd;
+        this.xEnd = xEnd;
         setStrokeWidth(1.5);
         setStroke(Color.CORAL);
-        translateToLayout(alignment);
+        translateToLayout(Alignment.getAlignment(yStart, yEnd));
     }
 
     private void translateToLayout(Alignment alignment) {
         if (alignment == Alignment.HORIZONTAL) {
-            int tiles = Math.abs(x1 - x2);
+            int tiles = Math.abs(xStart - xEnd);
             setEndX(ONE_TILE * (tiles - 1) + BRIDGE_OVERLAP * 2);
-            if (x1 < x2) {
+            if (xStart < xEnd) {
                 setTranslateX(ONE_TILE - BRIDGE_OVERLAP);
                 setTranslateY(BRIDGE_OFFSET);
             } else {
@@ -31,9 +31,9 @@ class BridgeLine extends Line {
                 setTranslateY(-BRIDGE_OFFSET);
             }
         } else {
-            int tiles = Math.abs(y1 - y2);
+            int tiles = Math.abs(yStart - yEnd);
             setEndY(ONE_TILE * (tiles - 1) + BRIDGE_OVERLAP * 2);
-            if (y1 < y2) {
+            if (yStart < yEnd) {
                 setTranslateX((ONE_TILE >> 1) + BRIDGE_OFFSET);
                 setTranslateY((ONE_TILE >> 1) * tiles);
             } else {
@@ -43,19 +43,19 @@ class BridgeLine extends Line {
         }
     }
 
-    int getX1() {
-        return x1;
+    int getXStart() {
+        return xStart;
     }
 
-    int getX2() {
-        return x2;
+    int getXEnd() {
+        return xEnd;
     }
 
-    int getY1() {
-        return y1;
+    int getYStart() {
+        return yStart;
     }
 
-    int getY2() {
-        return y2;
+    int getYEnd() {
+        return yEnd;
     }
 }

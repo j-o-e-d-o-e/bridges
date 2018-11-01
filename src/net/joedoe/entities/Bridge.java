@@ -1,14 +1,12 @@
 package net.joedoe.entities;
 
 import net.joedoe.utils.Alignment;
+import net.joedoe.utils.Coordinate;
 
 public class Bridge {
     private Coordinate start, end;
     private Isle startIsle, endIsle;
     private Alignment alignment;
-
-    //TODO:
-    private int startRow, endRow, startColumn,endColumn;
 
     public Bridge(Isle startIsle, Isle endIsle) {
         this.startIsle = startIsle;
@@ -20,13 +18,7 @@ public class Bridge {
             start = new Coordinate(endIsle.getY(), endIsle.getX());
             end = new Coordinate(startIsle.getY(), startIsle.getX());
         }
-        this.alignment = Alignment.getAlignment(startIsle.getY(), endIsle.getY(), startIsle.getX(), endIsle.getX());
-
-        //TODO:
-        startRow = startIsle.getY();
-        startColumn = startIsle.getX();
-        endRow = endIsle.getY();
-        endColumn = endIsle.getX();
+        this.alignment = Alignment.getAlignment(startIsle.getY(), endIsle.getY());
     }
 
     Isle getStartIsle() {
@@ -60,24 +52,5 @@ public class Bridge {
     @Override
     public String toString() {
         return "Bridge{" + "startIsle=" + startIsle + ", endIsle=" + endIsle + '}';
-    }
-
-
-    //TODO:
-
-    public int getStartRow() {
-        return startRow;
-    }
-
-    public int getEndRow() {
-        return endRow;
-    }
-
-    public int getStartColumn() {
-        return startColumn;
-    }
-
-    public int getEndColumn() {
-        return endColumn;
     }
 }

@@ -1,15 +1,17 @@
 package net.joedoe.entities;
 
+import net.joedoe.utils.Coordinate;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Isle implements Comparable<Isle> {
-    private Coordinate pos;
+    private Coordinate position;
     private int bridgeCount;
     private List<Bridge> bridges = new ArrayList<>();
 
     public Isle(int y, int x, int bridgeCount) {
-        pos = new Coordinate(y, x);
+        position = new Coordinate(y, x);
         this.bridgeCount = bridgeCount;
     }
 
@@ -47,11 +49,11 @@ public class Isle implements Comparable<Isle> {
     }
 
     public int getY() {
-        return pos.getY();
+        return position.getY();
     }
 
     public int getX() {
-        return pos.getX();
+        return position.getX();
     }
 
     @Override
@@ -64,6 +66,6 @@ public class Isle implements Comparable<Isle> {
 
     @Override
     public String toString() {
-        return "Isle{" + "pos=" + pos + '}';
+        return "Isle{" + "position=" + position + '}';
     }
 }

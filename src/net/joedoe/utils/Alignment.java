@@ -4,11 +4,10 @@ public enum Alignment {
     HORIZONTAL, VERTICAL;
 
 
-    public static Alignment getAlignment(int x1, int x2, int y1, int y2) {
-        if (x1 == x2)
+    public static Alignment getAlignment(int startY, int endY) {
+        if (startY == endY)
             return Alignment.HORIZONTAL;
-        else if (y1 == y2)
+        else
             return Alignment.VERTICAL;
-        else return null;
     }
 }

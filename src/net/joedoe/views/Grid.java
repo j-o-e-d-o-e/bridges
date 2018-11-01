@@ -5,9 +5,8 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import net.joedoe.controllers.GridController;
-import net.joedoe.entities.Bridge;
-import net.joedoe.entities.Isle;
 import net.joedoe.entities.Mocks;
+import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
 
 import java.util.ArrayList;
@@ -36,8 +35,8 @@ class Grid extends GridPane {
     }
 
     private void addIsles() {
-        for (Isle isle : gridController.getIsles()) {
-            IslePane pane = new IslePane(isle.getY(), isle.getX(), isle.getMissingBridgeCount());
+        for (int[] isle : Mocks.ISLES) {
+            IslePane pane = new IslePane(isle[0], isle[1], isle[2]);
             pane.setOnMouseClicked(e -> isleListener.handle(e));
             panes.add(pane);
             add(pane, pane.getY(), pane.getX());
@@ -45,25 +44,30 @@ class Grid extends GridPane {
     }
 
     void addBridge(IslePane pane, Direction direction) {
-        Bridge bridge = gridController.addBridge(pane.getX(), pane.getY(), direction);
-        if (bridge != null) {
+        Coordinate[] coordinates = gridController.addBridge(pane.getX(), pane.getY(), direction);
+        if (coordinates != null) {
             updateLines();
-            BridgeLine line = new BridgeLine(bridge.getStartColumn(), bridge.getEndColumn(), bridge.getStartRow(), bridge.getEndRow(), bridge.getAlignment());
+            BridgeLine line = new BridgeLine(
+                    coordinates[0].getY(),
+                    coordinates[0].getX(),
+                    coordinates[1].getY(),
+                    coordinates[1].getX());
             lines.add(line);
-            add(line, line.getX1(), line.getY1());
+            add(line, line.getXStart(), line.getYStart());
             updatePanes();
             checkIfSolved();
         }
     }
 
     void removeBridge(IslePane pane, Direction direction) {
-        Bridge bridge = gridController.removeBridge(pane.getX(), pane.getY(), direction);
-        if (bridge != null) {
+        Coordinate[] coordinates = gridController.removeBridge(pane.getX(), pane.getY(), direction);
+        if (coordinates != null) {
             updateLines();
-            BridgeLine line = lines.stream().filter(l -> l.getX1() == bridge.getStartColumn()
-                    && l.getX2() == bridge.getEndColumn()
-                    && l.getY1() == bridge.getStartRow()
-                    && l.getY2() == bridge.getEndRow()).findFirst().orElse(null);
+            BridgeLine line = lines.stream().filter(
+                    l -> l.getYStart() == coordinates[0].getY()
+                            && l.getXStart() == coordinates[0].getX()
+                            && l.getYEnd() == coordinates[1].getY()
+                            && l.getXEnd() == coordinates[1].getX()).findFirst().orElse(null);
             lines.remove(line);
             getChildren().remove(line);
             updatePanes();

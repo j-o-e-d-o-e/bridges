@@ -4,6 +4,7 @@ import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.entities.Mocks;
 import net.joedoe.utils.Alignment;
+import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
 
 import java.util.ArrayList;
@@ -24,44 +25,67 @@ public class GridController {
     }
 
     private void addIsles() {
-        for (int[] values : Mocks.ISLES) {
-            isles.add(new Isle(values[0], values[1], values[2]));
+        for (int[] isle : Mocks.ISLES) {
+            isles.add(new Isle(isle[0], isle[1], isle[2]));
         }
         Collections.sort(isles);
     }
 
-    public Bridge addBridge(int y, int x, Direction direction) {
+    public Coordinate[] addBridge(int y, int x, Direction direction) {
         Isle startIsle = getIsle(y, x);
         if (startIsle == null) return null;
         Isle endIsle = findIsle(startIsle, direction);
         if (endIsle == null) return null;
         Bridge bridge;
+        boolean reversed = false;
         if (startIsle.hasNoBridge(endIsle))
             bridge = new Bridge(startIsle, endIsle);
-        else if (endIsle.hasNoBridge(startIsle))
+        else if (endIsle.hasNoBridge(startIsle)) {
             bridge = new Bridge(endIsle, startIsle);
-        else
+            reversed = true;
+        } else
             return null;
         if (collides(bridge)) return null;
         startIsle.addBridge(bridge);
         endIsle.addBridge(bridge);
         bridges.add(bridge);
-        return bridge;
+        if (!reversed)
+            return new Coordinate[]{
+                    new Coordinate(startIsle.getY(), startIsle.getX()),
+                    new Coordinate(endIsle.getY(), endIsle.getX())
+            };
+        else
+            return new Coordinate[]{
+                    new Coordinate(endIsle.getY(), endIsle.getX()),
+                    new Coordinate(startIsle.getY(), startIsle.getX())
+            };
     }
 
-    public Bridge removeBridge(int y, int x, Direction direction) {
+    public Coordinate[] removeBridge(int y, int x, Direction direction) {
         Isle startIsle = getIsle(y, x);
         if (startIsle == null) return null;
         Isle endIsle = findIsle(startIsle, direction);
         if (endIsle == null) return null;
         Bridge bridge = startIsle.getBridge(endIsle, true);
-        if (bridge == null)
+        boolean reversed = false;
+        if (bridge == null) {
             bridge = endIsle.getBridge(startIsle, true);
+            reversed = true;
+        }
         if (bridge == null) return null;
         startIsle.removeBridge(bridge);
         endIsle.removeBridge(bridge);
         bridges.remove(bridge);
-        return bridge;
+        if (!reversed)
+            return new Coordinate[]{
+                    new Coordinate(startIsle.getY(), startIsle.getX()),
+                    new Coordinate(endIsle.getY(), endIsle.getX())
+            };
+        else
+            return new Coordinate[]{
+                    new Coordinate(endIsle.getY(), endIsle.getX()),
+                    new Coordinate(startIsle.getY(), startIsle.getX())
+            };
     }
 
     /*Returns the nearest isle to the specified isle in the specified direction
@@ -105,10 +129,6 @@ public class GridController {
 
     public Isle getIsle(int y, int x) {
         return isles.stream().filter(isle -> isle.getY() == y && isle.getX() == x).findFirst().orElse(null);
-    }
-
-    public List<Isle> getIsles() {
-        return isles;
     }
 
     public List<Bridge> getBridges() {

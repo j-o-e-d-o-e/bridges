@@ -3,6 +3,7 @@ package net.joedoe.utils;
 public enum Direction {
     UP, LEFT, DOWN, RIGHT;
 
+    @SuppressWarnings("unused")
     public Direction getOpposite() {
         if (this == Direction.UP)
             return Direction.DOWN;
@@ -14,6 +15,7 @@ public enum Direction {
             return Direction.LEFT;
     }
 
+    @SuppressWarnings("unused")
     public Alignment convertToAlignment() {
         if (this == Direction.RIGHT || this == Direction.LEFT) {
             return Alignment.HORIZONTAL;

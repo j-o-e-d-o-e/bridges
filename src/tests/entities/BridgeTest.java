@@ -19,7 +19,7 @@ public class BridgeTest {
         Bridge bridge = new Bridge(startIsle, endIsle);
 
         //then
-        assertEquals(endIsle.getY(), bridge.getStart().getY());
-        assertEquals(endIsle.getX(), bridge.getStart().getX());
+        assertEquals(endIsle.getY(), bridge.getStartY());
+        assertEquals(endIsle.getX(), bridge.getStartX());
     }
 }

@@ -4,26 +4,66 @@ import net.joedoe.utils.Alignment;
 
 public class Bridge {
     private Coordinate start, end;
-    private int startRow, endRow, startColumn, endColumn;
     private Isle startIsle, endIsle;
     private Alignment alignment;
+
+    //TODO:
+    private int startRow, endRow, startColumn,endColumn;
 
     public Bridge(Isle startIsle, Isle endIsle) {
         this.startIsle = startIsle;
         this.endIsle = endIsle;
+        if (startIsle.getY() + startIsle.getX() < endIsle.getY() + endIsle.getX()) {
+            start = new Coordinate(startIsle.getY(), startIsle.getX());
+            end = new Coordinate(endIsle.getY(), endIsle.getX());
+        } else {
+            start = new Coordinate(endIsle.getY(), endIsle.getX());
+            end = new Coordinate(startIsle.getY(), startIsle.getX());
+        }
+        this.alignment = Alignment.getAlignment(startIsle.getY(), endIsle.getY(), startIsle.getX(), endIsle.getX());
+
+        //TODO:
         startRow = startIsle.getY();
         startColumn = startIsle.getX();
         endRow = endIsle.getY();
         endColumn = endIsle.getX();
-        if (startRow + startColumn < endRow + endColumn) {
-            start = new Coordinate(startRow, startColumn);
-            end = new Coordinate(endRow, endColumn);
-        } else {
-            start = new Coordinate(endRow, endColumn);
-            end = new Coordinate(startRow, startColumn);
-        }
-        this.alignment = Alignment.getAlignment(startRow, endRow, startColumn, endColumn);
     }
+
+    Isle getStartIsle() {
+        return startIsle;
+    }
+
+    Isle getEndIsle() {
+        return endIsle;
+    }
+
+    public int getStartY() {
+        return start.getY();
+    }
+
+    public int getStartX() {
+        return start.getX();
+    }
+
+    public int getEndY() {
+        return end.getY();
+    }
+
+    public int getEndX() {
+        return end.getX();
+    }
+
+    public Alignment getAlignment() {
+        return alignment;
+    }
+
+    @Override
+    public String toString() {
+        return "Bridge{" + "startIsle=" + startIsle + ", endIsle=" + endIsle + '}';
+    }
+
+
+    //TODO:
 
     public int getStartRow() {
         return startRow;
@@ -39,43 +79,5 @@ public class Bridge {
 
     public int getEndColumn() {
         return endColumn;
-    }
-
-    public Alignment getAlignment() {
-        return alignment;
-    }
-
-    Isle getStartIsle() {
-        return startIsle;
-    }
-
-    Isle getEndIsle() {
-        return endIsle;
-    }
-
-    public int getStartX() {
-        return start.getX();
-    }
-
-    public int getStartY() {
-        return start.getY();
-    }
-
-    public int getEndX() {
-        return end.getX();
-    }
-
-    public int getEndY() {
-        return end.getY();
-    }
-
-
-    @Override
-    public String toString() {
-        return "Bridge{" + "startIsle=" + startIsle + ", endIsle=" + endIsle + '}';
-    }
-
-    public Coordinate getStart() {
-        return start;
     }
 }

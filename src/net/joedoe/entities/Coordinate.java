@@ -1,24 +1,23 @@
 package net.joedoe.entities;
 
-public class Coordinate implements Comparable<Coordinate> {
-    public int row;
-    public int column;
+public class Coordinate {
+    private int y, x;
 
-    public Coordinate(int row, int column) {
-        this.row = row;
-        this.column = column;
+    Coordinate(int y, int x) {
+        this.y = y;
+        this.x = x;
     }
 
-    public int getRow() {
-        return row;
+    public int getY() {
+        return y;
     }
 
-    public int getColumn() {
-        return column;
+    public int getX() {
+        return x;
     }
 
     @Override
-    public int compareTo(Coordinate o) {
-        return 0;
+    public String toString() {
+        return "Coordinate{" + "y=" + y + ", x=" + x + '}';
     }
 }

@@ -37,7 +37,7 @@ class Grid extends GridPane {
 
     private void addIsles() {
         for (Isle isle : gridController.getIsles()) {
-            IslePane pane = new IslePane(isle.getRow(), isle.getColumn(), isle.getMissingBridgeCount());
+            IslePane pane = new IslePane(isle.getY(), isle.getX(), isle.getMissingBridgeCount());
             pane.setOnMouseClicked(e -> isleListener.handle(e));
             panes.add(pane);
             add(pane, pane.getY(), pane.getX());
@@ -47,11 +47,11 @@ class Grid extends GridPane {
     void addBridge(IslePane pane, Direction direction) {
         Bridge bridge = gridController.addBridge(pane.getX(), pane.getY(), direction);
         if (bridge != null) {
-            updatePanes();
             updateLines();
             BridgeLine line = new BridgeLine(bridge.getStartColumn(), bridge.getEndColumn(), bridge.getStartRow(), bridge.getEndRow(), bridge.getAlignment());
             lines.add(line);
             add(line, line.getX1(), line.getY1());
+            updatePanes();
             checkIfSolved();
         }
     }
@@ -59,7 +59,6 @@ class Grid extends GridPane {
     void removeBridge(IslePane pane, Direction direction) {
         Bridge bridge = gridController.removeBridge(pane.getX(), pane.getY(), direction);
         if (bridge != null) {
-            updatePanes();
             updateLines();
             BridgeLine line = lines.stream().filter(l -> l.getX1() == bridge.getStartColumn()
                     && l.getX2() == bridge.getEndColumn()
@@ -67,6 +66,8 @@ class Grid extends GridPane {
                     && l.getY2() == bridge.getEndRow()).findFirst().orElse(null);
             lines.remove(line);
             getChildren().remove(line);
+            updatePanes();
+            checkIfSolved();
         }
     }
 

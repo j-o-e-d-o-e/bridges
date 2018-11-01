@@ -11,13 +11,18 @@ public class Bridge {
     public Bridge(Isle startIsle, Isle endIsle) {
         this.startIsle = startIsle;
         this.endIsle = endIsle;
-        startRow = startIsle.getRow();
-        endRow = endIsle.getRow();
-        startColumn = startIsle.getColumn();
-        endColumn = endIsle.getColumn();
-        start = new Coordinate(startRow, startColumn);
-        end = new Coordinate(endRow, endColumn);
-        this.alignment = Alignment.calculcateAlignment(startRow, endRow, startColumn, endColumn);
+        startRow = startIsle.getY();
+        startColumn = startIsle.getX();
+        endRow = endIsle.getY();
+        endColumn = endIsle.getX();
+        if (startRow + startColumn < endRow + endColumn) {
+            start = new Coordinate(startRow, startColumn);
+            end = new Coordinate(endRow, endColumn);
+        } else {
+            start = new Coordinate(endRow, endColumn);
+            end = new Coordinate(startRow, startColumn);
+        }
+        this.alignment = Alignment.getAlignment(startRow, endRow, startColumn, endColumn);
     }
 
     public int getStartRow() {
@@ -40,16 +45,41 @@ public class Bridge {
         return alignment;
     }
 
-    public Isle getStartIsle() {
+    Isle getStartIsle() {
         return startIsle;
     }
 
-    public Isle getEndIsle() {
+    Isle getEndIsle() {
         return endIsle;
     }
+
+    public int getStartX() {
+        return start.getX();
+    }
+
+    public int getStartY() {
+        return start.getY();
+    }
+
+    public int getEndX() {
+        return end.getX();
+    }
+
+    public int getEndY() {
+        return end.getY();
+    }
+
 
     @Override
     public String toString() {
         return "Bridge{" + "startIsle=" + startIsle + ", endIsle=" + endIsle + '}';
+    }
+
+    public Coordinate getStart() {
+        return start;
+    }
+
+    public Coordinate getEnd() {
+        return end;
     }
 }

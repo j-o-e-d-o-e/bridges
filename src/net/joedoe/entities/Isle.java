@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Isle implements Comparable<Isle> {
-    private Coordinate coordinate;
-    private int row, column;
+    private Coordinate pos;
     private int bridgeCount;
     private List<Bridge> bridges = new ArrayList<>();
 
-    Isle(int row, int column, int bridgeCount) {
-        coordinate = new Coordinate(row, column);
-        this.row = row;
-        this.column = column;
+    public Isle(int y, int x, int bridgeCount) {
+        pos = new Coordinate(y, x);
         this.bridgeCount = bridgeCount;
     }
 
@@ -49,35 +46,31 @@ public class Isle implements Comparable<Isle> {
         return bridgeCount - bridges.size();
     }
 
-    public int getRow() {
-        return row;
+    public int getY() {
+        return pos.getY();
     }
 
-    public int getColumn() {
-        return column;
-    }
-
-    @Override
-    public String toString() {
-        return "Isle{" + "row=" + row + ", column=" + column + '}';
+    public int getX() {
+        return pos.getX();
     }
 
     @Override
     public int compareTo(Isle isle) {
-        if (isle.getRow() == row)
-            if (isle.getColumn() > column)
+        if (isle.getY() == getY())
+            if (isle.getX() > getX())
                 return 1;
             else
                 return -1;
-        else if (isle.getColumn() == column)
-            if (isle.getRow() < row)
+        else if (isle.getX() == getX())
+            if (isle.getY() < getY())
                 return 1;
             else
                 return -1;
         return 0;
     }
 
-    public Coordinate getCoordinate() {
-        return coordinate;
+    @Override
+    public String toString() {
+        return "Isle{" + "pos=" + pos + '}';
     }
 }

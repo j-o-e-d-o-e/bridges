@@ -61,9 +61,12 @@ public class MainFrame extends BorderPane {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
         hBox.setSpacing(CONTAINER_OFFSET);
+        hBox.setPrefWidth(100);
         Button solveBtn = new Button("Automatisch lösen");
+        solveBtn.setMinWidth(hBox.getPrefWidth());
         solveBtn.setOnAction(e -> status.setText(solveBtn.getText()));
         Button nextBtn = new Button("Nächste Brücke");
+        nextBtn.setMinWidth(hBox.getPrefWidth());
         nextBtn.setOnAction(e -> status.setText(nextBtn.getText()));
         hBox.getChildren().addAll(solveBtn, nextBtn);
         status = new Label("Das Rätsel ist noch nicht gelöst!");

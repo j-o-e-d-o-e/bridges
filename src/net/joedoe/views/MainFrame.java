@@ -7,10 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
@@ -31,6 +28,7 @@ public class MainFrame extends BorderPane {
         MenuBar menuBar = new MenuBar();
         Menu menu = new Menu("Datei");
         MenuItem newGame = new MenuItem("Neues Rätsel");
+        newGame.setOnAction(e -> createNewGame());
         MenuItem reset = new MenuItem("Rätsel neu starten");
         MenuItem loadGame = new MenuItem("Rätsel laden");
         MenuItem save = new MenuItem("Rätsel speichern");
@@ -71,6 +69,12 @@ public class MainFrame extends BorderPane {
         status = new Label("Das Rätsel ist noch nicht gelöst!");
         vBox.getChildren().addAll(checkBox, hBox, status);
         return vBox;
+    }
+
+    private void createNewGame() {
+        NewGame newGame = new NewGame();
+        newGame.initOwner(window);
+        newGame.show();
     }
 
     private void handle(StatusEvent e) {

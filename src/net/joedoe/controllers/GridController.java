@@ -16,6 +16,8 @@ import java.util.logging.Logger;
 public class GridController {
     private List<Isle> isles = new ArrayList<>();
     private List<Bridge> bridges = new ArrayList<>();
+    @SuppressWarnings({"FieldCanBeLocal", "unused"})
+    private List<Bridge> solution;
 
     private final static Logger LOGGER = Logger.getLogger(GridController.class.getName());
 
@@ -149,5 +151,14 @@ public class GridController {
         Isle isle = getIsle(y, x);
         if (isle == null) return 0;
         return isle.getBridgeCount();
+    }
+
+    void setIsles(List<Isle> isles) {
+        this.isles = isles;
+    }
+
+    @SuppressWarnings("unused")
+    void setSolution(List<Bridge> solution) {
+        this.solution = solution;
     }
 }

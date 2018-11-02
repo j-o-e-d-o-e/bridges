@@ -149,6 +149,7 @@ class NewGame extends Stage {
                 controller.createGame(width, height, isles);
             }
         }
+        close();
     }
 
     private void reset() {

@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import net.joedoe.controllers.GridController;
+import net.joedoe.entities.Isle;
 import net.joedoe.entities.Mocks;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
@@ -32,6 +33,13 @@ class Grid extends GridPane {
         gridController = new GridController();
         isleListener = new IsleListener(this);
         addIsles();
+    }
+
+    private void addIsles(List<Isle> isles){
+        panes.clear();
+        for(Isle isle : isles){
+//            IslePane pane = new IslePane(isle.get)
+        }
     }
 
     private void addIsles() {

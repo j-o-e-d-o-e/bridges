@@ -153,7 +153,8 @@ public class GridController {
         return isle.getBridgeCount();
     }
 
-    void setIsles(List<Isle> isles) {
+    public void setIsles(List<Isle> isles) {
+        isles.clear();
         this.isles = isles;
     }
 

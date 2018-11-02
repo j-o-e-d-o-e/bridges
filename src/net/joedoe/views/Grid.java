@@ -35,11 +35,16 @@ class Grid extends GridPane {
         addIsles();
     }
 
-    private void addIsles(List<Isle> isles){
+    void setIsles(List<Isle> isles) {
         panes.clear();
-        for(Isle isle : isles){
-//            IslePane pane = new IslePane(isle.get)
+        lines.clear();
+        for (Isle isle : isles) {
+            IslePane pane = new IslePane(isle.getY(), isle.getX(), isle.getBridgeCount());
+            pane.setOnMouseClicked(e -> isleListener.handle(e));
+            panes.add(pane);
+            add(pane, pane.getX(), pane.getY());
         }
+        gridController.setIsles(isles);
     }
 
     private void addIsles() {
@@ -47,12 +52,12 @@ class Grid extends GridPane {
             IslePane pane = new IslePane(isle[0], isle[1], isle[2]);
             pane.setOnMouseClicked(e -> isleListener.handle(e));
             panes.add(pane);
-            add(pane, pane.getY(), pane.getX());
+            add(pane, pane.getX(), pane.getY());
         }
     }
 
     void addBridge(IslePane pane, Direction direction) {
-        Coordinate[] coordinates = gridController.addBridge(pane.getX(), pane.getY(), direction);
+        Coordinate[] coordinates = gridController.addBridge(pane.getY(), pane.getX(), direction);
         if (coordinates != null) {
             updateLines();
             BridgeLine line = new BridgeLine(
@@ -68,7 +73,7 @@ class Grid extends GridPane {
     }
 
     void removeBridge(IslePane pane, Direction direction) {
-        Coordinate[] coordinates = gridController.removeBridge(pane.getX(), pane.getY(), direction);
+        Coordinate[] coordinates = gridController.removeBridge(pane.getY(), pane.getX(), direction);
         if (coordinates != null) {
             updateLines();
             BridgeLine line = lines.stream().filter(
@@ -85,7 +90,7 @@ class Grid extends GridPane {
 
     private void updatePanes() {
         for (IslePane pane : panes) {
-            int bridgeCount = gridController.getMissingBridgeCount(pane.getX(), pane.getY());
+            int bridgeCount = gridController.getMissingBridgeCount(pane.getY(), pane.getX());
             if (bridgeCount == 0)
                 pane.setColor(SOLVED_COLOR);
             else if (bridgeCount < 0)
@@ -93,7 +98,7 @@ class Grid extends GridPane {
             else
                 pane.setColor(STD_COLOR);
             if (!showMissingBridges)
-                bridgeCount = gridController.getBridgeCount(pane.getX(), pane.getY());
+                bridgeCount = gridController.getBridgeCount(pane.getY(), pane.getX());
             pane.setText(Integer.toString(bridgeCount));
         }
     }
@@ -115,14 +120,21 @@ class Grid extends GridPane {
         for (IslePane pane : panes) {
             int bridgeCount;
             if (showMissingBridges)
-                bridgeCount = gridController.getMissingBridgeCount(pane.getX(), pane.getY());
+                bridgeCount = gridController.getMissingBridgeCount(pane.getY(), pane.getX());
             else
-                bridgeCount = gridController.getBridgeCount(pane.getX(), pane.getY());
+                bridgeCount = gridController.getBridgeCount(pane.getY(), pane.getX());
             pane.setText(Integer.toString(bridgeCount));
         }
     }
 
     void setStatusListener(EventHandler<StatusEvent> statusListener) {
         this.statusListener = statusListener;
+    }
+
+    void setSize(int width, int height) {
+        getChildren().removeAll(panes);
+        getChildren().removeAll(lines);
+        IntStream.range(0, height).mapToObj(i -> new RowConstraints(ONE_TILE)).forEach(row -> getRowConstraints().add(row));
+        IntStream.range(0, width).mapToObj(i -> new ColumnConstraints(ONE_TILE)).forEachOrdered(column -> getColumnConstraints().add(column));
     }
 }

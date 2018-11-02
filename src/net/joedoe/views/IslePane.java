@@ -9,13 +9,13 @@ import static net.joedoe.utils.GameInfo.CIRCLE_RADIUS;
 import static net.joedoe.utils.GameInfo.STD_COLOR;
 
 public class IslePane extends StackPane {
-    private int x, y;
+    private int y, x;
     private Circle circle;
     private Label label;
 
-    IslePane(int x, int y, int bridgeCount) {
-        this.x = x;
+    IslePane(int y, int x, int bridgeCount) {
         this.y = y;
+        this.x = x;
         circle = new Circle(CIRCLE_RADIUS, STD_COLOR);
         label = new Label(Integer.toString(bridgeCount));
         getChildren().addAll(circle, label);
@@ -29,16 +29,16 @@ public class IslePane extends StackPane {
         circle.setFill(color);
     }
 
-    int getX() {
-        return x;
-    }
-
     int getY() {
         return y;
     }
 
+    int getX() {
+        return x;
+    }
+
     @Override
     public String toString() {
-        return "IslePane{" + "x=" + x + ", y=" + y + '}';
+        return "IslePane{" + "y=" + y + ", x=" + x + '}';
     }
 }

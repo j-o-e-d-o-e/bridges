@@ -14,9 +14,11 @@ public class NewGameController {
     private static final int MAX = 25;
     private static final int MIN = 2;
     private int rows, columns, isleCount;
+    @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private GridController gridController;
     private List<Integer> indices;
     private List<Isle> isles = new ArrayList<>();
+    @SuppressWarnings("unused")
     private List<Bridge> bridges = new ArrayList<>();
 
     private final static Logger LOGGER = Logger.getLogger(NewGameController.class.getName());
@@ -26,31 +28,31 @@ public class NewGameController {
         LOGGER.setLevel(Level.OFF);
     }
 
-    public void createGame() {
+    public List<Isle> createGame() {
         LOGGER.info("Create New Game: AUTO");
         rows = (int) (Math.random() * MAX) + MIN;
         columns = (int) (Math.random() * MAX) + MIN;
         isleCount = (int) (Math.random() * (0.2 * rows * columns)) + MIN;
-        generateGame();
+        return generateGame();
     }
 
-    public void createGame(int width, int height) {
+    public List<Isle> createGame(int width, int height) {
         LOGGER.info("Create New Game: WIDTH + HEIGHT");
         this.rows = width;
         this.columns = height;
         this.isleCount = (int) (Math.random() * (0.2 * rows * columns)) + MIN;
-        generateGame();
+        return generateGame();
     }
 
-    public void createGame(int width, int height, int isles) {
+    public List<Isle> createGame(int width, int height, int isles) {
         LOGGER.info("Create New Game: WIDTH + HEIGHT + ISLES");
         this.rows = width;
         this.columns = height;
         this.isleCount = isles;
-        generateGame();
+        return generateGame();
     }
 
-    public void generateGame() {
+    public List<Isle> generateGame() {
         LOGGER.info("Generate new Game");
         indices = IntStream.range(0, rows * columns).boxed().collect(Collectors.toList());
         while (isleCount > 0) {
@@ -60,7 +62,7 @@ public class NewGameController {
             //TODO
 //            generateBridge();
         }
-        gridController.setIsles(isles);
+        return isles;
 //        gridController.setSolution(bridges);
     }
 
@@ -81,6 +83,7 @@ public class NewGameController {
         LOGGER.info("Generated Isle: " + isle.toString());
     }
 
+    @SuppressWarnings("unused")
     private void generateBridge() {
     }
 

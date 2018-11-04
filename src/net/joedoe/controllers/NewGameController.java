@@ -32,16 +32,18 @@ public class NewGameController {
     }
 
     public List<Isle> createGame() {
-        height = (int) (Math.random() * MAX) + MIN;
-        width = (int) (Math.random() * MAX) + MIN;
-        isleCount = (int) (Math.random() * (0.2 * height * width)) + MIN;
+        height = random.nextInt((MAX - MIN) + 1) + MIN;
+        width = random.nextInt((MAX - MIN) + 1) + MIN;
+        int maxIsles = (int) (0.2 * height * width);
+        isleCount = random.nextInt((maxIsles - MIN) + 1) + MIN;
         return generateGame();
     }
 
     public List<Isle> createGame(int height, int width) {
         this.height = height;
         this.width = width;
-        this.isleCount = (int) (Math.random() * (0.2 * height * width)) + MIN;
+        int maxIsles = (int) (0.2 * height * width);
+        isleCount = random.nextInt((maxIsles - MIN) + 1) + MIN;
         return generateGame();
     }
 
@@ -54,9 +56,8 @@ public class NewGameController {
 
     public List<Isle> generateGame() {
         LOGGER.info("Height: " + height + " Width: " + width + " Isles: " + isleCount);
-        indices = IntStream.range(0, height * width).boxed().collect(Collectors.toList());
         int count = isleCount - 1;
-        generateIsle();
+        isles.add(generateInitialIsle());
         while (count > 0) {
             Isle startIsle = getRandomIsle();
             LOGGER.info("START ISLE: " + startIsle.toString());
@@ -95,71 +96,87 @@ public class NewGameController {
     }
 
     private Isle getRandomIsle() {
-        int index = (int) (Math.random() * isles.size());
+        int index = random.nextInt(isles.size());
         return isles.get(index);
     }
 
     public Direction getRandomDirection(int y, int x) {
         List<Direction> possibleDirections = new ArrayList<>();
-        if (y > 1)
+        if (y >= 2)
             possibleDirections.add(Direction.UP);
-        if (x > 1)
+        if (x >= 2)
             possibleDirections.add(Direction.LEFT);
-        if (y < height - 1)
+        if (y <= height - 2)
             possibleDirections.add(Direction.DOWN);
-        if (x < width - 1)
+        if (x <= width - 2)
             possibleDirections.add(Direction.RIGHT);
-        int index = (int) (Math.random() * possibleDirections.size());
+        int index = random.nextInt(possibleDirections.size());
         return possibleDirections.get(index);
     }
 
     private int getRandomDistance(Isle isle, Direction direction) {
-        if (direction == Direction.UP)
-            return (int) (Math.random() * (isle.getY() - 2));
-        else if (direction == Direction.LEFT)
-            return (int) (Math.random() * (isle.getX() - 2));
-        else if (direction == Direction.DOWN)
-            return (int) (Math.random() * height) + isle.getY() + 2;
-        else
-            return (int) (Math.random() * width) + isle.getX() + 2;
+        int min = 2;
+        int max = 0;
+        if (direction == Direction.UP) {
+            max = isle.getY();
+        }
+        if (direction == Direction.LEFT) {
+            max = isle.getX();
+        }
+        if (direction == Direction.DOWN) {
+            max = height - isle.getY();
+        }
+        if (direction == Direction.RIGHT) {
+            max = width - isle.getX();
+        }
+        return random.nextInt((max - min) + 1) + min;
     }
 
-    private Isle createIsle(Isle startIsle, Direction direction, int distance) {
+    public Isle createIsle(Isle startIsle, Direction direction, int distance) {
         int y = 0;
         int x = 0;
-        if (direction == Direction.UP)
+        if (direction == Direction.UP) {
             y = startIsle.getY() - distance;
-        if (direction == Direction.LEFT)
+            x = startIsle.getX();
+        }
+        if (direction == Direction.LEFT) {
+            y = startIsle.getY();
             x = startIsle.getX() - distance;
-        if (direction == Direction.DOWN)
+        }
+        if (direction == Direction.DOWN) {
             y = startIsle.getY() + distance;
-        else
+            x = startIsle.getX();
+        }
+        if (direction == Direction.RIGHT) {
+            y = startIsle.getY();
             x = startIsle.getX() + distance;
+        }
         int index = y + x;
-        if (!indices.contains(index)) return null;
+        if (!indices.contains(index)) {
+            System.out.println("ISLES SIZE: " + isles.size());
+            return null;
+        }
         indices.remove(new Integer(index));
-        indices.remove(new Integer(index + height));
+        indices.remove(new Integer(index + width));
         indices.remove(new Integer(index + 1));
-        indices.remove(new Integer(index - height));
+        indices.remove(new Integer(index - width));
         indices.remove(new Integer(index - 1));
         return new Isle(y, x, 0);
 
     }
 
-    private void generateIsle() {
-        int rand = (int) (Math.random() * indices.size());
+    public Isle generateInitialIsle() {
+        indices = IntStream.range(0, height * width).boxed().collect(Collectors.toList());
+        int rand = random.nextInt(indices.size());
         int index = indices.get(rand);
         indices.remove(new Integer(index));
-        indices.remove(new Integer(index + height));
+        indices.remove(new Integer(index + width));
         indices.remove(new Integer(index + 1));
-        indices.remove(new Integer(index - height));
+        indices.remove(new Integer(index - width));
         indices.remove(new Integer(index - 1));
-        int y = index % height;
-        int x = index / height;
-        Isle isle = new Isle(y, x, 0);
-        isles.add(isle);
-//        LOGGER.info("Generated Index: " + index);
-//        LOGGER.info("Generated Isle: " + isle.toString());
+        int y = index / height;
+        int x = index % height;
+        return new Isle(y, x, 0);
     }
 
     @SuppressWarnings("unused")
@@ -196,5 +213,9 @@ public class NewGameController {
 
     public int getIsleCount() {
         return isleCount;
+    }
+
+    public void setIndices(List<Integer> indices) {
+        this.indices = indices;
     }
 }

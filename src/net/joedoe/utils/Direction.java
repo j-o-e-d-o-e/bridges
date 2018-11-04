@@ -1,5 +1,8 @@
 package net.joedoe.utils;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum Direction {
     UP, LEFT, DOWN, RIGHT;
 

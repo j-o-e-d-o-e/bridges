@@ -35,16 +35,15 @@ class Grid extends GridPane {
         addIsles();
     }
 
-    void setIsles(List<Isle> isles) {
-        panes.clear();
-        lines.clear();
-        for (Isle isle : isles) {
-            IslePane pane = new IslePane(isle.getY(), isle.getX(), isle.getBridgeCount());
-            pane.setOnMouseClicked(e -> isleListener.handle(e));
-            panes.add(pane);
-            add(pane, pane.getX(), pane.getY());
-        }
-        gridController.setIsles(isles);
+    Grid(int height, int width, List<Isle> isles) {
+        setGridLinesVisible(true);
+        setAlignment(Pos.CENTER);
+        setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        IntStream.range(0, height).mapToObj(i -> new RowConstraints(ONE_TILE)).forEach(row -> getRowConstraints().add(row));
+        IntStream.range(0, width).mapToObj(i -> new ColumnConstraints(ONE_TILE)).forEachOrdered(column -> getColumnConstraints().add(column));
+        gridController = new GridController();
+        isleListener = new IsleListener(this);
+        addIsles(isles);
     }
 
     private void addIsles() {
@@ -54,6 +53,17 @@ class Grid extends GridPane {
             panes.add(pane);
             add(pane, pane.getX(), pane.getY());
         }
+    }
+
+    private void addIsles(List<Isle> isles) {
+        isles.forEach(isle -> System.out.println(isle.toString()));
+        for (Isle isle : isles) {
+            IslePane pane = new IslePane(isle.getY(), isle.getX(), isle.getBridgeCount());
+            pane.setOnMouseClicked(e -> isleListener.handle(e));
+            panes.add(pane);
+            add(pane, pane.getX(), pane.getY());
+        }
+        gridController.setIsles(isles);
     }
 
     void addBridge(IslePane pane, Direction direction) {
@@ -129,12 +139,5 @@ class Grid extends GridPane {
 
     void setStatusListener(EventHandler<StatusEvent> statusListener) {
         this.statusListener = statusListener;
-    }
-
-    void setSize(int width, int height) {
-        getChildren().removeAll(panes);
-        getChildren().removeAll(lines);
-        IntStream.range(0, height).mapToObj(i -> new RowConstraints(ONE_TILE)).forEach(row -> getRowConstraints().add(row));
-        IntStream.range(0, width).mapToObj(i -> new ColumnConstraints(ONE_TILE)).forEachOrdered(column -> getColumnConstraints().add(column));
     }
 }

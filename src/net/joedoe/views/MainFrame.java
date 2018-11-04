@@ -7,14 +7,16 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 
 public class MainFrame extends BorderPane {
     private Stage window;
-    private Grid grid;
+    private Board board;
     private Label status;
 
     public MainFrame(Stage window) {
@@ -42,13 +44,8 @@ public class MainFrame extends BorderPane {
     }
 
     private Node createBoard() {
-        //outerPane for padding only
-        StackPane outerPane = new StackPane();
-        outerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, 0, CONTAINER_OFFSET));
-        grid = new Grid();
-        grid.setStatusListener(this::handle);
-        outerPane.getChildren().add(grid);
-        return outerPane;
+        board = new Board(this::handle);
+        return board;
     }
 
     private Node createControls() {
@@ -57,7 +54,7 @@ public class MainFrame extends BorderPane {
         vBox.setSpacing(CONTAINER_OFFSET);
         CheckBox checkBox = new CheckBox("Anzahl fehlender Brücken anzeigen");
         checkBox.setSelected(true);
-        checkBox.setOnAction(e -> grid.setShowMissingBridges(checkBox.isSelected()));
+        checkBox.setOnAction(e -> board.setShowMissingBridges(checkBox.isSelected()));
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
         hBox.setSpacing(CONTAINER_OFFSET);
@@ -75,7 +72,7 @@ public class MainFrame extends BorderPane {
     }
 
     private void createNewGame() {
-        NewGame newGame = new NewGame(grid);
+        NewGame newGame = new NewGame(board);
         newGame.initOwner(window);
         newGame.show();
     }

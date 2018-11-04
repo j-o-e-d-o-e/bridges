@@ -15,15 +15,15 @@ import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 import static net.joedoe.utils.GameInfo.ONE_TILE;
 
 class NewGame extends Stage {
-    private Grid grid;
+    private Board board;
     private NewGameController controller;
     private RadioButton autoBtn;
     private Label widthLabel, heightLabel, islesLabel;
     private TextField widthTxt, heightTxt, islesTxt;
     private CheckBox checkBox;
 
-    NewGame(Grid grid) {
-        this.grid = grid;
+    NewGame(Board board) {
+        this.board = board;
         controller = new NewGameController();
         setTitle("Neues Rätsel");
         Scene scene = new Scene(setLayout(), 400, 350);
@@ -124,28 +124,25 @@ class NewGame extends Stage {
 
     private void handleInput() {
         List<Isle> generatedIsles;
-        int width = 0;
-        int height = 0;
-        if (autoBtn.isSelected())
+        int width, height, isles;
+        if (autoBtn.isSelected()) {
             generatedIsles = controller.createGame();
-            //TODO: get Width and Height from controller
-        else {
+            board.setGrid(controller.getHeight(), controller.getWidth(), generatedIsles);
+        } else {
             try {
                 width = Integer.parseInt(widthTxt.getText());
                 height = Integer.parseInt(heightTxt.getText());
                 if (width < 4 || width > 25 || height < 4 || height > 25) {
                     throw new NumberFormatException();
                 }
-                //TODO: get generated width and height from controller (also for auto mode) and give it to grid
-                //TODO: check that width and height have the correct size
             } catch (NumberFormatException e) {
                 reset();
                 return;
             }
-            if (!checkBox.isSelected())
-                generatedIsles = controller.createGame(width, height);
-            else {
-                int isles;
+            if (!checkBox.isSelected()) {
+                generatedIsles = controller.createGame(height, width);
+                board.setGrid(height, width, generatedIsles);
+            } else {
                 try {
                     isles = Integer.parseInt(islesTxt.getText());
                     if (isles < 2 || isles > 0.2 * width * height) {
@@ -155,11 +152,10 @@ class NewGame extends Stage {
                     reset();
                     return;
                 }
-                generatedIsles = controller.createGame(width, height, isles);
+                generatedIsles = controller.createGame(height, width, isles);
+                board.setGrid(height, width, generatedIsles);
             }
         }
-        grid.setSize(width, height);
-        grid.setIsles(generatedIsles);
         close();
     }
 

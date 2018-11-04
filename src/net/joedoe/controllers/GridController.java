@@ -23,7 +23,7 @@ public class GridController {
 
     public GridController() {
         addIsles();
-        LOGGER.setLevel(Level.OFF);
+//        LOGGER.setLevel(Level.OFF);
     }
 
     private void addIsles() {
@@ -154,7 +154,6 @@ public class GridController {
     }
 
     public void setIsles(List<Isle> isles) {
-        isles.clear();
         this.isles = isles;
     }
 

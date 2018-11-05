@@ -54,6 +54,9 @@ public class NewGameController {
         return generateGame();
     }
 
+    //todo: use more Collections.shuffle() instead of random.nextInt()
+    //todo: to make program flow more deterministic
+
     public List<Isle> generateGame() {
         LOGGER.info("Height: " + height + " Width: " + width + " Isles: " + isleCount);
         int count = isleCount - 1;

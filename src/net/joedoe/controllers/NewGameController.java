@@ -40,16 +40,16 @@ public class NewGameController {
     }
 
     public List<Isle> createGame(int height, int width) {
-        this.height = height;
-        this.width = width;
+        this.height = height - 1;
+        this.width = width - 1;
         int maxIsles = (int) (0.2 * height * width);
         isleCount = random.nextInt((maxIsles - MIN) + 1) + MIN;
         return generateGame();
     }
 
     public List<Isle> createGame(int height, int width, int isleCount) {
-        this.height = height;
-        this.width = width;
+        this.height = height - 1;
+        this.width = width - 1;
         this.isleCount = isleCount;
         return generateGame();
     }
@@ -67,35 +67,32 @@ public class NewGameController {
             if (endIsle == null) continue;
             isles.add(endIsle);
             count--;
+            addBridge(startIsle, endIsle);
             if (random.nextBoolean()) {
-                Bridge bridge = new Bridge(startIsle, endIsle);
-                bridges.add(bridge);
-                startIsle.addBridge(bridge);
-                endIsle.addBridge(bridge);
-                bridge = new Bridge(endIsle, startIsle);
-                bridges.add(bridge);
-                startIsle.addBridge(bridge);
-                endIsle.addBridge(bridge);
-                startIsle.increaseBridgeCount();
-                startIsle.increaseBridgeCount();
-                endIsle.increaseBridgeCount();
-                endIsle.increaseBridgeCount();
-            } else {
-                Bridge bridge = new Bridge(startIsle, endIsle);
-                bridges.add(bridge);
-                startIsle.addBridge(bridge);
-                endIsle.addBridge(bridge);
-                startIsle.increaseBridgeCount();
-                endIsle.increaseBridgeCount();
+                addBridge(endIsle, startIsle);
             }
         }
-
         Collections.sort(isles);
         return isles;
 //        gridController.setSolution(bridges);
     }
 
+    public Isle generateInitialIsle() {
+        indices = IntStream.range(0, height * width).boxed().collect(Collectors.toList());
+        int rand = random.nextInt(indices.size());
+        int index = indices.get(rand);
+        indices.remove(new Integer(index));
+        indices.remove(new Integer(index + width));
+        indices.remove(new Integer(index + 1));
+        indices.remove(new Integer(index - width));
+        indices.remove(new Integer(index - 1));
+        int y = index / height;
+        int x = index % height;
+        return new Isle(y, x, 0);
+    }
+
     private Isle getRandomIsle() {
+//        Collections.shuffle(isles);
         int index = random.nextInt(isles.size());
         return isles.get(index);
     }
@@ -162,25 +159,15 @@ public class NewGameController {
         indices.remove(new Integer(index - width));
         indices.remove(new Integer(index - 1));
         return new Isle(y, x, 0);
-
     }
 
-    public Isle generateInitialIsle() {
-        indices = IntStream.range(0, height * width).boxed().collect(Collectors.toList());
-        int rand = random.nextInt(indices.size());
-        int index = indices.get(rand);
-        indices.remove(new Integer(index));
-        indices.remove(new Integer(index + width));
-        indices.remove(new Integer(index + 1));
-        indices.remove(new Integer(index - width));
-        indices.remove(new Integer(index - 1));
-        int y = index / height;
-        int x = index % height;
-        return new Isle(y, x, 0);
-    }
-
-    @SuppressWarnings("unused")
-    private void generateBridge() {
+    private void addBridge(Isle startIsle, Isle endIsle) {
+        Bridge bridge = new Bridge(startIsle, endIsle);
+        bridges.add(bridge);
+        startIsle.addBridge(bridge);
+        startIsle.increaseBridgeCount();
+        endIsle.addBridge(bridge);
+        endIsle.increaseBridgeCount();
     }
 
     public void setHeight(int height) {

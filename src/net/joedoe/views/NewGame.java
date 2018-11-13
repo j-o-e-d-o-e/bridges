@@ -10,6 +10,7 @@ import net.joedoe.controllers.NewGameController;
 import net.joedoe.entities.Isle;
 
 import java.util.List;
+import java.util.Optional;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 import static net.joedoe.utils.GameInfo.ONE_TILE;
@@ -129,13 +130,15 @@ class NewGame extends Stage {
             generatedIsles = controller.createGame();
             board.setGrid(controller.getHeight(), controller.getWidth(), generatedIsles);
         } else {
-            try {
-                width = Integer.parseInt(widthTxt.getText());
-                height = Integer.parseInt(heightTxt.getText());
-                if (width < 4 || width > 25 || height < 4 || height > 25) {
-                    throw new NumberFormatException();
-                }
-            } catch (NumberFormatException e) {
+            width = Integer.parseInt(widthTxt.getText());
+            height = Integer.parseInt(heightTxt.getText());
+            if (width < 4 || width > 25 || height < 4 || height > 25) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Ungültige Eingabe");
+                alert.setHeaderText("Breite und Höhe müssen größer 4 und kleiner 25 sein.");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK)
+                    alert.close();
                 reset();
                 return;
             }
@@ -143,12 +146,14 @@ class NewGame extends Stage {
                 generatedIsles = controller.createGame(height, width);
                 board.setGrid(height, width, generatedIsles);
             } else {
-                try {
-                    isles = Integer.parseInt(islesTxt.getText());
-                    if (isles < 2 || isles > 0.2 * width * height) {
-                        throw new NumberFormatException();
-                    }
-                } catch (NumberFormatException e) {
+                isles = Integer.parseInt(islesTxt.getText());
+                if (isles < 2 || isles > 0.2 * width * height) {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Ungültige Eingabe");
+                    alert.setHeaderText("Inselanzahl muss größer 2 und kleiner Breite * Höhe * 0.2 sein.");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK)
+                        alert.close();
                     reset();
                     return;
                 }

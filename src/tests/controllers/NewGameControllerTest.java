@@ -35,8 +35,8 @@ public class NewGameControllerTest {
     @Test
     public void generateGame() {
         //given
-        int height = 4;
-        int width = 8;
+        int height = 5;
+        int width = 5;
         int isleCount = (int) (0.2 * height * width);
         controller.setHeight(height);
         controller.setWidth(width);

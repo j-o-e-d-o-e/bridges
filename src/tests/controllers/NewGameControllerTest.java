@@ -41,54 +41,6 @@ public class NewGameControllerTest {
         controller.setHeight(height);
         controller.setWidth(width);
         controller.setIsleCount(isleCount);
-
-        //when
-        List<Isle> isles = controller.generateGame();
-
-        //then
-        assertEquals(isleCount, isles.size());
-        System.out.println("ISLES:");
-        isles.forEach(isle -> System.out.println(isle.toString()));
-        System.out.println("BRIDGES:");
-        controller.getBridges().forEach(bridge -> System.out.println(bridge.toString()));
-
-    }
-
-    @Test
-    public void testTest(){
-        int rand = (int) (Math.random() * 4) + 2 + 2;
-        System.out.println(rand);
-    }
-
-    @Test
-    @Ignore
-    public void getRandomDirection() {
-        //given
-        int y = 5;
-        int x = 5;
-        controller.setHeight(6);
-        controller.setWidth(6);
-
-        //when
-        Direction direction = controller.getRandomDirection(y, x);
-
-        //then
-        System.out.println("\n" + direction.toString());
-    }
-
-    @Test
-    public void generateInitialIsle() {
-        //given
-        int height = 8;
-        int width = 4;
-        controller.setHeight(height);
-        controller.setWidth(width);
-
-        //when
-        Isle isle = controller.generateInitialIsle();
-
-        //then
-        System.out.println(isle.toString());
     }
 
     @Test
@@ -100,16 +52,5 @@ public class NewGameControllerTest {
         controller.setWidth(width);
         List<Integer> indices = IntStream.range(0, height * width).boxed().collect(Collectors.toList());
         controller.setIndices(indices);
-
-        Isle isle = new Isle(3, 5, 0);
-        Direction direction = Direction.UP;
-        int distance = 2;
-
-        //when
-        Isle res = controller.createIsle(isle, direction, distance);
-
-        //then
-        System.out.println(res.toString());
-
     }
 }

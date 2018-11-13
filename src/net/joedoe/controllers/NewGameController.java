@@ -54,70 +54,20 @@ public class NewGameController {
         return generateGame();
     }
 
-    //todo: use more Collections.shuffle() instead of random.nextInt()
-    //todo: to make program flow more deterministic
-
-//    public List<Isle> generateGame() {
-//        LOGGER.info("Height: " + height + " Width: " + width + " Isles: " + isleCount);
-//        int count = isleCount - 1;
-//        isles.add(generateInitialIsle());
-//        while (count > 0) {
-//            Isle startIsle = getRandomIsle();
-//            LOGGER.info("START ISLE: " + startIsle.toString());
-//            Direction direction = getRandomDirection(startIsle.getY(), startIsle.getX());
-//            int distance = getRandomDistance(startIsle, direction);
-//            Isle endIsle = createIsle(startIsle, direction, distance);
-//            if (endIsle == null) continue;
-//            isles.add(endIsle);
-//            count--;
-//            addBridge(startIsle, endIsle);
-//            if (random.nextBoolean()) {
-//                addBridge(endIsle, startIsle);
-//            }
-//        }
-//        Collections.sort(isles);
-//        return isles;
-////        gridController.setSolution(bridges);
-//    }
-
-//    public List<Isle> generateGame() {
-//        LOGGER.info("Height: " + height + " Width: " + width + " Isles: " + isleCount);
-//        int count = isleCount - 1;
-//        isles.add(generateInitialIsle());
-//        while (count > 0) {
-//            Isle startIsle = getRandomIsle();
-//            LOGGER.info("START ISLE: " + startIsle.toString());
-//            Isle endIsle = getEndIsle(startIsle);
-//            if (endIsle == null) continue;
-//            isles.add(endIsle);
-//            count--;
-//            addBridge(startIsle, endIsle);
-//            if (random.nextBoolean()) {
-//                addBridge(endIsle, startIsle);
-//            }
-//        }
-//        Collections.sort(isles);
-//        return isles;
-////        gridController.setSolution(bridges);
-//    }
-
+    @SuppressWarnings("WeakerAccess")
     public List<Isle> generateGame() {
         LOGGER.info("Height: " + height + " Width: " + width + " Isles: " + isleCount);
-        int count = isleCount - 1;
-        isles.add(generateInitialIsle());
-        while (count > 0) {
+        indices = IntStream.range(0, height * width).boxed().collect(Collectors.toList());
+        int rand = random.nextInt(indices.size());
+        addIsle(indices.get(rand));
+        while (isleCount > 0) {
             Collections.shuffle(isles);
-            Isle endIsle;
             for (Isle startIsle : isles) {
                 LOGGER.info("START ISLE: " + startIsle.toString());
-                endIsle = getEndIsle(startIsle);
+                Isle endIsle = getEndIsle(startIsle);
+                addIsle(endIsle.getY() + endIsle.getX());
                 if (endIsle != null) {
-                    isles.add(endIsle);
-                    count--;
-                    addBridge(startIsle, endIsle);
-                    if (random.nextBoolean()) {
-                        addBridge(endIsle, startIsle);
-                    }
+                    addBridge(startIsle, endIsle, random.nextBoolean());
                     break;
                 }
             }
@@ -127,32 +77,9 @@ public class NewGameController {
 //        gridController.setSolution(bridges);
     }
 
-
-    @SuppressWarnings({"unused", "Duplicates"})
     private Isle getEndIsle(Isle startIsle) {
-        List<Direction> possibleDirections = new ArrayList<>();
-        if (startIsle.getY() >= 2)
-            possibleDirections.add(Direction.UP);
-        if (startIsle.getX() >= 2)
-            possibleDirections.add(Direction.LEFT);
-        if (startIsle.getY() <= height - 2)
-            possibleDirections.add(Direction.DOWN);
-        if (startIsle.getX() <= width - 2)
-            possibleDirections.add(Direction.RIGHT);
-        Collections.shuffle(possibleDirections);
-        for (Direction direction : possibleDirections) {
-            int max = 0;
-            if (direction == Direction.UP)
-                max = startIsle.getY();
-            if (direction == Direction.LEFT)
-                max = startIsle.getX();
-            if (direction == Direction.DOWN)
-                max = height - startIsle.getY();
-            if (direction == Direction.RIGHT)
-                max = width - startIsle.getX();
-            List<Integer> distances = IntStream.range(2, max).boxed().collect(Collectors.toList());
-            Collections.shuffle(distances);
-            for (int distance : distances) {
+        for (Direction direction : getDirections(startIsle)) {
+            for (int distance : getDistances(startIsle, direction)) {
                 int y = 0;
                 int x = 0;
                 if (direction == Direction.UP) {
@@ -173,110 +100,63 @@ public class NewGameController {
                 }
                 int index = y + x;
                 if (indices.contains(index)) {
-                    System.out.println("ISLES SIZE: " + isles.size());
-                    indices.remove(new Integer(index));
-                    indices.remove(new Integer(index + width));
-                    indices.remove(new Integer(index + 1));
-                    indices.remove(new Integer(index - width));
-                    indices.remove(new Integer(index - 1));
-                    return new Isle(y, x, 0);
+                    return new Isle(index / height, index % height, 0);
                 }
             }
         }
         return null;
     }
 
-    public Isle generateInitialIsle() {
-        indices = IntStream.range(0, height * width).boxed().collect(Collectors.toList());
-        int rand = random.nextInt(indices.size());
-        int index = indices.get(rand);
-        indices.remove(new Integer(index));
-        indices.remove(new Integer(index + width));
-        indices.remove(new Integer(index + 1));
-        indices.remove(new Integer(index - width));
-        indices.remove(new Integer(index - 1));
-        int y = index / height;
-        int x = index % height;
-        return new Isle(y, x, 0);
+    private List<Direction> getDirections(Isle startIsle) {
+        List<Direction> directions = new ArrayList<>();
+        if (startIsle.getY() > 1)
+            directions.add(Direction.UP);
+        if (startIsle.getX() > 1)
+            directions.add(Direction.LEFT);
+        if (startIsle.getY() < height - 1)
+            directions.add(Direction.DOWN);
+        if (startIsle.getX() < width - 1)
+            directions.add(Direction.RIGHT);
+        Collections.shuffle(directions);
+        return directions;
     }
 
-    private Isle getRandomIsle() {
-//        Collections.shuffle(isles);
-        int index = random.nextInt(isles.size());
-        return isles.get(index);
-    }
-
-    public Direction getRandomDirection(int y, int x) {
-        List<Direction> possibleDirections = new ArrayList<>();
-        if (y >= 2)
-            possibleDirections.add(Direction.UP);
-        if (x >= 2)
-            possibleDirections.add(Direction.LEFT);
-        if (y <= height - 2)
-            possibleDirections.add(Direction.DOWN);
-        if (x <= width - 2)
-            possibleDirections.add(Direction.RIGHT);
-        int index = random.nextInt(possibleDirections.size());
-        return possibleDirections.get(index);
-    }
-
-    private int getRandomDistance(Isle isle, Direction direction) {
-        int min = 2;
+    private List<Integer> getDistances(Isle startIsle, Direction direction) {
         int max = 0;
-        if (direction == Direction.UP) {
-            max = isle.getY();
-        }
-        if (direction == Direction.LEFT) {
-            max = isle.getX();
-        }
-        if (direction == Direction.DOWN) {
-            max = height - isle.getY();
-        }
-        if (direction == Direction.RIGHT) {
-            max = width - isle.getX();
-        }
-        return random.nextInt((max - min) + 1) + min;
+        if (direction == Direction.UP)
+            max = startIsle.getY();
+        if (direction == Direction.LEFT)
+            max = startIsle.getX();
+        if (direction == Direction.DOWN)
+            max = height - startIsle.getY();
+        if (direction == Direction.RIGHT)
+            max = width - startIsle.getX();
+        List<Integer> distances = IntStream.range(2, max).boxed().collect(Collectors.toList());
+        Collections.shuffle(distances);
+        return distances;
     }
 
-    public Isle createIsle(Isle startIsle, Direction direction, int distance) {
-        int y = 0;
-        int x = 0;
-        if (direction == Direction.UP) {
-            y = startIsle.getY() - distance;
-            x = startIsle.getX();
-        }
-        if (direction == Direction.LEFT) {
-            y = startIsle.getY();
-            x = startIsle.getX() - distance;
-        }
-        if (direction == Direction.DOWN) {
-            y = startIsle.getY() + distance;
-            x = startIsle.getX();
-        }
-        if (direction == Direction.RIGHT) {
-            y = startIsle.getY();
-            x = startIsle.getX() + distance;
-        }
-        int index = y + x;
-        if (!indices.contains(index)) {
-            System.out.println("ISLES SIZE: " + isles.size());
-            return null;
-        }
+    private void addIsle(int index) {
+        LOGGER.info("ISLES SIZE: " + isles.size());
         indices.remove(new Integer(index));
         indices.remove(new Integer(index + width));
         indices.remove(new Integer(index + 1));
         indices.remove(new Integer(index - width));
         indices.remove(new Integer(index - 1));
-        return new Isle(y, x, 0);
+        Isle isle = new Isle(index / height, index % height, 0);
+        isles.add(isle);
+        isleCount--;
     }
 
-    private void addBridge(Isle startIsle, Isle endIsle) {
+    private void addBridge(Isle startIsle, Isle endIsle, boolean doubleBridge) {
         Bridge bridge = new Bridge(startIsle, endIsle);
         bridges.add(bridge);
         startIsle.addBridge(bridge);
         startIsle.increaseBridgeCount();
         endIsle.addBridge(bridge);
         endIsle.increaseBridgeCount();
+        if (doubleBridge)
+            addBridge(endIsle, startIsle, false);
     }
 
     public void setHeight(int height) {

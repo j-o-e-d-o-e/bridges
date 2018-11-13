@@ -8,6 +8,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -17,10 +18,17 @@ public class NewGameControllerTest {
     private NewGameController controller;
     private static final int MAX = 10; // 25
     private static final int MIN = 2;
+    private final static Logger LOGGER = Logger.getLogger(NewGameControllerTest.class.getName());
 
     @Before
     public void setUp() {
         controller = new NewGameController();
+        controller.setHeight(MAX);
+        controller.setWidth(MAX);
+        List<Integer> indices = IntStream.range(0, controller.getHeight() * controller.getWidth())
+                .boxed().collect(Collectors.toList());
+        controller.setIndices(indices);
+        //        LOGGER.setLevel(Level.OFF);
     }
 
     @Test
@@ -44,13 +52,15 @@ public class NewGameControllerTest {
     }
 
     @Test
-    public void createIsle(){
+    public void getEndIsle(){
         //given
-        int height = 5;
-        controller.setHeight(height);
-        int width = 5;
-        controller.setWidth(width);
-        List<Integer> indices = IntStream.range(0, height * width).boxed().collect(Collectors.toList());
-        controller.setIndices(indices);
+        Isle startIsle = new Isle(0, 0, 0);
+
+        //when
+        Isle endIsle = controller.getEndIsle(startIsle);
+
+        //then
+        LOGGER.info("End isle: " + endIsle.toString());
+
     }
 }

@@ -65,7 +65,6 @@ public class NewGameController {
             for (Isle startIsle : isles) {
                 LOGGER.info("START ISLE: " + startIsle.toString());
                 Isle endIsle = getEndIsle(startIsle);
-                addIsle(endIsle.getY() + endIsle.getX());
                 if (endIsle != null) {
                     addBridge(startIsle, endIsle, random.nextBoolean());
                     break;
@@ -77,7 +76,7 @@ public class NewGameController {
 //        gridController.setSolution(bridges);
     }
 
-    private Isle getEndIsle(Isle startIsle) {
+    public Isle getEndIsle(Isle startIsle) {
         for (Direction direction : getDirections(startIsle)) {
             for (int distance : getDistances(startIsle, direction)) {
                 int y = 0;
@@ -100,7 +99,9 @@ public class NewGameController {
                 }
                 int index = y + x;
                 if (indices.contains(index)) {
-                    return new Isle(index / height, index % height, 0);
+                    LOGGER.info("Direction: " + direction.toString());
+                    LOGGER.info("Distance: " + distance);
+                    return addIsle(index);
                 }
             }
         }
@@ -136,8 +137,8 @@ public class NewGameController {
         return distances;
     }
 
-    private void addIsle(int index) {
-        LOGGER.info("ISLES SIZE: " + isles.size());
+    private Isle addIsle(int index) {
+        LOGGER.info("Index: " + index);
         indices.remove(new Integer(index));
         indices.remove(new Integer(index + width));
         indices.remove(new Integer(index + 1));
@@ -146,15 +147,18 @@ public class NewGameController {
         Isle isle = new Isle(index / height, index % height, 0);
         isles.add(isle);
         isleCount--;
+        LOGGER.info("Isles Size: " + isles.size());
+        LOGGER.info("Indices Size: " + indices.size());
+        return isle;
     }
 
     private void addBridge(Isle startIsle, Isle endIsle, boolean doubleBridge) {
         Bridge bridge = new Bridge(startIsle, endIsle);
-        bridges.add(bridge);
         startIsle.addBridge(bridge);
         startIsle.increaseBridgeCount();
         endIsle.addBridge(bridge);
         endIsle.increaseBridgeCount();
+        bridges.add(bridge);
         if (doubleBridge)
             addBridge(endIsle, startIsle, false);
     }
@@ -183,6 +187,7 @@ public class NewGameController {
         return isles;
     }
 
+    @SuppressWarnings("unused")
     public List<Bridge> getBridges() {
         return bridges;
     }

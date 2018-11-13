@@ -16,7 +16,6 @@ public class IsleListener implements EventHandler<MouseEvent> {
 
     private final static Logger LOGGER = Logger.getLogger(IsleListener.class.getName());
 
-
     IsleListener(Grid grid) {
         this.grid = grid;
         LOGGER.setLevel(Level.OFF);

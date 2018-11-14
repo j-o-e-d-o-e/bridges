@@ -18,8 +18,7 @@ public class NewGameController {
     private static final int MIN = 2;
     private int height, width;
     private int isleCount;
-    //    private GridController gridController;
-    private List<Integer> indices;
+    private List<Integer> indices = new ArrayList<>();
     private List<Isle> isles = new ArrayList<>();
     private List<Bridge> bridges = new ArrayList<>();
     private Random random = new Random();
@@ -27,7 +26,6 @@ public class NewGameController {
     private final static Logger LOGGER = Logger.getLogger(NewGameController.class.getName());
 
     public NewGameController() {
-//        gridController = new GridController();
 //        LOGGER.setLevel(Level.OFF);
     }
 
@@ -37,7 +35,7 @@ public class NewGameController {
         indices = IntStream.range(0, height * width).boxed().collect(Collectors.toList());
         int rand = random.nextInt(indices.size());
         int index = indices.get(rand);
-        Isle initialIsle = addIsle(index / height, index % height);
+        Isle initialIsle = addIsle(index / width, index % width);
         LOGGER.info("Initial Isle: " + initialIsle.toString() + "\n");
         while (isleCount > 0) {
             Collections.shuffle(isles);
@@ -51,7 +49,7 @@ public class NewGameController {
         }
         Collections.sort(isles);
         return isles;
-//        gridController.setSolution(bridges);
+//      TODO: return solution with bridges;
     }
 
     public Isle getEndIsle(Isle startIsle) {
@@ -76,12 +74,13 @@ public class NewGameController {
                     x = startIsle.getX() + distance;
                 }
                 //check neighbouring and collision condition
-                if (indices.contains(y + x) && !collides(startIsle.getY(), startIsle.getX(), y)) {
+//                if (indices.contains(y + x) && !collides(startIsle.getY(), startIsle.getX(), y)) {
+                if (indices.contains(y + x)) {
                     Isle endIsle = addIsle(y, x);
+                    LOGGER.info("Current Isle Count: " + isleCount);
                     LOGGER.info("Start Isle: " + startIsle.toString());
                     LOGGER.info("Direction: " + direction.toString());
                     LOGGER.info("Distance: " + distance);
-                    LOGGER.info("Isles Size: " + isles.size());
                     LOGGER.info("Indices Size: " + indices.size());
                     LOGGER.info("End Isle: " + endIsle.toString() + "\n");
                     return endIsle;
@@ -91,36 +90,36 @@ public class NewGameController {
         return null;
     }
 
-    private List<Direction> getDirections(Isle startIsle) {
+    public List<Direction> getDirections(Isle startIsle) {
         List<Direction> directions = new ArrayList<>();
         if (startIsle.getY() > 1)
             directions.add(Direction.UP);
         if (startIsle.getX() > 1)
             directions.add(Direction.LEFT);
-        if (startIsle.getY() < height - 1)
+        if (startIsle.getY() < height - 2)
             directions.add(Direction.DOWN);
-        if (startIsle.getX() < width - 1)
+        if (startIsle.getX() < width - 2)
             directions.add(Direction.RIGHT);
         Collections.shuffle(directions);
         return directions;
     }
 
-    private List<Integer> getDistances(Isle startIsle, Direction direction) {
+    public List<Integer> getDistances(Isle startIsle, Direction direction) {
         int max = 0;
         if (direction == Direction.UP)
             max = startIsle.getY();
         if (direction == Direction.LEFT)
             max = startIsle.getX();
         if (direction == Direction.DOWN)
-            max = height - startIsle.getY();
+            max = height - startIsle.getY() - 1;
         if (direction == Direction.RIGHT)
-            max = width - startIsle.getX();
+            max = width - startIsle.getX() - 1;
         List<Integer> distances = IntStream.range(2, max + 1).boxed().collect(Collectors.toList());
         Collections.shuffle(distances);
         return distances;
     }
 
-    @SuppressWarnings("WeakerAccess")
+    @SuppressWarnings({"WeakerAccess", "unused"})
     public boolean collides(int startY, int startX, int endY) {
         if (Alignment.getAlignment(startY, endY) == Alignment.HORIZONTAL) {
             return bridges.stream().anyMatch(b -> b.getAlignment() == Alignment.VERTICAL
@@ -137,12 +136,12 @@ public class NewGameController {
         Isle isle = new Isle(y, x, 0);
         isles.add(isle);
         isleCount--;
-        int index = y + x;
-        indices.remove(new Integer(index));
-        indices.remove(new Integer(index + width));
-        indices.remove(new Integer(index + 1));
+        int index = y * height + x;
         indices.remove(new Integer(index - width));
         indices.remove(new Integer(index - 1));
+        indices.remove(new Integer(index));
+        indices.remove(new Integer(index + 1));
+        indices.remove(new Integer(index + width));
         return isle;
     }
 
@@ -206,5 +205,9 @@ public class NewGameController {
 
     public void setIndices(List<Integer> indices) {
         this.indices = indices;
+    }
+
+    public List<Integer> getIndices() {
+        return indices;
     }
 }

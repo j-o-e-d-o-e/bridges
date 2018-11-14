@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class NewGameControllerTest {
     private NewGameController controller;
@@ -157,6 +158,21 @@ public class NewGameControllerTest {
 
         //then
         assertEquals(expectedSize, distances.size());
+    }
+
+    @Test
+    public void collidesBridgesVERTICAL() {
+        //given
+        Isle startIsle = new Isle(3, 3, 0);
+        Isle endIsle = new Isle(6, 3, 0);
+        controller.addBridge(startIsle, endIsle, false);
+
+        //when
+        boolean collides = controller.collidesBridges(4, 2, 4);
+
+        //then
+        assertTrue(collides);
+
     }
 
     @Test

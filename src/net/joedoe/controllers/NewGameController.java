@@ -31,12 +31,17 @@ public class NewGameController {
 
     @SuppressWarnings("WeakerAccess")
     public List<Isle> generateGame() {
-        LOGGER.info("Height: " + height + " Width: " + width + " Isles: " + isleCount);
         indices = IntStream.range(0, height * width).boxed().collect(Collectors.toList());
         int rand = random.nextInt(indices.size());
         int index = indices.get(rand);
         Isle initialIsle = addIsle(index / width, index % width);
-        LOGGER.info("Initial Isle: " + initialIsle.toString() + "\n");
+        LOGGER.info("Height: " + height
+                + " Width: " + width
+                + " Initial Isle: " + initialIsle.toString()
+                + "\nCurrent Isle Count: " + isleCount
+                + " Indices Size: " + indices.size()
+                + "\n");
+        int initialIsleCount = isleCount;
         while (isleCount > 0) {
             Collections.shuffle(isles);
             for (Isle startIsle : isles) {
@@ -44,6 +49,12 @@ public class NewGameController {
                 if (endIsle != null) {
                     addBridge(startIsle, endIsle, random.nextBoolean());
                     break;
+                }
+                if (startIsle == isles.get(isles.size() - 1)) {
+                    isleCount = initialIsleCount;
+                    isles.clear();
+                    bridges.clear();
+                    return generateGame();
                 }
             }
         }
@@ -74,15 +85,16 @@ public class NewGameController {
                     x = startIsle.getX() + distance;
                 }
                 //check neighbouring and collision condition
-//                if (indices.contains(y + x) && !collides(startIsle.getY(), startIsle.getX(), y)) {
-                if (indices.contains(y + x)) {
+                if (indices.contains(y + x) && !collidesBridges(startIsle.getY(), startIsle.getX(), y)) {
+//                if (indices.contains(y + x)) {
                     Isle endIsle = addIsle(y, x);
-                    LOGGER.info("Current Isle Count: " + isleCount);
-                    LOGGER.info("Start Isle: " + startIsle.toString());
-                    LOGGER.info("Direction: " + direction.toString());
-                    LOGGER.info("Distance: " + distance);
-                    LOGGER.info("Indices Size: " + indices.size());
-                    LOGGER.info("End Isle: " + endIsle.toString() + "\n");
+                    LOGGER.info("Start Isle: " + startIsle.toString()
+                            + " Direction: " + direction.toString()
+                            + " Distance: " + distance
+                            + " End Isle: " + endIsle.toString()
+                            + "\nCurrent Isle Count: " + isleCount
+                            + " Indices Size: " + indices.size()
+                            + "\n");
                     return endIsle;
                 }
             }
@@ -119,8 +131,7 @@ public class NewGameController {
         return distances;
     }
 
-    @SuppressWarnings({"WeakerAccess", "unused"})
-    public boolean collides(int startY, int startX, int endY) {
+    public boolean collidesBridges(int startY, int startX, int endY) {
         if (Alignment.getAlignment(startY, endY) == Alignment.HORIZONTAL) {
             return bridges.stream().anyMatch(b -> b.getAlignment() == Alignment.VERTICAL
                     && b.getStartY() < startY && b.getEndY() > startY
@@ -130,6 +141,11 @@ public class NewGameController {
                     && b.getStartX() < startX && b.getEndX() > startX
                     && startY < b.getStartY() && endY > b.getStartY());
         }
+    }
+
+    @SuppressWarnings("unused")
+    public boolean collidesIsles(int startY, int startX, int endY) {
+        return true;
     }
 
     public Isle addIsle(int y, int x) {
@@ -145,7 +161,7 @@ public class NewGameController {
         return isle;
     }
 
-    private void addBridge(Isle startIsle, Isle endIsle, boolean doubleBridge) {
+    public void addBridge(Isle startIsle, Isle endIsle, boolean doubleBridge) {
         Bridge bridge = new Bridge(startIsle, endIsle);
         startIsle.addBridge(bridge);
         startIsle.increaseBridgeCount();

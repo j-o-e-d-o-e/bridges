@@ -72,9 +72,9 @@ public class MainFrame extends BorderPane {
     }
 
     private void createNewGame() {
-        NewGame newGame = new NewGame(board);
-        newGame.initOwner(window);
-        newGame.show();
+        NewGameFrame newGameFrame = new NewGameFrame(board);
+        newGameFrame.initOwner(window);
+        newGameFrame.show();
     }
 
     private void handle(StatusEvent e) {

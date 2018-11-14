@@ -14,7 +14,7 @@ import java.util.Optional;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 
-class NewGame extends Stage {
+class NewGameFrame extends Stage {
     private Board board;
     private NewGameController controller;
     private RadioButton autoBtn;
@@ -22,7 +22,7 @@ class NewGame extends Stage {
     private TextField widthTxt, heightTxt, islesTxt;
     private CheckBox checkBox;
 
-    NewGame(Board board) {
+    NewGameFrame(Board board) {
         this.board = board;
         controller = new NewGameController();
         setTitle("Neues Rätsel");
@@ -92,8 +92,8 @@ class NewGame extends Stage {
 
         GridPane grid = new GridPane();
 //        grid.setGridLinesVisible(true);
-        grid.setPadding(new Insets(0, 0, 0, CONTAINER_OFFSET));
-        grid.getColumnConstraints().add(new ColumnConstraints(CONTAINER_OFFSET * 2));
+        grid.setPadding(new Insets(0, 0, 0, 40));
+        grid.getColumnConstraints().add(new ColumnConstraints(40));
         grid.setVgap(10);
         grid.add(widthLabel, 0, 0);
         grid.add(widthTxt, 1, 0);

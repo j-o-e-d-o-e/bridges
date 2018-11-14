@@ -9,13 +9,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class NewGameController {
-    private static final int MAX = 10; // 25
+    private static final int MAX = 25;
     private static final int MIN = 2;
     private int height, width;
     private int isleCount;
@@ -27,7 +26,7 @@ public class NewGameController {
     private final static Logger LOGGER = Logger.getLogger(NewGameController.class.getName());
 
     public NewGameController() {
-        LOGGER.setLevel(Level.OFF);
+//        LOGGER.setLevel(Level.OFF);
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -61,7 +60,6 @@ public class NewGameController {
         }
         Collections.sort(isles);
         return isles;
-//      TODO: return solution with bridges;
     }
 
     public Isle getEndIsle(Isle startIsle) {
@@ -85,9 +83,8 @@ public class NewGameController {
                     y = startIsle.getY();
                     x = startIsle.getX() + distance;
                 }
-                //check neighbouring and collision condition
-                if (indices.contains(y + x) && !collides(startIsle.getY(), startIsle.getX(), y, x)) {
-//                if (indices.contains(y + x)) {
+                //neighbouring check, isle and bridge collision detection
+                if (indices.contains(y * height + x) && !collides(startIsle.getY(), startIsle.getX(), y, x)) {
                     Isle endIsle = addIsle(y, x);
                     LOGGER.info("Start Isle: " + startIsle.toString()
                             + " Direction: " + direction.toString()
@@ -176,6 +173,7 @@ public class NewGameController {
             addBridge(endIsle, startIsle, false);
     }
 
+    @SuppressWarnings("unused")
     public void setHeight() {
         height = random.nextInt((MAX - MIN) + 1) + MIN;
     }
@@ -184,7 +182,7 @@ public class NewGameController {
         this.height = height;
     }
 
-
+    @SuppressWarnings("unused")
     public void setWidth() {
         width = random.nextInt((MAX - MIN) + 1) + MIN;
     }

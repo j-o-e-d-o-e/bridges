@@ -45,6 +45,7 @@ class Grid extends GridPane {
         gridController = new GridController(bridges);
         isleListener = new IsleListener(this);
         addIsles(isles);
+        addBridges(bridges);
     }
 
     private void addIsles() {
@@ -60,10 +61,23 @@ class Grid extends GridPane {
         for (Isle isle : isles) {
             IslePane pane = new IslePane(isle.getY(), isle.getX(), isle.getBridgeCount());
             pane.setOnMouseClicked(e -> isleListener.handle(e));
+            pane.setSmallText(isle.getY() + "/" + isle.getX());
             panes.add(pane);
             add(pane, pane.getX(), pane.getY());
         }
         gridController.setIsles(isles);
+    }
+
+    //for testing
+    private void addBridges(List<Bridge> bridges) {
+        for (Bridge bridge : bridges) {
+            BridgeLine line = new BridgeLine(
+                    bridge.getStartY(),
+                    bridge.getStartX(),
+                    bridge.getEndY(),
+                    bridge.getEndX());
+            add(line, line.getXStart(), line.getYStart());
+        }
     }
 
     void addBridge(IslePane pane, Direction direction) {

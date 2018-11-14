@@ -4,6 +4,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 
 import static net.joedoe.utils.GameInfo.CIRCLE_RADIUS;
 import static net.joedoe.utils.GameInfo.STD_COLOR;
@@ -22,6 +23,12 @@ public class IslePane extends StackPane {
     }
 
     void setText(String text) {
+        label.setText(text);
+    }
+
+    //for testing
+    void setSmallText(String text){
+        label.setFont(new Font(10));
         label.setText(text);
     }
 

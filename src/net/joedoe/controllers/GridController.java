@@ -10,6 +10,7 @@ import net.joedoe.utils.Direction;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GridController {
@@ -22,7 +23,7 @@ public class GridController {
 
     public GridController() {
         addIsles();
-//        LOGGER.setLevel(Level.OFF);
+        LOGGER.setLevel(Level.OFF);
     }
 
     public GridController(List<Bridge> bridges) {

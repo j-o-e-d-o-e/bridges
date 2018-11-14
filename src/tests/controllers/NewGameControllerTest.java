@@ -1,7 +1,6 @@
 package tests.controllers;
 
 import net.joedoe.controllers.NewGameController;
-import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.utils.Direction;
 import org.junit.Before;
@@ -162,6 +161,34 @@ public class NewGameControllerTest {
     }
 
     @Test
+    public void collidesIslesVERTICAL() {
+        //given: vertical connection
+        Isle startIsle = new Isle(3, 3, 0);
+        Isle endIsle = new Isle(6, 3, 0);
+        controller.addIsle(4,3);
+
+        //when
+        boolean collides = controller.collidesIsles(startIsle.getY(), startIsle.getX(), endIsle.getY(), endIsle.getX());
+
+        //then
+        assertTrue(collides);
+    }
+
+    @Test
+    public void collidesIslesHORIZONTAL() {
+        //given: horizontal connection
+        Isle startIsle = new Isle(4, 2, 0);
+        Isle endIsle = new Isle(4, 5, 0);
+        controller.addIsle(4,4);
+
+        //when
+        boolean collides = controller.collidesIsles(startIsle.getY(), startIsle.getX(), endIsle.getY(), endIsle.getX());
+
+        //then
+        assertTrue(collides);
+    }
+
+    @Test
     public void collidesBridgesVERTICAL() {
         //given: vertical bridge
         Isle startIsle = new Isle(3, 3, 0);
@@ -169,7 +196,7 @@ public class NewGameControllerTest {
         controller.addBridge(startIsle, endIsle, false);
 
         //when: horizontal bridge
-        boolean collides = controller.collidesBridges(4, 2, 4,5);
+        boolean collides = controller.collidesBridges(4, 2, 4, 5);
 
         //then
         assertTrue(collides);
@@ -183,7 +210,7 @@ public class NewGameControllerTest {
         controller.addBridge(startIsle, endIsle, false);
 
         //when: vertical bridge
-        boolean collides = controller.collidesBridges(3, 3, 6,3);
+        boolean collides = controller.collidesBridges(3, 3, 6, 3);
 
         //then
         assertTrue(collides);

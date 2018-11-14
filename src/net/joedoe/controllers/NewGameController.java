@@ -85,7 +85,7 @@ public class NewGameController {
                     x = startIsle.getX() + distance;
                 }
                 //check neighbouring and collision condition
-                if (indices.contains(y + x) && !collidesBridges(startIsle.getY(), startIsle.getX(), y)) {
+                if (indices.contains(y + x) && !collidesBridges(startIsle.getY(), startIsle.getX(), y, x)) {
 //                if (indices.contains(y + x)) {
                     Isle endIsle = addIsle(y, x);
                     LOGGER.info("Start Isle: " + startIsle.toString()
@@ -131,16 +131,15 @@ public class NewGameController {
         return distances;
     }
 
-    public boolean collidesBridges(int startY, int startX, int endY) {
-        if (Alignment.getAlignment(startY, endY) == Alignment.HORIZONTAL) {
+    public boolean collidesBridges(int startY, int startX, int endY, int endX) {
+        if (Alignment.getAlignment(startY, endY) == Alignment.HORIZONTAL)
             return bridges.stream().anyMatch(b -> b.getAlignment() == Alignment.VERTICAL
                     && b.getStartY() < startY && b.getEndY() > startY
-                    && startX < b.getStartX() && startX > b.getStartX());
-        } else {
+                    && startX < b.getStartX() && endX > b.getStartX());
+        else
             return bridges.stream().anyMatch(b -> b.getAlignment() == Alignment.HORIZONTAL
                     && b.getStartX() < startX && b.getEndX() > startX
                     && startY < b.getStartY() && endY > b.getStartY());
-        }
     }
 
     @SuppressWarnings("unused")

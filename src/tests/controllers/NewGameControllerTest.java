@@ -1,6 +1,7 @@
 package tests.controllers;
 
 import net.joedoe.controllers.NewGameController;
+import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.utils.Direction;
 import org.junit.Before;
@@ -162,17 +163,30 @@ public class NewGameControllerTest {
 
     @Test
     public void collidesBridgesVERTICAL() {
-        //given
+        //given: vertical bridge
         Isle startIsle = new Isle(3, 3, 0);
         Isle endIsle = new Isle(6, 3, 0);
         controller.addBridge(startIsle, endIsle, false);
 
-        //when
-        boolean collides = controller.collidesBridges(4, 2, 4);
+        //when: horizontal bridge
+        boolean collides = controller.collidesBridges(4, 2, 4,5);
 
         //then
         assertTrue(collides);
+    }
 
+    @Test
+    public void collidesBridgesHORIZONTAL() {
+        //given: horizontal bridge
+        Isle startIsle = new Isle(4, 2, 0);
+        Isle endIsle = new Isle(4, 5, 0);
+        controller.addBridge(startIsle, endIsle, false);
+
+        //when: vertical bridge
+        boolean collides = controller.collidesBridges(3, 3, 6,3);
+
+        //then
+        assertTrue(collides);
     }
 
     @Test

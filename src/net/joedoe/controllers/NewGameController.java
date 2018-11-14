@@ -2,6 +2,7 @@ package net.joedoe.controllers;
 
 import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
+import net.joedoe.utils.Alignment;
 import net.joedoe.utils.Direction;
 
 import java.util.ArrayList;
@@ -21,37 +22,13 @@ public class NewGameController {
     private List<Integer> indices;
     private List<Isle> isles = new ArrayList<>();
     private List<Bridge> bridges = new ArrayList<>();
-    private Random random;
+    private Random random = new Random();
 
     private final static Logger LOGGER = Logger.getLogger(NewGameController.class.getName());
 
     public NewGameController() {
-        this.random = new Random();
 //        gridController = new GridController();
 //        LOGGER.setLevel(Level.OFF);
-    }
-
-    public List<Isle> createGame() {
-        height = random.nextInt((MAX - MIN) + 1) + MIN;
-        width = random.nextInt((MAX - MIN) + 1) + MIN;
-        int maxIsles = (int) (0.2 * height * width);
-        isleCount = random.nextInt((maxIsles - MIN) + 1) + MIN;
-        return generateGame();
-    }
-
-    public List<Isle> createGame(int height, int width) {
-        this.height = height - 1;
-        this.width = width - 1;
-        int maxIsles = (int) (0.2 * height * width);
-        isleCount = random.nextInt((maxIsles - MIN) + 1) + MIN;
-        return generateGame();
-    }
-
-    public List<Isle> createGame(int height, int width, int isleCount) {
-        this.height = height - 1;
-        this.width = width - 1;
-        this.isleCount = isleCount;
-        return generateGame();
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -59,11 +36,12 @@ public class NewGameController {
         LOGGER.info("Height: " + height + " Width: " + width + " Isles: " + isleCount);
         indices = IntStream.range(0, height * width).boxed().collect(Collectors.toList());
         int rand = random.nextInt(indices.size());
-        addIsle(indices.get(rand));
+        int index = indices.get(rand);
+        Isle initialIsle = addIsle(index / height, index % height);
+        LOGGER.info("Initial Isle: " + initialIsle.toString() + "\n");
         while (isleCount > 0) {
             Collections.shuffle(isles);
             for (Isle startIsle : isles) {
-                LOGGER.info("START ISLE: " + startIsle.toString());
                 Isle endIsle = getEndIsle(startIsle);
                 if (endIsle != null) {
                     addBridge(startIsle, endIsle, random.nextBoolean());
@@ -97,11 +75,16 @@ public class NewGameController {
                     y = startIsle.getY();
                     x = startIsle.getX() + distance;
                 }
-                int index = y + x;
-                if (indices.contains(index)) {
+                //check neighbouring and collision condition
+                if (indices.contains(y + x) && !collides(startIsle.getY(), startIsle.getX(), y)) {
+                    Isle endIsle = addIsle(y, x);
+                    LOGGER.info("Start Isle: " + startIsle.toString());
                     LOGGER.info("Direction: " + direction.toString());
                     LOGGER.info("Distance: " + distance);
-                    return addIsle(index);
+                    LOGGER.info("Isles Size: " + isles.size());
+                    LOGGER.info("Indices Size: " + indices.size());
+                    LOGGER.info("End Isle: " + endIsle.toString() + "\n");
+                    return endIsle;
                 }
             }
         }
@@ -132,23 +115,34 @@ public class NewGameController {
             max = height - startIsle.getY();
         if (direction == Direction.RIGHT)
             max = width - startIsle.getX();
-        List<Integer> distances = IntStream.range(2, max).boxed().collect(Collectors.toList());
+        List<Integer> distances = IntStream.range(2, max + 1).boxed().collect(Collectors.toList());
         Collections.shuffle(distances);
         return distances;
     }
 
-    private Isle addIsle(int index) {
-        LOGGER.info("Index: " + index);
+    @SuppressWarnings("WeakerAccess")
+    public boolean collides(int startY, int startX, int endY) {
+        if (Alignment.getAlignment(startY, endY) == Alignment.HORIZONTAL) {
+            return bridges.stream().anyMatch(b -> b.getAlignment() == Alignment.VERTICAL
+                    && b.getStartY() < startY && b.getEndY() > startY
+                    && startX < b.getStartX() && startX > b.getStartX());
+        } else {
+            return bridges.stream().anyMatch(b -> b.getAlignment() == Alignment.HORIZONTAL
+                    && b.getStartX() < startX && b.getEndX() > startX
+                    && startY < b.getStartY() && endY > b.getStartY());
+        }
+    }
+
+    public Isle addIsle(int y, int x) {
+        Isle isle = new Isle(y, x, 0);
+        isles.add(isle);
+        isleCount--;
+        int index = y + x;
         indices.remove(new Integer(index));
         indices.remove(new Integer(index + width));
         indices.remove(new Integer(index + 1));
         indices.remove(new Integer(index - width));
         indices.remove(new Integer(index - 1));
-        Isle isle = new Isle(index / height, index % height, 0);
-        isles.add(isle);
-        isleCount--;
-        LOGGER.info("Isles Size: " + isles.size());
-        LOGGER.info("Indices Size: " + indices.size());
         return isle;
     }
 
@@ -163,16 +157,34 @@ public class NewGameController {
             addBridge(endIsle, startIsle, false);
     }
 
+    public void setHeight() {
+        height = random.nextInt((MAX - MIN) + 1) + MIN;
+    }
+
     public void setHeight(int height) {
         this.height = height;
+    }
+
+
+    public void setWidth() {
+        width = random.nextInt((MAX - MIN) + 1) + MIN;
     }
 
     public void setWidth(int width) {
         this.width = width;
     }
 
+    public void setIsleCount() {
+        int maxIsles = (int) (0.2 * height * width);
+        isleCount = random.nextInt((maxIsles - MIN) + 1) + MIN;
+    }
+
     public void setIsleCount(int isleCount) {
         this.isleCount = isleCount;
+    }
+
+    public int getIsleCount() {
+        return isleCount;
     }
 
     public int getHeight() {
@@ -190,10 +202,6 @@ public class NewGameController {
     @SuppressWarnings("unused")
     public List<Bridge> getBridges() {
         return bridges;
-    }
-
-    public int getIsleCount() {
-        return isleCount;
     }
 
     public void setIndices(List<Integer> indices) {

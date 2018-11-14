@@ -125,9 +125,12 @@ class NewGame extends Stage {
 
     private void handleInput() {
         List<Isle> generatedIsles;
-        int width, height, isles;
+        int width, height, isleCount;
         if (autoBtn.isSelected()) {
-            generatedIsles = controller.createGame();
+            controller.setWidth();
+            controller.setHeight();
+            controller.setIsleCount();
+            generatedIsles = controller.generateGame();
             board.setGrid(controller.getHeight(), controller.getWidth(), generatedIsles);
         } else {
             width = Integer.parseInt(widthTxt.getText());
@@ -143,11 +146,14 @@ class NewGame extends Stage {
                 return;
             }
             if (!checkBox.isSelected()) {
-                generatedIsles = controller.createGame(height, width);
+                controller.setWidth(width);
+                controller.setHeight(height);
+                controller.setIsleCount();
+                generatedIsles = controller.generateGame();
                 board.setGrid(height, width, generatedIsles);
             } else {
-                isles = Integer.parseInt(islesTxt.getText());
-                if (isles < 2 || isles > 0.2 * width * height) {
+                isleCount = Integer.parseInt(islesTxt.getText());
+                if (isleCount < 2 || isleCount > 0.2 * width * height) {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                     alert.setTitle("Ungültige Eingabe");
                     alert.setHeaderText("Inselanzahl muss größer 2 und kleiner Breite * Höhe * 0.2 sein.");
@@ -157,7 +163,10 @@ class NewGame extends Stage {
                     reset();
                     return;
                 }
-                generatedIsles = controller.createGame(height, width, isles);
+                controller.setWidth(width);
+                controller.setHeight(height);
+                controller.setIsleCount(isleCount);
+                generatedIsles = controller.generateGame();
                 board.setGrid(height, width, generatedIsles);
             }
         }

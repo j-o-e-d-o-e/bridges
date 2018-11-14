@@ -58,7 +58,7 @@ public class NewGameControllerTest {
         LOGGER.info("End isle: " + endIsle.toString());
     }
 
-    //basics: 
+    //basics:
 
     @Test
     public void getDirectionsMIDDLE() {

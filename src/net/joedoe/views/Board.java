@@ -3,6 +3,7 @@ package net.joedoe.views;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.layout.StackPane;
+import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 
 import java.util.List;
@@ -21,9 +22,9 @@ class Board extends StackPane {
         getChildren().add(grid);
     }
 
-    void setGrid(int height, int width, List<Isle> isles) {
+    void setGrid(int height, int width, List<Isle> isles, List<Bridge> bridges) {
         getChildren().remove(grid);
-        grid = new Grid(height, width, isles);
+        grid = new Grid(height, width, isles, bridges);
         grid.setStatusListener(statusListener);
         getChildren().add(grid);
     }

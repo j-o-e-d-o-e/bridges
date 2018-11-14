@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import net.joedoe.controllers.GridController;
+import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.entities.Mocks;
 import net.joedoe.utils.Coordinate;
@@ -25,7 +26,7 @@ class Grid extends GridPane {
     private boolean showMissingBridges = true;
 
     Grid() {
-        setGridLinesVisible(true);
+//        setGridLinesVisible(true);
         setAlignment(Pos.CENTER);
         setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         IntStream.range(0, Mocks.ROWS).mapToObj(i -> new RowConstraints(ONE_TILE)).forEach(row -> getRowConstraints().add(row));
@@ -35,13 +36,13 @@ class Grid extends GridPane {
         addIsles();
     }
 
-    Grid(int height, int width, List<Isle> isles) {
+    Grid(int height, int width, List<Isle> isles, List<Bridge> bridges) {
         setGridLinesVisible(true);
         setAlignment(Pos.CENTER);
         setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         IntStream.range(0, height).mapToObj(i -> new RowConstraints(ONE_TILE)).forEach(row -> getRowConstraints().add(row));
         IntStream.range(0, width).mapToObj(i -> new ColumnConstraints(ONE_TILE)).forEachOrdered(column -> getColumnConstraints().add(column));
-        gridController = new GridController();
+        gridController = new GridController(bridges);
         isleListener = new IsleListener(this);
         addIsles(isles);
     }
@@ -56,7 +57,6 @@ class Grid extends GridPane {
     }
 
     private void addIsles(List<Isle> isles) {
-        isles.forEach(isle -> System.out.println(isle.toString()));
         for (Isle isle : isles) {
             IslePane pane = new IslePane(isle.getY(), isle.getX(), isle.getBridgeCount());
             pane.setOnMouseClicked(e -> isleListener.handle(e));

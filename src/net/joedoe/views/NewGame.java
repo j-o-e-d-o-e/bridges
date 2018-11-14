@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
-import static net.joedoe.utils.GameInfo.ONE_TILE;
 
 class NewGame extends Stage {
     private Board board;
@@ -94,7 +93,7 @@ class NewGame extends Stage {
         GridPane grid = new GridPane();
 //        grid.setGridLinesVisible(true);
         grid.setPadding(new Insets(0, 0, 0, CONTAINER_OFFSET));
-        grid.getColumnConstraints().add(new ColumnConstraints(ONE_TILE));
+        grid.getColumnConstraints().add(new ColumnConstraints(CONTAINER_OFFSET * 2));
         grid.setVgap(10);
         grid.add(widthLabel, 0, 0);
         grid.add(widthTxt, 1, 0);
@@ -127,11 +126,15 @@ class NewGame extends Stage {
         List<Isle> generatedIsles;
         int width, height, isleCount;
         if (autoBtn.isSelected()) {
-            controller.setWidth();
-            controller.setHeight();
-            controller.setIsleCount();
+//            controller.setWidth();
+//            controller.setHeight();
+//            controller.setIsleCount();
+            controller.setWidth(25);
+            controller.setHeight(25);
+            controller.setIsleCount(125);
             generatedIsles = controller.generateGame();
-            board.setGrid(controller.getHeight(), controller.getWidth(), generatedIsles);
+            board.setGrid(controller.getHeight(), controller.getWidth(), generatedIsles, controller.getBridges());
+//            board.setSo
         } else {
             width = Integer.parseInt(widthTxt.getText());
             height = Integer.parseInt(heightTxt.getText());
@@ -140,7 +143,7 @@ class NewGame extends Stage {
                 alert.setTitle("Ungültige Eingabe");
                 alert.setHeaderText("Breite und Höhe müssen größer 4 und kleiner 25 sein.");
                 Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK)
+                if (result.isPresent() && result.get() == ButtonType.OK)
                     alert.close();
                 reset();
                 return;
@@ -150,7 +153,7 @@ class NewGame extends Stage {
                 controller.setHeight(height);
                 controller.setIsleCount();
                 generatedIsles = controller.generateGame();
-                board.setGrid(height, width, generatedIsles);
+                board.setGrid(height, width, generatedIsles, controller.getBridges());
             } else {
                 isleCount = Integer.parseInt(islesTxt.getText());
                 if (isleCount < 2 || isleCount > 0.2 * width * height) {
@@ -158,7 +161,7 @@ class NewGame extends Stage {
                     alert.setTitle("Ungültige Eingabe");
                     alert.setHeaderText("Inselanzahl muss größer 2 und kleiner Breite * Höhe * 0.2 sein.");
                     Optional<ButtonType> result = alert.showAndWait();
-                    if (result.get() == ButtonType.OK)
+                    if (result.isPresent() && result.get() == ButtonType.OK)
                         alert.close();
                     reset();
                     return;
@@ -167,7 +170,7 @@ class NewGame extends Stage {
                 controller.setHeight(height);
                 controller.setIsleCount(isleCount);
                 generatedIsles = controller.generateGame();
-                board.setGrid(height, width, generatedIsles);
+                board.setGrid(height, width, generatedIsles, controller.getBridges());
             }
         }
         close();

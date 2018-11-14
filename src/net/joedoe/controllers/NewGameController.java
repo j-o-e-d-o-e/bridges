@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -26,7 +27,7 @@ public class NewGameController {
     private final static Logger LOGGER = Logger.getLogger(NewGameController.class.getName());
 
     public NewGameController() {
-//        LOGGER.setLevel(Level.OFF);
+        LOGGER.setLevel(Level.OFF);
     }
 
     @SuppressWarnings("WeakerAccess")

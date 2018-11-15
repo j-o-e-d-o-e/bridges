@@ -1,6 +1,7 @@
 package tests.controllers;
 
-import net.joedoe.controllers.NewGameController;
+import net.joedoe.controllers.GameGenerator;
+import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.utils.Direction;
 import org.junit.Before;
@@ -15,15 +16,15 @@ import java.util.stream.IntStream;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class NewGameControllerTest {
-    private NewGameController controller;
-    private static final int HEIGHT = 25; //MIN: 2, MAX: 25
-    private static final int WIDTH = 25;
-    private final static Logger LOGGER = Logger.getLogger(NewGameControllerTest.class.getName());
+public class GameGeneratorTest {
+    private GameGenerator controller;
+    private static final int HEIGHT = 6; //MIN: 2, MAX: 25
+    private static final int WIDTH = 6;
+    private final static Logger LOGGER = Logger.getLogger(GameGeneratorTest.class.getName());
 
     @Before
     public void setUp() {
-        controller = new NewGameController();
+        controller = new GameGenerator();
         controller.setHeight(HEIGHT);
         controller.setWidth(WIDTH);
         int maxIsles = (int) (0.2 * HEIGHT * WIDTH);
@@ -65,7 +66,7 @@ public class NewGameControllerTest {
     @Test
     public void getDirectionsMIDDLE() {
         //given
-        Isle startIsle = new Isle(7, 7, 0);
+        Isle startIsle = new Isle(2, 2, 0);
 
         //when
         List<Direction> directions = controller.getDirections(startIsle);
@@ -77,8 +78,7 @@ public class NewGameControllerTest {
     @Test
     public void getDirectionsBORDER() {
         //given
-        int x = WIDTH - 2;
-        Isle startIsle = new Isle(3, x, 0);
+        Isle startIsle = new Isle(2, WIDTH - 2, 0);
 
         //when
         List<Direction> directions = controller.getDirections(startIsle);
@@ -196,7 +196,8 @@ public class NewGameControllerTest {
         //given: vertical bridge
         Isle startIsle = new Isle(3, 3, 0);
         Isle endIsle = new Isle(6, 3, 0);
-        controller.createBridge(startIsle, endIsle);
+        Bridge bridge = controller.createBridge(startIsle, endIsle);
+        controller.getBridges().add(bridge);
 
         //when: horizontal bridge
         boolean collides = controller.collidesBridges(4, 2, 4, 5);
@@ -210,7 +211,8 @@ public class NewGameControllerTest {
         //given: horizontal bridge
         Isle startIsle = new Isle(4, 2, 0);
         Isle endIsle = new Isle(4, 5, 0);
-        controller.createBridge(startIsle, endIsle);
+        Bridge bridge = controller.createBridge(startIsle, endIsle);
+        controller.getBridges().add(bridge);
 
         //when: vertical bridge
         boolean collides = controller.collidesBridges(3, 3, 6, 3);
@@ -236,12 +238,13 @@ public class NewGameControllerTest {
     @Test
     public void createBridgeHORIZONTAL() {
         //given
+        int startX = 3;
+        int endX = 6;
         List<Integer> indices = IntStream.range(0, HEIGHT * WIDTH).boxed().collect(Collectors.toList());
         controller.setIndices(indices);
-        int length = 3;
-        int expectedSize = indices.size() - length;
-        Isle startIsle = new Isle(3, 3, 0);
-        Isle endIsle = new Isle(3, 3 + length, 0);
+        int expectedSize = indices.size() - Math.abs(endX - startX);
+        Isle startIsle = new Isle(3, startX, 0);
+        Isle endIsle = new Isle(3, endX, 0);
 
         //when
         controller.createBridge(startIsle, endIsle);
@@ -253,12 +256,13 @@ public class NewGameControllerTest {
     @Test
     public void createBridgeVERTICAL() {
         //given
+        int startY = 0;
+        int endY= 5;
         List<Integer> indices = IntStream.range(0, HEIGHT * WIDTH).boxed().collect(Collectors.toList());
         controller.setIndices(indices);
-        int length = 3;
-        int expectedSize = indices.size() - length;
-        Isle startIsle = new Isle(3, 3, 0);
-        Isle endIsle = new Isle(3 + length, 3, 0);
+        int expectedSize = indices.size() - Math.abs(endY - startY);
+        Isle startIsle = new Isle(startY, 3, 0);
+        Isle endIsle = new Isle(endY, 3, 0);
 
         //when
         controller.createBridge(startIsle, endIsle);

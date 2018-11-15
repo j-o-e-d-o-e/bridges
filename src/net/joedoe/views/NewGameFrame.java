@@ -6,7 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import net.joedoe.controllers.NewGameController;
+import net.joedoe.controllers.GameGenerator;
 import net.joedoe.entities.Isle;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 
 class NewGameFrame extends Stage {
     private Board board;
-    private NewGameController controller;
+    private GameGenerator controller;
     private RadioButton autoBtn;
     private Label widthLabel, heightLabel, islesLabel;
     private TextField widthTxt, heightTxt, islesTxt;
@@ -24,7 +24,7 @@ class NewGameFrame extends Stage {
 
     NewGameFrame(Board board) {
         this.board = board;
-        controller = new NewGameController();
+        controller = new GameGenerator();
         setTitle("Neues Rätsel");
         Scene scene = new Scene(setLayout(), 400, 350);
         setScene(scene);
@@ -126,12 +126,12 @@ class NewGameFrame extends Stage {
         List<Isle> generatedIsles;
         int width, height, isleCount;
         if (autoBtn.isSelected()) {
-//            controller.setWidth();
 //            controller.setHeight();
+//            controller.setWidth();
 //            controller.setIsleCount();
-            controller.setWidth(10);
-            controller.setHeight(10);
-            controller.setIsleCount(20);
+            controller.setHeight(25);
+            controller.setWidth(25);
+            controller.setIsleCount((int) (0.2 * controller.getHeight() * controller.getWidth()));
             generatedIsles = controller.generateGame();
             board.setGrid(controller.getHeight(), controller.getWidth(), generatedIsles, controller.getBridges());
 //            board.setSo
@@ -149,8 +149,8 @@ class NewGameFrame extends Stage {
                 return;
             }
             if (!checkBox.isSelected()) {
-                controller.setWidth(width);
                 controller.setHeight(height);
+                controller.setWidth(width);
                 controller.setIsleCount();
                 generatedIsles = controller.generateGame();
                 board.setGrid(height, width, generatedIsles, controller.getBridges());
@@ -166,8 +166,8 @@ class NewGameFrame extends Stage {
                     reset();
                     return;
                 }
-                controller.setWidth(width);
                 controller.setHeight(height);
+                controller.setWidth(width);
                 controller.setIsleCount(isleCount);
                 generatedIsles = controller.generateGame();
                 board.setGrid(height, width, generatedIsles, controller.getBridges());

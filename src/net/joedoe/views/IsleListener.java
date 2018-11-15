@@ -3,7 +3,6 @@ package net.joedoe.views;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import net.joedoe.controllers.NewGameController;
 import net.joedoe.utils.Direction;
 
 import java.util.logging.Level;

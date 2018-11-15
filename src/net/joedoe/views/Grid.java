@@ -48,6 +48,7 @@ class Grid extends GridPane {
         addBridges(bridges);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void addIsles(int[][] isles) {
         for (int[] isle : isles) {
             IslePane pane = new IslePane(isle[0], isle[1], isle[2]);

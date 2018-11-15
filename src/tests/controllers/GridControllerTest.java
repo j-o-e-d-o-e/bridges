@@ -30,7 +30,7 @@ public class GridControllerTest {
         //when
         gridController.addBridge(startIsle.getY(), startIsle.getX(), direction);
         gridController.addBridge(startIsle.getY(), startIsle.getX(), direction);
-//        gridController.addBridge(startIsle.getY(), startIsle.getX(), direction);
+//        gridController.createBridge(startIsle.getY(), startIsle.getX(), direction);
 
         //then
         assertEquals(2, startIsle.getBridges().size());
@@ -50,7 +50,7 @@ public class GridControllerTest {
         //when
         gridController.addBridge(startIsle.getY(), startIsle.getX(), direction);
         gridController.addBridge(startIsle.getY(), startIsle.getX(), direction);
-//        gridController.addBridge(endIsle.getY(), endIsle.getX(), direction.getOpposite());
+//        gridController.createBridge(endIsle.getY(), endIsle.getX(), direction.getOpposite());
 
         //then
         assertEquals(2, startIsle.getBridges().size());
@@ -69,7 +69,7 @@ public class GridControllerTest {
         Isle endIsle = gridController.findIsle(startIsle, direction);
 
         //when
-//        Bridge added = gridController.addBridge(startIsle.getY(), startIsle.getX(), direction);
+//        Bridge added = gridController.createBridge(startIsle.getY(), startIsle.getX(), direction);
 //        Bridge removed = gridController.removeBridge(startIsle.getY(), startIsle.getX(), direction);
 //        Bridge removed = gridController.removeBridge(endIsle.getY(), endIsle.getX(), direction.getOpposite());
 
@@ -83,7 +83,7 @@ public class GridControllerTest {
         Direction direction = Direction.DOWN;
         Isle startIsle = gridController.getIsle(0, 0);
         Isle endIsle = gridController.getIsle(3, 0);
-//        Bridge added = gridController.addBridge(startIsle.getY(), startIsle.getX(), direction);
+//        Bridge added = gridController.createBridge(startIsle.getY(), startIsle.getX(), direction);
 
         //when
 //        Bridge removed = gridController.removeBridge(endIsle.getY(), endIsle.getX(), direction.getOpposite());

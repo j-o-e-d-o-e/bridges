@@ -29,25 +29,29 @@ public class NewGameController {
 //        LOGGER.setLevel(Level.OFF);
     }
 
-    @SuppressWarnings("WeakerAccess")
     public List<Isle> generateGame() {
         indices = IntStream.range(0, height * width).boxed().collect(Collectors.toList());
-        int rand = random.nextInt(indices.size());
-        int index = indices.get(rand);
-        Isle initialIsle = addIsle(index / width, index % width);
+        int index = random.nextInt(indices.size());
+        Isle initialIsle = createIsle(index / width, index % width);
+        isles.add(initialIsle);
+        int initialIsleCount = isleCount;
+        isleCount--;
         LOGGER.info("Height: " + height
                 + " Width: " + width
                 + " Initial Isle: " + initialIsle.toString()
                 + "\nCurrent Isle Count: " + isleCount
                 + " Indices Size: " + indices.size()
                 + "\n");
-        int initialIsleCount = isleCount;
         while (isleCount > 0) {
             Collections.shuffle(isles);
             for (Isle startIsle : isles) {
                 Isle endIsle = getEndIsle(startIsle);
                 if (endIsle != null) {
-                    addBridge(startIsle, endIsle, random.nextBoolean());
+                    isles.add(endIsle);
+                    isleCount--;
+                    bridges.add(createBridge(startIsle, endIsle));
+                    if (random.nextBoolean())
+                        bridges.add(createBridge(endIsle, startIsle));
                     break;
                 }
                 if (startIsle == isles.get(isles.size() - 1)) {
@@ -85,7 +89,7 @@ public class NewGameController {
                 }
                 //neighbouring check, isle and bridge collision detection
                 if (indices.contains(y * height + x) && !collides(startIsle.getY(), startIsle.getX(), y, x)) {
-                    Isle endIsle = addIsle(y, x);
+                    Isle endIsle = createIsle(y, x);
                     LOGGER.info("Start Isle: " + startIsle.toString()
                             + " Direction: " + direction.toString()
                             + " Distance: " + distance
@@ -149,10 +153,8 @@ public class NewGameController {
                     && startY < b.getStartY() && endY > b.getStartY());
     }
 
-    public Isle addIsle(int y, int x) {
+    public Isle createIsle(int y, int x) {
         Isle isle = new Isle(y, x, 0);
-        isles.add(isle);
-        isleCount--;
         int index = y * height + x;
         indices.remove(new Integer(index - width));
         indices.remove(new Integer(index - 1));
@@ -162,15 +164,25 @@ public class NewGameController {
         return isle;
     }
 
-    public void addBridge(Isle startIsle, Isle endIsle, boolean doubleBridge) {
+    public Bridge createBridge(Isle startIsle, Isle endIsle) {
         Bridge bridge = new Bridge(startIsle, endIsle);
         startIsle.addBridge(bridge);
         startIsle.increaseBridgeCount();
         endIsle.addBridge(bridge);
         endIsle.increaseBridgeCount();
         bridges.add(bridge);
-        if (doubleBridge)
-            addBridge(endIsle, startIsle, false);
+        //for testing
+        int indicesSizeOld = indices.size();
+        int startY = bridge.getStartY() * height;
+        int endY = bridge.getEndY() * height;
+        if (bridge.getAlignment() == Alignment.HORIZONTAL)
+            indices.removeAll(IntStream.range(startY + bridge.getStartX(), endY + bridge.getEndX())
+                    .boxed().collect(Collectors.toList()));
+        else
+            indices.removeAll(IntStream.range(startY, endY).filter(i -> i % height == bridge.getStartX())
+                    .boxed().collect(Collectors.toList()));
+        LOGGER.info("Indices size before/after: " + indicesSizeOld + "/" + indices.size());
+        return bridge;
     }
 
     @SuppressWarnings("unused")
@@ -182,6 +194,10 @@ public class NewGameController {
         this.height = height;
     }
 
+    public int getHeight() {
+        return height;
+    }
+
     @SuppressWarnings("unused")
     public void setWidth() {
         width = random.nextInt((MAX - MIN) + 1) + MIN;
@@ -189,6 +205,10 @@ public class NewGameController {
 
     public void setWidth(int width) {
         this.width = width;
+    }
+
+    public int getWidth() {
+        return width;
     }
 
     public void setIsleCount() {
@@ -204,19 +224,10 @@ public class NewGameController {
         return isleCount;
     }
 
-    public int getHeight() {
-        return height;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
     public List<Isle> getIsles() {
         return isles;
     }
 
-    @SuppressWarnings("unused")
     public List<Bridge> getBridges() {
         return bridges;
     }

@@ -129,9 +129,9 @@ class NewGameFrame extends Stage {
 //            controller.setWidth();
 //            controller.setHeight();
 //            controller.setIsleCount();
-            controller.setWidth(25);
-            controller.setHeight(25);
-            controller.setIsleCount(125);
+            controller.setWidth(10);
+            controller.setHeight(10);
+            controller.setIsleCount(20);
             generatedIsles = controller.generateGame();
             board.setGrid(controller.getHeight(), controller.getWidth(), generatedIsles, controller.getBridges());
 //            board.setSo

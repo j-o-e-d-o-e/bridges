@@ -49,7 +49,8 @@ public class NewGameControllerTest {
         //given
         List<Integer> indices = IntStream.range(0, HEIGHT * WIDTH).boxed().collect(Collectors.toList());
         controller.setIndices(indices);
-        controller.addIsle(3, 3);
+        Isle isle = controller.createIsle(3, 3);
+        controller.getIsles().add(isle);
         Isle startIsle = controller.getIsles().get(0);
 
         //when
@@ -165,7 +166,8 @@ public class NewGameControllerTest {
         //given: vertical connection
         Isle startIsle = new Isle(3, 3, 0);
         Isle endIsle = new Isle(6, 3, 0);
-        controller.addIsle(4,3);
+        Isle isle = controller.createIsle(4, 3);
+        controller.getIsles().add(isle);
 
         //when
         boolean collides = controller.collidesIsles(startIsle.getY(), startIsle.getX(), endIsle.getY(), endIsle.getX());
@@ -179,7 +181,8 @@ public class NewGameControllerTest {
         //given: horizontal connection
         Isle startIsle = new Isle(4, 2, 0);
         Isle endIsle = new Isle(4, 5, 0);
-        controller.addIsle(4,4);
+        Isle isle = controller.createIsle(4, 4);
+        controller.getIsles().add(isle);
 
         //when
         boolean collides = controller.collidesIsles(startIsle.getY(), startIsle.getX(), endIsle.getY(), endIsle.getX());
@@ -193,7 +196,7 @@ public class NewGameControllerTest {
         //given: vertical bridge
         Isle startIsle = new Isle(3, 3, 0);
         Isle endIsle = new Isle(6, 3, 0);
-        controller.addBridge(startIsle, endIsle, false);
+        controller.createBridge(startIsle, endIsle);
 
         //when: horizontal bridge
         boolean collides = controller.collidesBridges(4, 2, 4, 5);
@@ -207,7 +210,7 @@ public class NewGameControllerTest {
         //given: horizontal bridge
         Isle startIsle = new Isle(4, 2, 0);
         Isle endIsle = new Isle(4, 5, 0);
-        controller.addBridge(startIsle, endIsle, false);
+        controller.createBridge(startIsle, endIsle);
 
         //when: vertical bridge
         boolean collides = controller.collidesBridges(3, 3, 6, 3);
@@ -217,14 +220,48 @@ public class NewGameControllerTest {
     }
 
     @Test
-    public void addIsle() {
+    public void createIsle() {
         //given
         List<Integer> indices = IntStream.range(0, HEIGHT * WIDTH).boxed().collect(Collectors.toList());
         controller.setIndices(indices);
         int expectedSize = indices.size() - 5;
 
         //when
-        controller.addIsle(3, 3);
+        controller.createIsle(3, 3);
+
+        //then
+        assertEquals(expectedSize, controller.getIndices().size());
+    }
+
+    @Test
+    public void createBridgeHORIZONTAL() {
+        //given
+        List<Integer> indices = IntStream.range(0, HEIGHT * WIDTH).boxed().collect(Collectors.toList());
+        controller.setIndices(indices);
+        int length = 3;
+        int expectedSize = indices.size() - length;
+        Isle startIsle = new Isle(3, 3, 0);
+        Isle endIsle = new Isle(3, 3 + length, 0);
+
+        //when
+        controller.createBridge(startIsle, endIsle);
+
+        //then
+        assertEquals(expectedSize, controller.getIndices().size());
+    }
+
+    @Test
+    public void createBridgeVERTICAL() {
+        //given
+        List<Integer> indices = IntStream.range(0, HEIGHT * WIDTH).boxed().collect(Collectors.toList());
+        controller.setIndices(indices);
+        int length = 3;
+        int expectedSize = indices.size() - length;
+        Isle startIsle = new Isle(3, 3, 0);
+        Isle endIsle = new Isle(3 + length, 3, 0);
+
+        //when
+        controller.createBridge(startIsle, endIsle);
 
         //then
         assertEquals(expectedSize, controller.getIndices().size());

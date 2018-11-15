@@ -61,7 +61,7 @@ class Grid extends GridPane {
         for (Isle isle : isles) {
             IslePane pane = new IslePane(isle.getY(), isle.getX(), isle.getBridgeCount());
             pane.setOnMouseClicked(e -> isleListener.handle(e));
-            pane.setSmallText(isle.getY() + "/" + isle.getX());
+//            pane.setSmallText(isle.getY() + "/" + isle.getX());
             panes.add(pane);
             add(pane, pane.getX(), pane.getY());
         }

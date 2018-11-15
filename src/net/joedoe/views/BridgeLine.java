@@ -16,14 +16,14 @@ class BridgeLine extends Line {
         this.xEnd = xEnd;
         setStrokeWidth(1.5);
         setStroke(Color.CORAL);
-        translateToLayout(Alignment.getAlignment(yStart, yEnd));
+        translateToLayout();
     }
 
-    private void translateToLayout(Alignment alignment) {
-        if (alignment == Alignment.HORIZONTAL) {
+    private void translateToLayout() {
+        if (Alignment.getAlignment(yStart, yEnd) == Alignment.HORIZONTAL) {
             int tiles = Math.abs(xStart - xEnd);
             setEndX(ONE_TILE * (tiles - 1) + BRIDGE_OVERLAP * 2);
-            if (xStart < xEnd) {
+            if (xStart < xEnd) { // takes this
                 setTranslateX(ONE_TILE - BRIDGE_OVERLAP);
                 setTranslateY(BRIDGE_OFFSET);
             } else {
@@ -33,7 +33,7 @@ class BridgeLine extends Line {
         } else {
             int tiles = Math.abs(yStart - yEnd);
             setEndY(ONE_TILE * (tiles - 1) + BRIDGE_OVERLAP * 2);
-            if (yStart < yEnd) {
+            if (yStart < yEnd) { // takes this
                 setTranslateX((ONE_TILE >> 1) + BRIDGE_OFFSET);
                 setTranslateY((ONE_TILE >> 1) * tiles);
             } else {

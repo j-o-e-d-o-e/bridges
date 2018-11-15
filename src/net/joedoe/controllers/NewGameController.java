@@ -170,7 +170,6 @@ public class NewGameController {
         startIsle.increaseBridgeCount();
         endIsle.addBridge(bridge);
         endIsle.increaseBridgeCount();
-        bridges.add(bridge);
         //for testing
         int indicesSizeOld = indices.size();
         int startY = bridge.getStartY() * height;

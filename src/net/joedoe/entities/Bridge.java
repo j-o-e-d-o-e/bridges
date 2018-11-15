@@ -4,13 +4,14 @@ import net.joedoe.utils.Alignment;
 import net.joedoe.utils.Coordinate;
 
 public class Bridge {
-    private Coordinate start, end;
     private Isle startIsle, endIsle;
+    private Coordinate start, end;
     private Alignment alignment;
 
     public Bridge(Isle startIsle, Isle endIsle) {
         this.startIsle = startIsle;
         this.endIsle = endIsle;
+        //todo: maybe place this if-else in gridcontroller.collides()?
         if (startIsle.getY() + startIsle.getX() < endIsle.getY() + endIsle.getX()) {
             start = new Coordinate(startIsle.getY(), startIsle.getX());
             end = new Coordinate(endIsle.getY(), endIsle.getX());
@@ -21,11 +22,11 @@ public class Bridge {
         this.alignment = Alignment.getAlignment(startIsle.getY(), endIsle.getY());
     }
 
-    Isle getStartIsle() {
+    public Isle getStartIsle() {
         return startIsle;
     }
 
-    Isle getEndIsle() {
+    public Isle getEndIsle() {
         return endIsle;
     }
 

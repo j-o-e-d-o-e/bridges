@@ -26,14 +26,14 @@ class Grid extends GridPane {
     private boolean showMissingBridges = true;
 
     Grid() {
-//        setGridLinesVisible(true);
+        setGridLinesVisible(true);
         setAlignment(Pos.CENTER);
         setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         IntStream.range(0, Mocks.ROWS).mapToObj(i -> new RowConstraints(ONE_TILE)).forEach(row -> getRowConstraints().add(row));
         IntStream.range(0, Mocks.COLS).mapToObj(i -> new ColumnConstraints(ONE_TILE)).forEachOrdered(column -> getColumnConstraints().add(column));
         gridController = new GridController();
         isleListener = new IsleListener(this);
-        addIsles();
+        addIsles(Mocks.ISLES);
     }
 
     Grid(int height, int width, List<Isle> isles, List<Bridge> bridges) {
@@ -48,8 +48,8 @@ class Grid extends GridPane {
         addBridges(bridges);
     }
 
-    private void addIsles() {
-        for (int[] isle : Mocks.ISLES) {
+    private void addIsles(int[][] isles) {
+        for (int[] isle : isles) {
             IslePane pane = new IslePane(isle[0], isle[1], isle[2]);
             pane.setOnMouseClicked(e -> isleListener.handle(e));
             panes.add(pane);
@@ -68,14 +68,15 @@ class Grid extends GridPane {
         gridController.setIsles(isles);
     }
 
-    //for testing
+//    for testing only
     private void addBridges(List<Bridge> bridges) {
         for (Bridge bridge : bridges) {
             BridgeLine line = new BridgeLine(
-                    bridge.getStartY(),
-                    bridge.getStartX(),
-                    bridge.getEndY(),
-                    bridge.getEndX());
+                    bridge.getStartIsle().getY(),
+                    bridge.getStartIsle().getX(),
+                    bridge.getEndIsle().getY(),
+                    bridge.getEndIsle().getX());
+            lines.add(line);
             add(line, line.getXStart(), line.getYStart());
         }
     }

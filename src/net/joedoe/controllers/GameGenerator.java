@@ -49,6 +49,7 @@ public class GameGenerator {
                 if (endIsle != null) {
                     isles.add(endIsle);
                     isleCount--;
+                    //todo: possibly place collidesBridges-condition here
                     bridges.add(createBridge(startIsle, endIsle));
                     if (random.nextBoolean())
                         bridges.add(createBridge(endIsle, startIsle));

@@ -145,7 +145,7 @@ public class GameGenerator {
                 || i.getX() > startX && i.getX() < endX && i.getY() == startY);
     }
 
-    //todo: change bridge.getStartY(), etc.
+    //todo: change methods to bridge.getStartY(), etc.
     public boolean collidesBridges(int startY, int startX, int endY, int endX) {
         if (Alignment.getAlignment(startY, endY) == Alignment.HORIZONTAL)
             return bridges.stream().anyMatch(b -> b.getAlignment() == Alignment.VERTICAL
@@ -194,8 +194,6 @@ public class GameGenerator {
                     .forEach(i -> indices.remove(new Integer(i)));
 
         LOGGER.info("Indices size before/after: " + indicesSizeOld + "/" + indices.size());
-        if (indicesSizeOld == indices.size())
-            LOGGER.info("Nothing changed");
         return bridge;
     }
 

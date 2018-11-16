@@ -18,8 +18,8 @@ import static org.junit.Assert.assertTrue;
 
 public class GameGeneratorTest {
     private GameGenerator controller;
-    private static final int HEIGHT = 6; //MIN: 2, MAX: 25
-    private static final int WIDTH = 6;
+    private static final int HEIGHT = 25; //MIN: 2, MAX: 25
+    private static final int WIDTH = 25;
     private final static Logger LOGGER = Logger.getLogger(GameGeneratorTest.class.getName());
 
     @Before
@@ -38,11 +38,10 @@ public class GameGeneratorTest {
         int initialIsleCount = controller.getIsleCount();
 
         //when
-        List<Isle> isles = controller.generateGame();
+        controller.generateGame();
 
         //then
-        assertEquals(initialIsleCount, isles.size());
-//        isles.forEach(isle -> System.out.println(isle.toString()));
+        assertEquals(initialIsleCount, controller.getIsles().size());
     }
 
     @Test

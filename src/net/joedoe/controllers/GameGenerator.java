@@ -146,16 +146,15 @@ public class GameGenerator {
                 || i.getX() > startX && i.getX() < endX && i.getY() == startY);
     }
 
-    //todo: change methods to bridge.getStartY(), etc.
     public boolean collidesBridges(int startY, int startX, int endY, int endX) {
         if (Alignment.getAlignment(startY, endY) == Alignment.HORIZONTAL)
             return bridges.stream().anyMatch(b -> b.getAlignment() == Alignment.VERTICAL
-                    && b.getStartIsle().getY() < startY && b.getEndIsle().getY() > startY
-                    && startX < b.getStartIsle().getX() && endX > b.getStartIsle().getX());
+                    && b.getStartY() < startY && b.getEndY() > startY
+                    && startX < b.getStartX() && endX > b.getStartX());
         else
             return bridges.stream().anyMatch(b -> b.getAlignment() == Alignment.HORIZONTAL
-                    && b.getStartIsle().getX() < startX && b.getEndIsle().getX() > startX
-                    && startY < b.getStartIsle().getY() && endY > b.getStartIsle().getY());
+                    && b.getStartX() < startX && b.getEndX() > startX
+                    && startY < b.getStartY() && endY > b.getStartY());
     }
 
     public Isle createIsle(int y, int x) {

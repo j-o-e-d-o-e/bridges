@@ -121,17 +121,14 @@ public class GridController {
 
     public boolean collides(Bridge bridge) {
         LOGGER.info(bridge.toString());
-        if (bridge.getAlignment() == Alignment.HORIZONTAL) {
-            int y = bridge.getStartY();
+        if (bridge.getAlignment() == Alignment.HORIZONTAL)
             return bridges.stream().anyMatch(b -> b.getAlignment() == Alignment.VERTICAL
-                    && b.getStartY() < y && b.getEndY() > y
+                    && b.getStartY() < bridge.getStartY() && b.getEndY() > bridge.getStartY()
                     && bridge.getStartX() < b.getStartX() && bridge.getEndX() > b.getStartX());
-        } else {
-            int x = bridge.getStartX();
+        else
             return bridges.stream().anyMatch(b -> b.getAlignment() == Alignment.HORIZONTAL
-                    && b.getStartX() < x && b.getEndX() > x
+                    && b.getStartX() < bridge.getStartX() && b.getEndX() > bridge.getStartX()
                     && bridge.getStartY() < b.getStartY() && bridge.getEndY() > b.getStartY());
-        }
     }
 
     public Isle getIsle(int y, int x) {

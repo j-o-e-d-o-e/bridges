@@ -11,7 +11,6 @@ public class Bridge {
     public Bridge(Isle startIsle, Isle endIsle) {
         this.startIsle = startIsle;
         this.endIsle = endIsle;
-        //todo: maybe place this if-else in gridcontroller.collides()?
         if (startIsle.getY() + startIsle.getX() < endIsle.getY() + endIsle.getX()) {
             start = new Coordinate(startIsle.getY(), startIsle.getX());
             end = new Coordinate(endIsle.getY(), endIsle.getX());

@@ -123,11 +123,11 @@ class NewGameFrame extends Stage {
     private void handleInput() {
         int width, height, isleCount;
         if (autoBtn.isSelected()) {
-            controller.setHeight(25);
-            controller.setWidth(25);
-            controller.setIsleCount(125);
+            controller.setHeight();
+            controller.setWidth();
+            controller.setIsleCount();
             controller.generateGame();
-            board.setGrid(controller.getHeight(), controller.getWidth(), controller.getIsles(), controller.getBridges());
+            board.setGrid(controller.getHeight(), controller.getWidth(), controller.getFinalIsles(), controller.getFinalBridges());
         } else {
             width = Integer.parseInt(widthTxt.getText());
             height = Integer.parseInt(heightTxt.getText());
@@ -146,7 +146,7 @@ class NewGameFrame extends Stage {
                 controller.setWidth(width);
                 controller.setIsleCount();
                 controller.generateGame();
-                board.setGrid(height, width, controller.getIsles(), controller.getBridges());
+                board.setGrid(height, width, controller.getFinalIsles(), controller.getFinalBridges());
             } else {
                 isleCount = Integer.parseInt(islesTxt.getText());
                 if (isleCount < 2 || isleCount > 0.2 * width * height) {
@@ -163,7 +163,7 @@ class NewGameFrame extends Stage {
                 controller.setWidth(width);
                 controller.setIsleCount(isleCount);
                 controller.generateGame();
-                board.setGrid(height, width, controller.getIsles(), controller.getBridges());
+                board.setGrid(height, width, controller.getFinalIsles(), controller.getFinalBridges());
             }
         }
         close();

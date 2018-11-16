@@ -66,6 +66,9 @@ public class GameGenerator {
         Collections.sort(isles);
     }
 
+    /*Returns an isle to which a bridge can be build from the specified isle
+     * @param isle - the isle from which a bridge shall be build
+     * */
     public Isle getEndIsle(Isle startIsle) {
         for (Direction direction : getDirections(startIsle))
             for (int distance : getDistances(startIsle, direction)) {
@@ -103,6 +106,9 @@ public class GameGenerator {
         return null;
     }
 
+    /*Returns a list of possible directions for the specified isle
+     * @param isle - the isle for which the directions need to be found
+     * */
     public List<Direction> getDirections(Isle startIsle) {
         List<Direction> directions = new ArrayList<>();
         if (startIsle.getY() > 1)
@@ -117,6 +123,10 @@ public class GameGenerator {
         return directions;
     }
 
+    /*Returns a list of possible distances for the specified isle and direction
+     * @param isle - the isle for which the directions need to be found
+     * @param direction - the direction where to get the distances
+     * */
     public List<Integer> getDistances(Isle startIsle, Direction direction) {
         int max = 0;
         if (direction == Direction.UP)
@@ -226,8 +236,33 @@ public class GameGenerator {
         return isles;
     }
 
+    public List<int[]> getFinalIsles() {
+        List<int[]> finalIsles = new ArrayList<>();
+        for (Isle isle : isles) {
+            finalIsles.add(new int[]{
+                    isle.getY(),
+                    isle.getX(),
+                    isle.getBridgeCount()
+            });
+        }
+        return finalIsles;
+    }
+
     public List<Bridge> getBridges() {
         return bridges;
+    }
+
+    public List<int[]> getFinalBridges() {
+        List<int[]> finalBridges = new ArrayList<>();
+        for (Bridge bridge : bridges) {
+            finalBridges.add(new int[]{
+                    bridge.getStartIsle().getY(),
+                    bridge.getStartIsle().getX(),
+                    bridge.getEndIsle().getY(),
+                    bridge.getEndIsle().getX()
+            });
+        }
+        return finalBridges;
     }
 
     public void setIndices(List<Integer> indices) {

@@ -5,8 +5,6 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import net.joedoe.controllers.GridController;
-import net.joedoe.entities.Bridge;
-import net.joedoe.entities.Isle;
 import net.joedoe.entities.Mocks;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
@@ -31,25 +29,27 @@ class Grid extends GridPane {
         setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         IntStream.range(0, Mocks.ROWS).mapToObj(i -> new RowConstraints(ONE_TILE)).forEach(row -> getRowConstraints().add(row));
         IntStream.range(0, Mocks.COLS).mapToObj(i -> new ColumnConstraints(ONE_TILE)).forEachOrdered(column -> getColumnConstraints().add(column));
-        gridController = new GridController();
         isleListener = new IsleListener(this);
         addIsles(Mocks.ISLES);
+        gridController = new GridController();
+        gridController.setIsles(Mocks.ISLES);
     }
 
-    Grid(int height, int width, List<Isle> isles, List<Bridge> bridges) {
+    Grid(int height, int width, List<int[]> isles, List<int[]> bridges) {
         setGridLinesVisible(true);
         setAlignment(Pos.CENTER);
         setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         IntStream.range(0, height).mapToObj(i -> new RowConstraints(ONE_TILE)).forEach(row -> getRowConstraints().add(row));
         IntStream.range(0, width).mapToObj(i -> new ColumnConstraints(ONE_TILE)).forEachOrdered(column -> getColumnConstraints().add(column));
-        gridController = new GridController(bridges);
         isleListener = new IsleListener(this);
         addIsles(isles);
-        addBridges(bridges);
+//        addBridges(bridges); // for testing only
+        gridController = new GridController();
+        gridController.setIsles(isles);
+        gridController.setBridges(bridges);
     }
 
-    @SuppressWarnings("SameParameterValue")
-    private void addIsles(int[][] isles) {
+    private void addIsles(List<int[]> isles) {
         for (int[] isle : isles) {
             IslePane pane = new IslePane(isle[0], isle[1], isle[2]);
             pane.setOnMouseClicked(e -> isleListener.handle(e));
@@ -58,25 +58,15 @@ class Grid extends GridPane {
         }
     }
 
-    private void addIsles(List<Isle> isles) {
-        for (Isle isle : isles) {
-            IslePane pane = new IslePane(isle.getY(), isle.getX(), isle.getBridgeCount());
-            pane.setOnMouseClicked(e -> isleListener.handle(e));
-//            pane.setSmallText(isle.getY() + "/" + isle.getX());
-            panes.add(pane);
-            add(pane, pane.getX(), pane.getY());
-        }
-        gridController.setIsles(isles);
-    }
-
-//    for testing only
-    private void addBridges(List<Bridge> bridges) {
-        for (Bridge bridge : bridges) {
+    //    for testing only
+    private void addBridges(List<int[]> bridges) {
+        for (int[] bridge : bridges) {
             BridgeLine line = new BridgeLine(
-                    bridge.getStartIsle().getY(),
-                    bridge.getStartIsle().getX(),
-                    bridge.getEndIsle().getY(),
-                    bridge.getEndIsle().getX());
+                    bridge[0],
+                    bridge[1],
+                    bridge[2],
+                    bridge[3]
+            );
             lines.add(line);
             add(line, line.getXStart(), line.getYStart());
         }

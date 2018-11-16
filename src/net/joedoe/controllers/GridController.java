@@ -2,7 +2,6 @@ package net.joedoe.controllers;
 
 import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
-import net.joedoe.entities.Mocks;
 import net.joedoe.utils.Alignment;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
@@ -22,20 +21,7 @@ public class GridController {
     private final static Logger LOGGER = Logger.getLogger(GridController.class.getName());
 
     public GridController() {
-        addIsles();
         LOGGER.setLevel(Level.OFF);
-    }
-
-    public GridController(List<Bridge> bridges) {
-        this();
-        solution = bridges;
-    }
-
-    private void addIsles() {
-        for (int[] isle : Mocks.ISLES) {
-            isles.add(new Isle(isle[0], isle[1], isle[2]));
-        }
-        Collections.sort(isles);
     }
 
     public Coordinate[] addBridge(int y, int x, Direction direction) {
@@ -155,12 +141,21 @@ public class GridController {
         return isle.getBridgeCount();
     }
 
-    public void setIsles(List<Isle> isles) {
-        this.isles = isles;
+    public void setIsles(List<int[]> islesData) {
+        for (int[] isle : islesData)
+            isles.add(new Isle(
+                    isle[0],
+                    isle[1],
+                    isle[2]
+            ));
+        Collections.sort(isles);
     }
 
-    @SuppressWarnings("unused")
-    void setSolution(List<Bridge> solution) {
-        this.solution = solution;
+    public void setBridges(List<int[]> bridgesData) {
+        for (int[] bridge : bridgesData)
+            bridges.add(new Bridge(
+                    getIsle(bridge[0], bridge[1]),
+                    getIsle(bridge[2], bridge[3])
+            ));
     }
 }

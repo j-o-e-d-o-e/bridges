@@ -183,6 +183,7 @@ public class GameGenerator {
         return bridge;
     }
 
+    @SuppressWarnings("unused")
     public void setHeight() {
         height = random.nextInt((MAX - MIN) + 1) + MIN;
     }
@@ -195,6 +196,7 @@ public class GameGenerator {
         return height;
     }
 
+    @SuppressWarnings("unused")
     public void setWidth() {
         width = random.nextInt((MAX - MIN) + 1) + MIN;
     }

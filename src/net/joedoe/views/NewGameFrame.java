@@ -16,8 +16,8 @@ class NewGameFrame extends Stage {
     private Board board;
     private GameGenerator controller;
     private RadioButton autoBtn;
-    private Label widthLabel, heightLabel, islesLabel;
-    private TextField widthTxt, heightTxt, islesTxt;
+    private Label heightLabel, widthLabel, islesLabel;
+    private TextField heightTxt, widthTxt, islesTxt;
     private CheckBox checkBox;
 
     NewGameFrame(Board board) {
@@ -47,31 +47,33 @@ class NewGameFrame extends Stage {
         customBtn.setToggleGroup(radios);
         radios.selectedToggleProperty().addListener(e -> {
             if (autoBtn.isSelected()) {
-                widthLabel.setDisable(true);
-                widthTxt.setDisable(true);
                 heightLabel.setDisable(true);
                 heightTxt.setDisable(true);
+                widthLabel.setDisable(true);
+                widthTxt.setDisable(true);
                 checkBox.setDisable(true);
                 checkBox.setSelected(false);
                 islesLabel.setDisable(true);
                 islesTxt.setDisable(true);
             } else {
-                widthLabel.setDisable(false);
-                widthTxt.setDisable(false);
                 heightLabel.setDisable(false);
                 heightTxt.setDisable(false);
+                widthLabel.setDisable(false);
+                widthTxt.setDisable(false);
                 checkBox.setDisable(false);
 
             }
         });
-        widthLabel = new Label("Breite:");
-        widthTxt = new TextField();
-        widthTxt.setDisable(true);
-        widthLabel.setDisable(true);
         heightLabel = new Label("Höhe:");
         heightLabel.setDisable(true);
         heightTxt = new TextField();
         heightTxt.setDisable(true);
+
+        widthLabel = new Label("Breite:");
+        widthTxt = new TextField();
+        widthTxt.setDisable(true);
+        widthLabel.setDisable(true);
+
         checkBox = new CheckBox("Inselanzahl festlegen");
         checkBox.setDisable(true);
         checkBox.setOnAction(e -> {
@@ -90,13 +92,13 @@ class NewGameFrame extends Stage {
 
         GridPane grid = new GridPane();
 //        grid.setGridLinesVisible(true);
-        grid.setPadding(new Insets(0, 0, 0, 40));
-        grid.getColumnConstraints().add(new ColumnConstraints(40));
+        grid.setPadding(new Insets(0, 0, 0, 50));
+        grid.getColumnConstraints().add(new ColumnConstraints(50));
         grid.setVgap(10);
-        grid.add(widthLabel, 0, 0);
-        grid.add(widthTxt, 1, 0);
-        grid.add(heightLabel, 0, 1);
-        grid.add(heightTxt, 1, 1);
+        grid.add(heightLabel, 0, 0);
+        grid.add(heightTxt, 1, 0);
+        grid.add(widthLabel, 0, 1);
+        grid.add(widthTxt, 1, 1);
         grid.add(checkBox, 0, 2);
         GridPane.setColumnSpan(checkBox, 3);
         grid.add(islesLabel, 0, 3);
@@ -123,9 +125,9 @@ class NewGameFrame extends Stage {
     private void handleInput() {
         int width, height, isleCount;
         if (autoBtn.isSelected()) {
-            controller.setHeight();
-            controller.setWidth();
-            controller.setIsleCount();
+            controller.setHeight(8);
+            controller.setWidth(14);
+            controller.setIsleCount(22);
             controller.generateGame();
             board.setGrid(controller.getHeight(), controller.getWidth(), controller.getFinalIsles(), controller.getFinalBridges());
         } else {

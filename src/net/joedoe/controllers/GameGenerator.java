@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -27,7 +26,7 @@ public class GameGenerator {
     private final static Logger LOGGER = Logger.getLogger(GameGenerator.class.getName());
 
     public GameGenerator() {
-        LOGGER.setLevel(Level.OFF);
+//        LOGGER.setLevel(Level.OFF);
     }
 
     public void generateGame() {
@@ -39,13 +38,15 @@ public class GameGenerator {
         missingIsles--;
         LOGGER.info("Height: " + height
                 + " Width: " + width
+                + " Isles: " + isleCount
+                + "\nRandom Index: " + index
                 + " Initial Isle: " + initialIsle.toString()
-                + "\nMissing isles: " + missingIsles
-                + " Indices Size: " + indices.size()
+                + "\nIndices Size: " + indices.size()
                 + "\n");
         while (missingIsles > 0) {
             Collections.shuffle(isles);
             for (Isle startIsle : isles) {
+                if (startIsle.getBridgeCount() == 8) continue;
                 Isle endIsle = getEndIsle(startIsle);
                 if (endIsle != null) {
                     isles.add(endIsle);
@@ -91,13 +92,13 @@ public class GameGenerator {
                     x = startIsle.getX() + distance;
                 }
                 //neighbouring check and collision detection
-                if (indices.contains(y * height + x) && !collides(startIsle.getY(), startIsle.getX(), y, x)) {
+                if (indices.contains(y * width + x) && !collides(startIsle.getY(), startIsle.getX(), y, x)) {
                     Isle endIsle = createIsle(y, x);
                     LOGGER.info("Start Isle: " + startIsle.toString()
                             + " Direction: " + direction.toString()
                             + " Distance: " + distance
                             + "\nEnd Isle: " + endIsle.toString()
-                            + "\nCurrent Isle Count: " + isleCount
+                            + "\nMissing Isles: " + isleCount
                             + " Indices Size: " + indices.size()
                             + "\n");
                     return endIsle;
@@ -142,9 +143,14 @@ public class GameGenerator {
         return distances;
     }
 
-    //collision detection for isles and bridges
+    /*Returns boolean whether new bridge collides with existing isles or bridges
+     * @param startY - the start y point of the new bridge
+     * @param startX - the start x point of the new bridge
+     * @param endY - the end y point of the new bridge
+     * @param endX - the end x point of the new bridge
+     * */
     private boolean collides(int startY, int startX, int endY, int endX) {
-        if (startY * height + startX > endY * height + endX) {
+        if (startY * width + startX > endY * width + endX) {
             return collidesIsles(endY, endX, startY, startX) || collidesBridges(endY, endX, startY, startX);
         }
         return collidesIsles(startY, startX, endY, endX) || collidesBridges(startY, startX, endY, endX);
@@ -168,7 +174,7 @@ public class GameGenerator {
 
     public Isle createIsle(int y, int x) {
         Isle isle = new Isle(y, x, 0);
-        int index = y * height + x;
+        int index = y * width + x;
         indices.remove(new Integer(index - width));
         indices.remove(new Integer(index - 1));
         indices.remove(new Integer(index));
@@ -183,12 +189,12 @@ public class GameGenerator {
         startIsle.increaseBridgeCount();
         endIsle.addBridge(bridge);
         endIsle.increaseBridgeCount();
-        int startIndex = bridge.getStartY() * height + bridge.getStartX();
-        int endIndex = bridge.getEndY() * height + bridge.getEndX();
+        int startIndex = bridge.getStartY() * width + bridge.getStartX();
+        int endIndex = bridge.getEndY() * width + bridge.getEndX();
         if (bridge.getAlignment() == Alignment.HORIZONTAL)
             IntStream.range(startIndex, endIndex).boxed().forEach(i -> indices.remove(i));
         else
-            IntStream.range(startIndex, endIndex).filter(i -> i % height == bridge.getStartX())
+            IntStream.range(startIndex, endIndex).filter(i -> i % width == bridge.getStartX())
                     .boxed().forEach(i -> indices.remove(i));
         return bridge;
     }

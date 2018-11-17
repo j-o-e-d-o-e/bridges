@@ -21,13 +21,14 @@ public class GridController {
     private final static Logger LOGGER = Logger.getLogger(GridController.class.getName());
 
     public GridController() {
-        LOGGER.setLevel(Level.OFF);
+//        LOGGER.setLevel(Level.OFF);
     }
 
     public Coordinate[] addBridge(int y, int x, Direction direction) {
         Isle startIsle = getIsle(y, x);
         if (startIsle == null) return null;
         Isle endIsle = findIsle(startIsle, direction);
+        LOGGER.info(endIsle.toString());
         if (endIsle == null) return null;
         Bridge bridge;
         boolean reversed = false;

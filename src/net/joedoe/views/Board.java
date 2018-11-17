@@ -30,4 +30,20 @@ class Board extends StackPane {
     void setShowMissingBridges(boolean selected) {
         grid.setShowMissingBridges(selected);
     }
+
+    void reset() {
+        grid.reset();
+    }
+
+    void showNextBridge() {
+        grid.showNextBridge();
+    }
+
+    void solve() {
+        grid.solve();
+    }
+
+    void stopThread() {
+        grid.stopThread();
+    }
 }

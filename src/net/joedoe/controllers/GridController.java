@@ -15,21 +15,20 @@ import java.util.logging.Logger;
 public class GridController {
     private List<Isle> isles = new ArrayList<>();
     private List<Bridge> bridges = new ArrayList<>();
-    @SuppressWarnings({"FieldCanBeLocal", "unused"})
-    private List<Bridge> solution;
+    private List<Bridge> solution = new ArrayList<>();
 
     private final static Logger LOGGER = Logger.getLogger(GridController.class.getName());
 
     public GridController() {
-//        LOGGER.setLevel(Level.OFF);
+        LOGGER.setLevel(Level.OFF);
     }
 
     public Coordinate[] addBridge(int y, int x, Direction direction) {
         Isle startIsle = getIsle(y, x);
         if (startIsle == null) return null;
         Isle endIsle = findIsle(startIsle, direction);
-        LOGGER.info(endIsle.toString());
         if (endIsle == null) return null;
+        LOGGER.info(endIsle.toString());
         Bridge bridge;
         boolean reversed = false;
         if (startIsle.hasNoBridge(endIsle))
@@ -152,11 +151,35 @@ public class GridController {
         Collections.sort(isles);
     }
 
-    public void setBridges(List<int[]> bridgesData) {
+    public void setSolution(List<int[]> bridgesData) {
         for (int[] bridge : bridgesData)
-            bridges.add(new Bridge(
+            solution.add(new Bridge(
                     getIsle(bridge[0], bridge[1]),
                     getIsle(bridge[2], bridge[3])
             ));
+    }
+
+    public void reset() {
+        bridges.clear();
+        isles.forEach(Isle::clearBridges);
+    }
+
+    public Coordinate[] showNextBridge() {
+        Bridge next = solution.stream().filter(bridge -> !bridges.contains(bridge)).findFirst().orElse(null);
+        if (next == null) return null;
+        bridges.add(next);
+        Isle startIsle = next.getStartIsle();
+        startIsle.addBridge(next);
+        Isle endIsle = next.getEndIsle();
+        endIsle.addBridge(next);
+        if (startIsle.getY() + startIsle.getX() < endIsle.getY() + endIsle.getX())
+            return new Coordinate[]{
+                    new Coordinate(next.getStartY(), next.getStartX()),
+                    new Coordinate(next.getEndY(), next.getEndX())
+            };
+        return new Coordinate[]{
+                new Coordinate(next.getEndY(), next.getEndX()),
+                new Coordinate(next.getStartY(), next.getStartX())
+        };
     }
 }

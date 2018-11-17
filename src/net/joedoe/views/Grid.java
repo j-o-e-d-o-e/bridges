@@ -16,27 +16,28 @@ import java.util.stream.IntStream;
 import static net.joedoe.utils.GameInfo.*;
 
 class Grid extends GridPane {
-    private GridController gridController;
+    private GridController controller;
     private List<IslePane> panes = new ArrayList<>();
     private List<BridgeLine> lines = new ArrayList<>();
     private EventHandler<StatusEvent> statusListener;
     private IsleListener isleListener;
     private boolean showMissingBridges = true;
+    private Thread thread;
 
     Grid() {
-        setGridLinesVisible(true);
+//        setGridLinesVisible(true);
         setAlignment(Pos.CENTER);
         setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         IntStream.range(0, Mocks.ROWS).mapToObj(i -> new RowConstraints(ONE_TILE)).forEach(row -> getRowConstraints().add(row));
         IntStream.range(0, Mocks.COLS).mapToObj(i -> new ColumnConstraints(ONE_TILE)).forEachOrdered(column -> getColumnConstraints().add(column));
         isleListener = new IsleListener(this);
         addIsles(Mocks.ISLES);
-        gridController = new GridController();
-        gridController.setIsles(Mocks.ISLES);
+        controller = new GridController();
+        controller.setIsles(Mocks.ISLES);
     }
 
     Grid(int height, int width, List<int[]> isles, List<int[]> bridges) {
-        setGridLinesVisible(true);
+//        setGridLinesVisible(true);
         setAlignment(Pos.CENTER);
         setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         IntStream.range(0, height).mapToObj(i -> new RowConstraints(ONE_TILE)).forEach(row -> getRowConstraints().add(row));
@@ -44,9 +45,9 @@ class Grid extends GridPane {
         isleListener = new IsleListener(this);
         addIsles(isles);
 //        addBridges(bridges); // for testing only
-        gridController = new GridController();
-        gridController.setIsles(isles);
-        gridController.setBridges(bridges);
+        controller = new GridController();
+        controller.setIsles(isles);
+        controller.setSolution(bridges);
     }
 
     private void addIsles(List<int[]> isles) {
@@ -59,6 +60,7 @@ class Grid extends GridPane {
     }
 
     //    for testing only
+    @SuppressWarnings("unused")
     private void addBridges(List<int[]> bridges) {
         for (int[] bridge : bridges) {
             BridgeLine line = new BridgeLine(
@@ -73,7 +75,11 @@ class Grid extends GridPane {
     }
 
     void addBridge(IslePane pane, Direction direction) {
-        Coordinate[] coordinates = gridController.addBridge(pane.getY(), pane.getX(), direction);
+        Coordinate[] coordinates = controller.addBridge(pane.getY(), pane.getX(), direction);
+        addBridge(coordinates);
+    }
+
+    private void addBridge(Coordinate[] coordinates) {
         if (coordinates != null) {
             updateLines();
             BridgeLine line = new BridgeLine(
@@ -89,7 +95,7 @@ class Grid extends GridPane {
     }
 
     void removeBridge(IslePane pane, Direction direction) {
-        Coordinate[] coordinates = gridController.removeBridge(pane.getY(), pane.getX(), direction);
+        Coordinate[] coordinates = controller.removeBridge(pane.getY(), pane.getX(), direction);
         if (coordinates != null) {
             updateLines();
             BridgeLine line = lines.stream().filter(
@@ -106,15 +112,11 @@ class Grid extends GridPane {
 
     private void updatePanes() {
         for (IslePane pane : panes) {
-            int bridgeCount = gridController.getMissingBridgeCount(pane.getY(), pane.getX());
-            if (bridgeCount == 0)
-                pane.setColor(SOLVED_COLOR);
-            else if (bridgeCount < 0)
-                pane.setColor(ALERT_COLOR);
-            else
-                pane.setColor(STD_COLOR);
-            if (!showMissingBridges)
-                bridgeCount = gridController.getBridgeCount(pane.getY(), pane.getX());
+            int bridgeCount = controller.getMissingBridgeCount(pane.getY(), pane.getX());
+            if (bridgeCount == 0) pane.setColor(SOLVED_COLOR);
+            else if (bridgeCount < 0) pane.setColor(ALERT_COLOR);
+            else pane.setColor(STD_COLOR);
+            if (!showMissingBridges) bridgeCount = controller.getBridgeCount(pane.getY(), pane.getX());
             pane.setText(Integer.toString(bridgeCount));
         }
     }
@@ -125,7 +127,7 @@ class Grid extends GridPane {
     }
 
     private void checkIfSolved() {
-        if (gridController.gameSolved()) {
+        if (controller.gameSolved()) {
             lines.get(lines.size() - 1).setStroke(STD_COLOR);
             statusListener.handle(new StatusEvent(null, "Gelöst!"));
         }
@@ -136,14 +138,38 @@ class Grid extends GridPane {
         for (IslePane pane : panes) {
             int bridgeCount;
             if (showMissingBridges)
-                bridgeCount = gridController.getMissingBridgeCount(pane.getY(), pane.getX());
+                bridgeCount = controller.getMissingBridgeCount(pane.getY(), pane.getX());
             else
-                bridgeCount = gridController.getBridgeCount(pane.getY(), pane.getX());
+                bridgeCount = controller.getBridgeCount(pane.getY(), pane.getX());
             pane.setText(Integer.toString(bridgeCount));
         }
     }
 
     void setStatusListener(EventHandler<StatusEvent> statusListener) {
         this.statusListener = statusListener;
+    }
+
+    void reset() {
+        getChildren().removeAll(lines);
+        lines.clear();
+        for (IslePane pane : panes) {
+            pane.setColor(STD_COLOR);
+            pane.setText(Integer.toString(controller.getBridgeCount(pane.getY(), pane.getX())));
+        }
+        controller.reset();
+    }
+
+    void showNextBridge() {
+        if (!controller.gameSolved())
+            addBridge(controller.showNextBridge());
+    }
+
+    void solve() {
+//        thread = new Thread();
+    }
+
+    void stopThread() {
+        System.out.println("Stop Thread");
+        if(thread != null) thread.stop();
     }
 }

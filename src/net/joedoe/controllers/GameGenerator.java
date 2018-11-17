@@ -52,11 +52,10 @@ public class GameGenerator {
                     isles.add(endIsle);
                     missingIsles--;
                     bridges.add(createBridge(startIsle, endIsle));
-                    if (random.nextBoolean())
+                    if (random.nextBoolean() && startIsle.getBridgeCount() < 8)
                         bridges.add(createBridge(endIsle, startIsle));
                     break;
-                }
-                if (startIsle == isles.get(isles.size() - 1)) {
+                } else if (startIsle == isles.get(isles.size() - 1)) {
                     isles.clear();
                     bridges.clear();
                     generateGame();
@@ -64,7 +63,6 @@ public class GameGenerator {
                 }
             }
         }
-        Collections.sort(isles);
     }
 
     /*Returns an isle to which a bridge can be build from the specified isle

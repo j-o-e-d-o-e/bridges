@@ -125,9 +125,12 @@ class NewGameFrame extends Stage {
     private void handleInput() {
         int width, height, isleCount;
         if (autoBtn.isSelected()) {
-            controller.setHeight(8);
-            controller.setWidth(14);
-            controller.setIsleCount(22);
+            controller.setHeight();
+            controller.setWidth();
+            controller.setIsleCount();
+//            controller.setHeight(25);
+//            controller.setWidth(25);
+//            controller.setIsleCount((int) (0.2 * controller.getHeight() * controller.getWidth()));
             controller.generateGame();
             board.setGrid(controller.getHeight(), controller.getWidth(), controller.getFinalIsles(), controller.getFinalBridges());
         } else {

@@ -72,4 +72,8 @@ public class Isle implements Comparable<Isle> {
     public String toString() {
         return "Isle{" + "position=" + position + "bridgeCount=" + bridgeCount + '}';
     }
+
+    public void clearBridges() {
+        bridges.clear();
+    }
 }

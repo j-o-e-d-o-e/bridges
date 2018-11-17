@@ -26,12 +26,6 @@ public class IslePane extends StackPane {
         label.setText(text);
     }
 
-    //for testing
-    void setSmallText(String text){
-        label.setFont(new Font(10));
-        label.setText(text);
-    }
-
     void setColor(Color color) {
         circle.setFill(color);
     }

@@ -23,7 +23,7 @@ class BridgeLine extends Line {
         if (Alignment.getAlignment(yStart, yEnd) == Alignment.HORIZONTAL) {
             int tiles = Math.abs(xStart - xEnd);
             setEndX(ONE_TILE * (tiles - 1) + BRIDGE_OVERLAP * 2);
-            if (xStart < xEnd) { // takes this
+            if (xStart < xEnd) {
                 setTranslateX(ONE_TILE - BRIDGE_OVERLAP);
                 setTranslateY(BRIDGE_OFFSET);
             } else {
@@ -33,7 +33,7 @@ class BridgeLine extends Line {
         } else {
             int tiles = Math.abs(yStart - yEnd);
             setEndY(ONE_TILE * (tiles - 1) + BRIDGE_OVERLAP * 2);
-            if (yStart < yEnd) { // takes this
+            if (yStart < yEnd) {
                 setTranslateX((ONE_TILE >> 1) + BRIDGE_OFFSET);
                 setTranslateY((ONE_TILE >> 1) * tiles);
             } else {

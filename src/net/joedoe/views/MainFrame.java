@@ -24,14 +24,19 @@ public class MainFrame extends BorderPane {
         setTop(createMenuBar());
         setCenter(createBoard());
         setBottom(createControls());
+//        setOnMouseClicked(e-> board.stopThread());
     }
 
     private MenuBar createMenuBar() {
         MenuBar menuBar = new MenuBar();
         Menu menu = new Menu("Datei");
         MenuItem newGame = new MenuItem("Neues Rätsel");
-        newGame.setOnAction(e -> createNewGame());
+        newGame.setOnAction(e -> {
+            createNewGame();
+            status.setText("Das Rätsel ist noch nicht gelöst!");
+        });
         MenuItem reset = new MenuItem("Rätsel neu starten");
+        reset.setOnAction(e -> board.reset());
         MenuItem loadGame = new MenuItem("Rätsel laden");
         MenuItem save = new MenuItem("Rätsel speichern");
         MenuItem saveAs = new MenuItem("Rätsel speichern unter");
@@ -61,10 +66,10 @@ public class MainFrame extends BorderPane {
         hBox.setPrefWidth(100);
         Button solveBtn = new Button("Automatisch lösen");
         solveBtn.setMinWidth(hBox.getPrefWidth());
-        solveBtn.setOnAction(e -> status.setText(solveBtn.getText()));
+        solveBtn.setOnAction(e -> board.solve());
         Button nextBtn = new Button("Nächste Brücke");
         nextBtn.setMinWidth(hBox.getPrefWidth());
-        nextBtn.setOnAction(e -> status.setText(nextBtn.getText()));
+        nextBtn.setOnAction(e -> board.showNextBridge());
         hBox.getChildren().addAll(solveBtn, nextBtn);
         status = new Label("Das Rätsel ist noch nicht gelöst!");
         vBox.getChildren().addAll(checkBox, hBox, status);

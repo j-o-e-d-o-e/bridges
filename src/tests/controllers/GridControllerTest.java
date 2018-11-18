@@ -25,7 +25,7 @@ public class GridControllerTest {
         //given
         Direction direction = Direction.DOWN;
         Isle startIsle = gridController.getIsle(0, 0);
-        Isle endIsle = gridController.findIsle(startIsle, direction);
+        Isle endIsle = gridController.getEndIsle(startIsle, direction);
 
         //when
         gridController.addBridge(startIsle.getY(), startIsle.getX(), direction);
@@ -45,7 +45,7 @@ public class GridControllerTest {
         //given
         Direction direction = Direction.DOWN;
         Isle startIsle = gridController.getIsle(0, 0);
-        Isle endIsle = gridController.findIsle(startIsle, direction);
+        Isle endIsle = gridController.getEndIsle(startIsle, direction);
 
         //when
         gridController.addBridge(startIsle.getY(), startIsle.getX(), direction);
@@ -66,7 +66,7 @@ public class GridControllerTest {
         //given
         Direction direction = Direction.DOWN;
         Isle startIsle = gridController.getIsle(0, 0);
-        Isle endIsle = gridController.findIsle(startIsle, direction);
+        Isle endIsle = gridController.getEndIsle(startIsle, direction);
 
         //when
 //        Bridge added = gridController.createBridge(startIsle.getY(), startIsle.getX(), direction);
@@ -100,7 +100,7 @@ public class GridControllerTest {
         Isle startIsle = gridController.getIsle(5, 3);
 
         //when
-        Isle endIsle = gridController.findIsle(startIsle, Direction.UP);
+        Isle endIsle = gridController.getEndIsle(startIsle, Direction.UP);
 
         //then
         assertEquals(startIsle.getX(), endIsle.getX());
@@ -113,7 +113,7 @@ public class GridControllerTest {
         Isle startIsle = gridController.getIsle(6, 6);
 
         //when
-        Isle endIsle = gridController.findIsle(startIsle, Direction.LEFT);
+        Isle endIsle = gridController.getEndIsle(startIsle, Direction.LEFT);
 
         //then
         assertEquals(startIsle.getY(), endIsle.getY());
@@ -126,7 +126,7 @@ public class GridControllerTest {
         Isle startIsle = gridController.getIsle(1, 3);
 
         //when
-        Isle endIsle = gridController.findIsle(startIsle, Direction.DOWN);
+        Isle endIsle = gridController.getEndIsle(startIsle, Direction.DOWN);
 
         //then
         assertEquals(startIsle.getX(), endIsle.getX());
@@ -139,7 +139,7 @@ public class GridControllerTest {
         Isle startIsle = gridController.getIsle(6, 1);
 
         //when
-        Isle endIsle = gridController.findIsle(startIsle, Direction.RIGHT);
+        Isle endIsle = gridController.getEndIsle(startIsle, Direction.RIGHT);
 
         //then
         assertEquals(startIsle.getY(), endIsle.getY());

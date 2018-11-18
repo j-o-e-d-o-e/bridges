@@ -26,9 +26,8 @@ public class GridController {
     public Coordinate[] addBridge(int y, int x, Direction direction) {
         Isle startIsle = getIsle(y, x);
         if (startIsle == null) return null;
-        Isle endIsle = findIsle(startIsle, direction);
+        Isle endIsle = getEndIsle(startIsle, direction);
         if (endIsle == null) return null;
-        LOGGER.info(endIsle.toString());
         Bridge bridge;
         boolean reversed = false;
         if (startIsle.hasNoBridge(endIsle))
@@ -57,7 +56,7 @@ public class GridController {
     public Coordinate[] removeBridge(int y, int x, Direction direction) {
         Isle startIsle = getIsle(y, x);
         if (startIsle == null) return null;
-        Isle endIsle = findIsle(startIsle, direction);
+        Isle endIsle = getEndIsle(startIsle, direction);
         if (endIsle == null) return null;
         Bridge bridge = startIsle.getBridge(endIsle, true);
         boolean reversed = false;
@@ -85,7 +84,7 @@ public class GridController {
      * @param isle - the isle for which is nearest isle is to be found
      * @param direction - the direction where to look for the nearest isle
      * */
-    public Isle findIsle(Isle isle, Direction direction) {
+    public Isle getEndIsle(Isle isle, Direction direction) {
         LOGGER.info(isle.toString() + " " + direction);
         if (direction == Direction.UP)
             return isles.stream().sorted(Collections.reverseOrder())

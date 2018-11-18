@@ -123,33 +123,41 @@ class NewGameFrame extends Stage {
     }
 
     private void handleInput() {
-        int width, height, isleCount;
+        int width = 0;
+        int height = 0;
+        int isleCount = 0;
         if (autoBtn.isSelected()) {
-            controller.setHeight();
-            controller.setWidth();
-            controller.setIsleCount();
-//            controller.setHeight(25);
-//            controller.setWidth(25);
-//            controller.setIsleCount((int) (0.2 * controller.getHeight() * controller.getWidth()));
+//            controller.setHeight();
+//            controller.setWidth();
+//            controller.setIsleCount();
+            controller.setHeight(25);
+            controller.setWidth(25);
+            controller.setIsleCount(125);
         } else {
-            width = Integer.parseInt(widthTxt.getText());
-            height = Integer.parseInt(heightTxt.getText());
+            try {
+                width = Integer.parseInt(widthTxt.getText());
+                height = Integer.parseInt(heightTxt.getText());
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
             if (width < 4 || width > 25 || height < 4 || height > 25) {
-                setAlert("Breite und Höhe müssen größer 4 und kleiner 25 sein.");
+                setAlert("Breite und Höhe müssen größer 3 und kleiner 26 sein.");
                 return;
             }
-            if (!checkBox.isSelected()) {
-                controller.setHeight(height);
-                controller.setWidth(width);
+            controller.setHeight(height);
+            controller.setWidth(width);
+            if (!checkBox.isSelected())
                 controller.setIsleCount();
-            } else {
-                isleCount = Integer.parseInt(islesTxt.getText());
+            else {
+                try {
+                    isleCount = Integer.parseInt(islesTxt.getText());
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
                 if (isleCount < 2 || isleCount > 0.2 * width * height) {
-                    setAlert("Inselanzahl muss größer 2 und kleiner Breite * Höhe * 0.2 sein.");
+                    setAlert("Inselanzahl muss größer 1 und kleiner/gleich Breite * Höhe * 0.2 sein.");
                     return;
                 }
-                controller.setHeight(height);
-                controller.setWidth(width);
                 controller.setIsleCount(isleCount);
             }
         }
@@ -159,7 +167,7 @@ class NewGameFrame extends Stage {
     }
 
     private void setAlert(String text) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Ungültige Eingabe");
         alert.setHeaderText(text);
         Optional<ButtonType> result = alert.showAndWait();

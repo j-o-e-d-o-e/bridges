@@ -19,6 +19,7 @@ public class Bridge {
             end = new Coordinate(startIsle.getY(), startIsle.getX());
         }
         this.alignment = Alignment.getAlignment(startIsle.getY(), endIsle.getY());
+//        startIsle.compareTo(endIsle);
     }
 
     public Isle getStartIsle() {

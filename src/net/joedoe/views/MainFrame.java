@@ -71,7 +71,7 @@ public class MainFrame extends BorderPane {
         nextBtn.setMinWidth(hBox.getPrefWidth());
         nextBtn.setOnAction(e -> board.showNextBridge());
         hBox.getChildren().addAll(solveBtn, nextBtn);
-        status = new Label("Das Rätsel ist noch nicht gelöst!");
+        status = new Label("Noch nicht gelöst.");
         vBox.getChildren().addAll(checkBox, hBox, status);
         return vBox;
     }

@@ -90,7 +90,7 @@ class Grid extends GridPane {
             lines.add(line);
             add(line, line.getXStart(), line.getYStart());
             updatePanes();
-            checkIfSolved();
+            checkStatus();
         }
     }
 
@@ -106,7 +106,7 @@ class Grid extends GridPane {
             lines.remove(line);
             getChildren().remove(line);
             updatePanes();
-            checkIfSolved();
+            checkStatus();
         }
     }
 
@@ -126,11 +126,16 @@ class Grid extends GridPane {
             lines.get(lines.size() - 1).setStroke(STD_COLOR);
     }
 
-    private void checkIfSolved() {
+    private void checkStatus() {
         if (controller.gameSolved()) {
             lines.get(lines.size() - 1).setStroke(STD_COLOR);
             statusListener.handle(new StatusEvent(null, "Gelöst!"));
-        }
+        } else if (controller.gameUnsolvable())
+            statusListener.handle(new StatusEvent(null, "Nicht mehr lösbar."));
+        else if (controller.errorOccured())
+            statusListener.handle(new StatusEvent(null, "Enthält einen Fehler."));
+        else
+            statusListener.handle(new StatusEvent(null, "Noch nicht gelöst."));
     }
 
     void setShowMissingBridges(boolean showMissingBridges) {
@@ -170,6 +175,6 @@ class Grid extends GridPane {
 
     void stopThread() {
         System.out.println("Stop Thread");
-        if(thread != null) thread.stop();
+        if (thread != null) thread.stop();
     }
 }

@@ -87,22 +87,20 @@ public class GridController {
      * */
     public Isle findIsle(Isle isle, Direction direction) {
         LOGGER.info(isle.toString() + " " + direction);
-        if (direction == Direction.UP) {
-            List<Isle> reversed = new ArrayList<>(isles);
-            Collections.reverse(reversed);
-            return reversed.stream().filter(i -> i.getX() == isle.getX()
-                    && i.getY() < isle.getY()).findFirst().orElse(null);
-        } else if (direction == Direction.LEFT) {
-            List<Isle> reversed = new ArrayList<>(isles);
-            Collections.reverse(reversed);
-            return reversed.stream().filter(i -> i.getY() == isle.getY()
-                    && i.getX() < isle.getX()).findFirst().orElse(null);
-        } else if (direction == Direction.DOWN)
-            return isles.stream().filter(i -> i.getX() == isle.getX()
-                    && i.getY() > isle.getY()).findFirst().orElse(null);
+        if (direction == Direction.UP)
+            return isles.stream().sorted(Collections.reverseOrder())
+                    .filter(i -> i.getX() == isle.getX() && i.getY() < isle.getY())
+                    .findFirst().orElse(null);
+        else if (direction == Direction.LEFT)
+            return isles.stream().sorted(Collections.reverseOrder())
+                    .filter(i -> i.getY() == isle.getY() && i.getX() < isle.getX())
+                    .findFirst().orElse(null);
+        else if (direction == Direction.DOWN)
+            return isles.stream().filter(i -> i.getX() == isle.getX() && i.getY() > isle.getY())
+                    .findFirst().orElse(null);
         else
-            return isles.stream().filter(i -> i.getY() == isle.getY()
-                    && i.getX() > isle.getX()).findFirst().orElse(null);
+            return isles.stream().filter(i -> i.getY() == isle.getY() && i.getX() > isle.getX())
+                    .findFirst().orElse(null);
     }
 
     public boolean collides(Bridge bridge) {
@@ -125,19 +123,13 @@ public class GridController {
         return bridges;
     }
 
-    public boolean gameSolved() {
-        return isles.stream().allMatch(isle -> isle.getMissingBridgeCount() == 0);
-    }
-
     public int getMissingBridgeCount(int y, int x) {
         Isle isle = getIsle(y, x);
-        if (isle == null) return 0;
         return isle.getMissingBridgeCount();
     }
 
     public int getBridgeCount(int y, int x) {
         Isle isle = getIsle(y, x);
-        if (isle == null) return 0;
         return isle.getBridgeCount();
     }
 
@@ -165,14 +157,20 @@ public class GridController {
     }
 
     public Coordinate[] showNextBridge() {
-        Bridge next = solution.stream().filter(bridge -> !bridges.contains(bridge)).findFirst().orElse(null);
+        /*todo: find first bridge from solution whose unique combination of start- and endisle
+        * is not present in the bridges list*/
+//        Bridge next = solution.stream().filter(bridge -> !bridges.contains(bridge))
+//                .findFirst().orElse(null);
+        Bridge next = solution.stream().filter(bridge -> bridges.stream().allMatch(
+                b -> bridge.getStartIsle() != b.getStartIsle()
+                        && bridge.getEndIsle() != b.getEndIsle())).findFirst().orElse(null);
         if (next == null) return null;
         bridges.add(next);
         Isle startIsle = next.getStartIsle();
         startIsle.addBridge(next);
         Isle endIsle = next.getEndIsle();
         endIsle.addBridge(next);
-        if (startIsle.getY() + startIsle.getX() < endIsle.getY() + endIsle.getX())
+        if (startIsle.compareTo(endIsle) > 0)
             return new Coordinate[]{
                     new Coordinate(next.getStartY(), next.getStartX()),
                     new Coordinate(next.getEndY(), next.getEndX())
@@ -181,5 +179,17 @@ public class GridController {
                 new Coordinate(next.getEndY(), next.getEndX()),
                 new Coordinate(next.getStartY(), next.getStartX())
         };
+    }
+
+    public boolean errorOccured() {
+        return isles.stream().anyMatch(isle -> isle.getMissingBridgeCount() < 0);
+    }
+
+    public boolean gameUnsolvable() {
+        return isles.stream().allMatch(isle -> isle.getMissingBridgeCount() <= 0);
+    }
+
+    public boolean gameSolved() {
+        return isles.stream().allMatch(isle -> isle.getMissingBridgeCount() == 0);
     }
 }

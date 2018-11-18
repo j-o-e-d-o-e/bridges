@@ -1,4 +1,4 @@
-package net.joedoe.controllers;
+package net.joedoe.logics;
 
 import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;

@@ -4,8 +4,9 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import net.joedoe.controllers.GridController;
-import net.joedoe.entities.Mocks;
+import net.joedoe.logics.GameSolver;
+import net.joedoe.logics.GridController;
+import net.joedoe.utils.Mocks;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
 
@@ -170,11 +171,14 @@ class Grid extends GridPane {
     }
 
     void solve() {
-//        thread = new Thread();
+        GameSolver solver = new GameSolver(controller);
+        thread = new Thread(solver);
+        thread.start();
+        addBridge(solver.getNext());
     }
 
     void stopThread() {
         System.out.println("Stop Thread");
-        if (thread != null) thread.stop();
+        if (thread != null) thread = null;
     }
 }

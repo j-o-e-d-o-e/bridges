@@ -1,6 +1,6 @@
 package tests.controllers;
 
-import net.joedoe.controllers.GridController;
+import net.joedoe.logics.GridController;
 import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.utils.Direction;

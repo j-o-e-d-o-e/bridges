@@ -6,7 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import net.joedoe.controllers.GameGenerator;
+import net.joedoe.logics.GameGenerator;
 
 import java.util.Optional;
 

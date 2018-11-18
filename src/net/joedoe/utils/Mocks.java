@@ -1,4 +1,4 @@
-package net.joedoe.entities;
+package net.joedoe.utils;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,6 +1,6 @@
 package tests.controllers;
 
-import net.joedoe.controllers.GameGenerator;
+import net.joedoe.logics.GameGenerator;
 import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.utils.Direction;

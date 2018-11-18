@@ -1,8 +1,9 @@
-package net.joedoe.controllers;
+package net.joedoe.logics;
 
 import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.utils.Alignment;
+import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
 
 import java.util.ArrayList;
@@ -17,11 +18,10 @@ import java.util.stream.IntStream;
 public class GameGenerator {
     private static final int MAX = 25;
     private static final int MIN = 2;
-    private int height, width;
-    private int isleCount;
-    private List<Integer> indices = new ArrayList<>();
+    private int height, width, isleCount;
     private List<Isle> isles = new ArrayList<>();
     private List<Bridge> bridges = new ArrayList<>();
+    private List<Integer> indices = new ArrayList<>();
     private Random random = new Random();
 
     private final static Logger LOGGER = Logger.getLogger(GameGenerator.class.getName());
@@ -257,15 +257,17 @@ public class GameGenerator {
         return bridges;
     }
 
-    public List<int[]> getFinalBridges() {
-        List<int[]> finalBridges = new ArrayList<>();
+    public List<Coordinate[]> getFinalBridges() {
+        List<Coordinate[]> finalBridges = new ArrayList<>();
         for (Bridge bridge : bridges) {
-            finalBridges.add(new int[]{
-                    bridge.getStartIsle().getY(),
-                    bridge.getStartIsle().getX(),
-                    bridge.getEndIsle().getY(),
-                    bridge.getEndIsle().getX()
-            });
+            finalBridges.add(new Coordinate[]{
+                    new Coordinate(
+                            bridge.getStartIsle().getY(),
+                            bridge.getStartIsle().getX()),
+                    new Coordinate(
+                            bridge.getEndIsle().getY(),
+                            bridge.getEndIsle().getX())}
+            );
         }
         return finalBridges;
     }

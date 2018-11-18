@@ -131,50 +131,40 @@ class NewGameFrame extends Stage {
 //            controller.setHeight(25);
 //            controller.setWidth(25);
 //            controller.setIsleCount((int) (0.2 * controller.getHeight() * controller.getWidth()));
-            controller.generateGame();
-            board.setGrid(controller.getHeight(), controller.getWidth(), controller.getFinalIsles(), controller.getFinalBridges());
         } else {
             width = Integer.parseInt(widthTxt.getText());
             height = Integer.parseInt(heightTxt.getText());
             if (width < 4 || width > 25 || height < 4 || height > 25) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Ungültige Eingabe");
-                alert.setHeaderText("Breite und Höhe müssen größer 4 und kleiner 25 sein.");
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.isPresent() && result.get() == ButtonType.OK)
-                    alert.close();
-                reset();
+                setAlert("Breite und Höhe müssen größer 4 und kleiner 25 sein.");
                 return;
             }
             if (!checkBox.isSelected()) {
                 controller.setHeight(height);
                 controller.setWidth(width);
                 controller.setIsleCount();
-                controller.generateGame();
-                board.setGrid(height, width, controller.getFinalIsles(), controller.getFinalBridges());
             } else {
                 isleCount = Integer.parseInt(islesTxt.getText());
                 if (isleCount < 2 || isleCount > 0.2 * width * height) {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("Ungültige Eingabe");
-                    alert.setHeaderText("Inselanzahl muss größer 2 und kleiner Breite * Höhe * 0.2 sein.");
-                    Optional<ButtonType> result = alert.showAndWait();
-                    if (result.isPresent() && result.get() == ButtonType.OK)
-                        alert.close();
-                    reset();
+                    setAlert("Inselanzahl muss größer 2 und kleiner Breite * Höhe * 0.2 sein.");
                     return;
                 }
                 controller.setHeight(height);
                 controller.setWidth(width);
                 controller.setIsleCount(isleCount);
-                controller.generateGame();
-                board.setGrid(height, width, controller.getFinalIsles(), controller.getFinalBridges());
             }
         }
+        controller.generateGame();
+        board.setGrid(controller.getHeight(), controller.getWidth(), controller.getFinalIsles(), controller.getFinalBridges());
         close();
     }
 
-    private void reset() {
+    private void setAlert(String text) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Ungültige Eingabe");
+        alert.setHeaderText(text);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK)
+            alert.close();
         widthTxt.setText("");
         heightTxt.setText("");
         islesTxt.setText("");

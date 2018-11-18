@@ -1,29 +1,41 @@
 package net.joedoe.logics;
 
 import net.joedoe.utils.Coordinate;
+import net.joedoe.views.SolverListener;
 
-public class GameSolver implements Runnable {
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class GameSolver {
+    private final ExecutorService service = Executors.newCachedThreadPool();
+    private boolean running = true;
     private GridController controller;
-    private Coordinate[] next;
+    private SolverListener listener;
 
     public GameSolver(GridController controller) {
         this.controller = controller;
-    }
-
-    @Override
-    public void run() {
-        if (!controller.gameSolved()) {
-            next = controller.showNextBridge();
-            System.out.println("Sugar");
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        service.submit(() -> {
+            while (running) {
+                listener.onChange();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-        }
+        });
     }
 
-    public Coordinate[] getNext() {
-        return next;
+    public Coordinate[] showNextBridge() {
+        return controller.showNextBridge();
+    }
+
+    public void shutdown() {
+        running = false;
+        service.shutdown();
+    }
+
+    public void addListener(SolverListener listener) {
+        this.listener = listener;
     }
 }

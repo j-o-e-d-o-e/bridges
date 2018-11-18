@@ -1,14 +1,15 @@
 package net.joedoe.views;
 
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import net.joedoe.logics.GameSolver;
 import net.joedoe.logics.GridController;
-import net.joedoe.utils.Mocks;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
+import net.joedoe.utils.Mocks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,8 @@ class Grid extends GridPane {
     private EventHandler<StatusEvent> statusListener;
     private IsleListener isleListener;
     private boolean showMissingBridges = true;
-    private Thread thread;
+    private GameSolver solver;
+
 
     Grid() {
 //        setGridLinesVisible(true);
@@ -37,7 +39,7 @@ class Grid extends GridPane {
         controller.setIsles(Mocks.ISLES);
     }
 
-    Grid(int height, int width, List<int[]> isles, List<int[]> bridges) {
+    Grid(int height, int width, List<int[]> isles, List<Coordinate[]> bridges) {
 //        setGridLinesVisible(true);
         setAlignment(Pos.CENTER);
         setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
@@ -62,13 +64,13 @@ class Grid extends GridPane {
 
     //    for testing only
     @SuppressWarnings("unused")
-    private void addBridges(List<int[]> bridges) {
-        for (int[] bridge : bridges) {
+    private void addBridges(List<Coordinate[]> bridgesData) {
+        for (Coordinate[] data : bridgesData) {
             BridgeLine line = new BridgeLine(
-                    bridge[0],
-                    bridge[1],
-                    bridge[2],
-                    bridge[3]
+                    data[0].getY(),
+                    data[0].getX(),
+                    data[1].getY(),
+                    data[1].getX()
             );
             lines.add(line);
             add(line, line.getXStart(), line.getYStart());
@@ -151,10 +153,6 @@ class Grid extends GridPane {
         }
     }
 
-    void setStatusListener(EventHandler<StatusEvent> statusListener) {
-        this.statusListener = statusListener;
-    }
-
     void reset() {
         getChildren().removeAll(lines);
         lines.clear();
@@ -171,14 +169,17 @@ class Grid extends GridPane {
     }
 
     void solve() {
-        GameSolver solver = new GameSolver(controller);
-        thread = new Thread(solver);
-        thread.start();
-        addBridge(solver.getNext());
+        solver = new GameSolver(controller);
+        solver.addListener(() ->
+                Platform.runLater(() ->
+                        addBridge(solver.showNextBridge())));
     }
 
-    void stopThread() {
-        System.out.println("Stop Thread");
-        if (thread != null) thread = null;
+    void shutdown() {
+        solver.shutdown();
+    }
+
+    void setStatusListener(EventHandler<StatusEvent> statusListener) {
+        this.statusListener = statusListener;
     }
 }

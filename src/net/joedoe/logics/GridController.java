@@ -143,11 +143,11 @@ public class GridController {
         Collections.sort(isles);
     }
 
-    public void setSolution(List<int[]> bridgesData) {
-        for (int[] bridge : bridgesData)
+    public void setSolution(List<Coordinate[]> bridgesData) {
+        for (Coordinate[] data : bridgesData)
             solution.add(new Bridge(
-                    getIsle(bridge[0], bridge[1]),
-                    getIsle(bridge[2], bridge[3])
+                    getIsle(data[0].getY(), data[0].getX()),
+                    getIsle(data[1].getY(), data[1].getX())
             ));
     }
 
@@ -158,7 +158,7 @@ public class GridController {
 
     public Coordinate[] showNextBridge() {
         /*todo: find first bridge from solution whose unique combination of start- and endisle
-        * is not present in the bridges list*/
+         * is not present in the bridges list*/
 //        Bridge next = solution.stream().filter(bridge -> !bridges.contains(bridge))
 //                .findFirst().orElse(null);
         Bridge next = solution.stream().filter(bridge -> bridges.stream().allMatch(

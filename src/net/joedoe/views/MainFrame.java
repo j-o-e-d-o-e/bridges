@@ -24,7 +24,7 @@ public class MainFrame extends BorderPane {
         setTop(createMenuBar());
         setCenter(createBoard());
         setBottom(createControls());
-//        setOnMouseClicked(e-> board.stopThread());
+//        setOnMouseClicked(e-> board.shutdown());
     }
 
     private MenuBar createMenuBar() {

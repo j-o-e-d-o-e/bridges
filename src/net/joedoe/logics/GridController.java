@@ -30,9 +30,9 @@ public class GridController {
         if (endIsle == null) return null;
         Bridge bridge;
         boolean reversed = false;
-        if (startIsle.hasNoBridge(endIsle))
+        if (startIsle.getBridge(endIsle, true) == null)
             bridge = new Bridge(startIsle, endIsle);
-        else if (endIsle.hasNoBridge(startIsle)) {
+        else if (endIsle.getBridge(startIsle, true) == null) {
             bridge = new Bridge(endIsle, startIsle);
             reversed = true;
         } else
@@ -155,7 +155,7 @@ public class GridController {
         isles.forEach(Isle::clearBridges);
     }
 
-    public Coordinate[] showNextBridge() {
+    public Coordinate[] getNextBridge() {
         /*todo: find first bridge from solution whose unique combination of start- and endisle
          * is not present in the bridges list*/
 //        Bridge next = solution.stream().filter(bridge -> !bridges.contains(bridge))

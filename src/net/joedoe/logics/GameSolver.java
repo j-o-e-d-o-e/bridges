@@ -26,8 +26,8 @@ public class GameSolver {
         });
     }
 
-    public Coordinate[] showNextBridge() {
-        return controller.showNextBridge();
+    public Coordinate[] getNextBridge() {
+        return controller.getNextBridge();
     }
 
     public void shutdown() {

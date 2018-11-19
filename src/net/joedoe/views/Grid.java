@@ -165,14 +165,14 @@ class Grid extends GridPane {
 
     void showNextBridge() {
         if (!controller.gameSolved())
-            addBridge(controller.showNextBridge());
+            addBridge(controller.getNextBridge());
     }
 
     void solve() {
         solver = new GameSolver(controller);
         solver.addListener(() ->
                 Platform.runLater(() ->
-                        addBridge(solver.showNextBridge())));
+                        addBridge(solver.getNextBridge())));
     }
 
     void shutdown() {

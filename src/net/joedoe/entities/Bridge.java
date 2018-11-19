@@ -11,7 +11,7 @@ public class Bridge {
     public Bridge(Isle startIsle, Isle endIsle) {
         this.startIsle = startIsle;
         this.endIsle = endIsle;
-        if (startIsle.getY() + startIsle.getX() < endIsle.getY() + endIsle.getX()) {
+        if (startIsle.compareTo(endIsle) < 0) {
             start = new Coordinate(startIsle.getY(), startIsle.getX());
             end = new Coordinate(endIsle.getY(), endIsle.getX());
         } else {
@@ -19,7 +19,6 @@ public class Bridge {
             end = new Coordinate(startIsle.getY(), startIsle.getX());
         }
         this.alignment = Alignment.getAlignment(startIsle.getY(), endIsle.getY());
-//        startIsle.compareTo(endIsle);
     }
 
     public Isle getStartIsle() {

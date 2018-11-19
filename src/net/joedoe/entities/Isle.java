@@ -36,10 +36,6 @@ public class Isle implements Comparable<Isle> {
         return bridges;
     }
 
-    public boolean hasNoBridge(Isle isle) {
-        return bridges.stream().noneMatch(bridge -> bridge.getStartIsle() == this && bridge.getEndIsle() == isle);
-    }
-
     public void increaseBridgeCount() {
         this.bridgeCount++;
     }

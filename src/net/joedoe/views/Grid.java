@@ -5,7 +5,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import net.joedoe.logics.GameSolver;
+import net.joedoe.logics.AutoSolver;
 import net.joedoe.logics.GridController;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
@@ -24,7 +24,7 @@ class Grid extends GridPane {
     private EventHandler<StatusEvent> statusListener;
     private IsleListener isleListener;
     private boolean showMissingBridges = true;
-    private GameSolver solver;
+    private AutoSolver autoSolver;
 
 
     Grid() {
@@ -168,15 +168,15 @@ class Grid extends GridPane {
             addBridge(controller.getNextBridge());
     }
 
-    void solve() {
-        solver = new GameSolver(controller);
-        solver.addListener(() ->
+    void autoSolve() {
+        autoSolver = new AutoSolver(controller);
+        autoSolver.addListener(() ->
                 Platform.runLater(() ->
-                        addBridge(solver.getNextBridge())));
+                        addBridge(autoSolver.getNextBridge())));
     }
 
-    void shutdown() {
-        solver.shutdown();
+    void stopAutoSolve() {
+        autoSolver.stop();
     }
 
     void setStatusListener(EventHandler<StatusEvent> statusListener) {

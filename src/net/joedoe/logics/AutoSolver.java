@@ -6,13 +6,13 @@ import net.joedoe.views.SolverListener;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class GameSolver {
+public class AutoSolver {
     private final ExecutorService service = Executors.newCachedThreadPool();
     private boolean running = true;
     private GridController controller;
     private SolverListener listener;
 
-    public GameSolver(GridController controller) {
+    public AutoSolver(GridController controller) {
         this.controller = controller;
         service.submit(() -> {
             while (running) {
@@ -30,7 +30,7 @@ public class GameSolver {
         return controller.getNextBridge();
     }
 
-    public void shutdown() {
+    public void stop() {
         running = false;
         service.shutdown();
     }

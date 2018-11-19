@@ -40,11 +40,11 @@ class Board extends StackPane {
         grid.showNextBridge();
     }
 
-    void solve() {
-        grid.solve();
+    void autoSolve() {
+        grid.autoSolve();
     }
 
-    void stopThread() {
-        grid.shutdown();
+    void stopAutoSolve() {
+        grid.stopAutoSolve();
     }
 }

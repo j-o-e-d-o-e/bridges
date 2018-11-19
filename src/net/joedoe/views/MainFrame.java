@@ -24,7 +24,7 @@ public class MainFrame extends BorderPane {
         setTop(createMenuBar());
         setCenter(createBoard());
         setBottom(createControls());
-//        setOnMouseClicked(e-> board.shutdown());
+        setOnMouseClicked(e-> board.stopAutoSolve());
     }
 
     private MenuBar createMenuBar() {
@@ -66,7 +66,7 @@ public class MainFrame extends BorderPane {
         hBox.setPrefWidth(100);
         Button solveBtn = new Button("Automatisch lösen");
         solveBtn.setMinWidth(hBox.getPrefWidth());
-        solveBtn.setOnAction(e -> board.solve());
+        solveBtn.setOnAction(e -> board.autoSolve());
         Button nextBtn = new Button("Nächste Brücke");
         nextBtn.setMinWidth(hBox.getPrefWidth());
         nextBtn.setOnAction(e -> board.showNextBridge());
@@ -93,6 +93,7 @@ public class MainFrame extends BorderPane {
 //        Optional<ButtonType> result = alert.showAndWait();
 //        if (result.get() == ButtonType.OK)
         window.close();
+        board.stopAutoSolve();
 //        else
 //            alert.close();
     }

@@ -14,7 +14,7 @@ import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 
 class NewGameFrame extends Stage {
     private Board board;
-    private GameGenerator controller;
+    private GameGenerator generator;
     private RadioButton autoBtn;
     private Label heightLabel, widthLabel, islesLabel;
     private TextField heightTxt, widthTxt, islesTxt;
@@ -22,7 +22,7 @@ class NewGameFrame extends Stage {
 
     NewGameFrame(Board board) {
         this.board = board;
-        controller = new GameGenerator();
+        generator = new GameGenerator();
         setTitle("Neues Rätsel");
         Scene scene = new Scene(setLayout(), 400, 350);
         setScene(scene);
@@ -127,12 +127,12 @@ class NewGameFrame extends Stage {
         int height = 0;
         int isleCount = 0;
         if (autoBtn.isSelected()) {
-//            controller.setHeight();
-//            controller.setWidth();
-//            controller.setIsleCount();
-            controller.setHeight(25);
-            controller.setWidth(25);
-            controller.setIsleCount(125);
+//            generator.setHeight();
+//            generator.setWidth();
+//            generator.setIsleCount();
+            generator.setHeight(25);
+            generator.setWidth(25);
+            generator.setIsleCount(125);
         } else {
             try {
                 width = Integer.parseInt(widthTxt.getText());
@@ -144,10 +144,10 @@ class NewGameFrame extends Stage {
                 setAlert("Breite und Höhe müssen größer 3 und kleiner 26 sein.");
                 return;
             }
-            controller.setHeight(height);
-            controller.setWidth(width);
+            generator.setHeight(height);
+            generator.setWidth(width);
             if (!checkBox.isSelected())
-                controller.setIsleCount();
+                generator.setIsleCount();
             else {
                 try {
                     isleCount = Integer.parseInt(islesTxt.getText());
@@ -158,11 +158,11 @@ class NewGameFrame extends Stage {
                     setAlert("Inselanzahl muss größer 1 und kleiner/gleich Breite * Höhe * 0.2 sein.");
                     return;
                 }
-                controller.setIsleCount(isleCount);
+                generator.setIsleCount(isleCount);
             }
         }
-        controller.generateGame();
-        board.setGrid(controller.getHeight(), controller.getWidth(), controller.getFinalIsles(), controller.getFinalBridges());
+        generator.generateGame();
+        board.setGrid(generator.getHeight(), generator.getWidth(), generator.getFinalIsles(), generator.getFinalBridges());
         close();
     }
 

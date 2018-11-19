@@ -1,7 +1,7 @@
 package net.joedoe.logics;
 
 import net.joedoe.utils.Coordinate;
-import net.joedoe.views.AutoSolverListener;
+import net.joedoe.views.SolverListener;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -10,7 +10,7 @@ public class AutoSolver {
     private GridController controller;
     private final ExecutorService service = Executors.newFixedThreadPool(1);
     private boolean running;
-    private AutoSolverListener listener;
+    private SolverListener listener;
 
     public AutoSolver(GridController controller) {
         this.controller = controller;
@@ -46,7 +46,7 @@ public class AutoSolver {
         return running;
     }
 
-    public void addListener(AutoSolverListener listener) {
+    public void addListener(SolverListener listener) {
         this.listener = listener;
     }
 }

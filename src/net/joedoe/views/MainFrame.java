@@ -69,7 +69,7 @@ public class MainFrame extends BorderPane {
         solveBtn.setOnAction(e -> board.autoSolve());
         Button nextBtn = new Button("Nächste Brücke");
         nextBtn.setMinWidth(hBox.getPrefWidth());
-        nextBtn.setOnAction(e -> board.showNextBridge());
+        nextBtn.setOnAction(e -> board.getNextBridge());
         hBox.getChildren().addAll(solveBtn, nextBtn);
         status = new Label("Noch nicht gelöst.");
         vBox.getChildren().addAll(checkBox, hBox, status);

@@ -27,6 +27,7 @@ public class AutoSolver {
     }
 
     public Coordinate[] getNextBridge() {
+        System.out.println("get next bridge");
         return controller.getNextBridge();
     }
 

@@ -36,8 +36,8 @@ class Board extends StackPane {
         grid.reset();
     }
 
-    void showNextBridge() {
-        grid.showNextBridge();
+    void getNextBridge() {
+        grid.getNextBridge();
     }
 
     void autoSolve() {

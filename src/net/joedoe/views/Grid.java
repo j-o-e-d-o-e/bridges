@@ -160,12 +160,13 @@ class Grid extends GridPane {
         controller.reset();
     }
 
-    void showNextBridge() {
+    void getNextBridge() {
         if (!controller.gameSolved())
             addBridge(controller.getNextBridge());
     }
 
     void autoSolve() {
+        System.out.println("auto solve");
         autoSolver.addListener(() ->
                 Platform.runLater(() ->
                         addBridge(autoSolver.getNextBridge())));

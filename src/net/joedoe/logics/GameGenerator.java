@@ -90,7 +90,7 @@ public class GameGenerator {
                     y = startIsle.getY();
                     x = startIsle.getX() + distance;
                 }
-                //neighbouring check and collision detection
+                //collision detection for new isle && for new bridge
                 if (indices.contains(y * width + x) && !collides(startIsle.getY(), startIsle.getX(), y, x)) {
                     Isle endIsle = createIsle(y, x);
                     LOGGER.info("Start Isle: " + startIsle.toString()

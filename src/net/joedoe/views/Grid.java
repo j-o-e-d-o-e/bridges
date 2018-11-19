@@ -180,6 +180,10 @@ class Grid extends GridPane {
             autoSolver.stop();
     }
 
+    void shutdownAutoSolve() {
+        autoSolver.shutdown();
+    }
+
     void setStatusListener(EventHandler<StatusEvent> statusListener) {
         this.statusListener = statusListener;
     }

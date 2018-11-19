@@ -47,4 +47,8 @@ class Board extends StackPane {
     void stopAutoSolve() {
         grid.stopAutoSolve();
     }
+
+    void shutdownAutoSolve() {
+        grid.shutdownAutoSolve();
+    }
 }

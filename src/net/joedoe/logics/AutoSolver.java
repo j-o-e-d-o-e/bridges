@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 
 public class AutoSolver {
     private GridController controller;
-    private final ExecutorService service = Executors.newFixedThreadPool(1);
+    private final ExecutorService service = Executors.newCachedThreadPool();
     private boolean running;
     private SolverListener listener;
 
@@ -25,7 +25,7 @@ public class AutoSolver {
         while (running) {
             listener.onChange();
             try {
-                Thread.sleep(1000);
+                Thread.sleep(300);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -38,6 +38,10 @@ public class AutoSolver {
 
 
     public void stop() {
+        running = false;
+    }
+
+    public void shutdown(){
         running = false;
         service.shutdown();
     }

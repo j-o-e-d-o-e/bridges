@@ -6,9 +6,7 @@ import net.joedoe.utils.Alignment;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -190,5 +188,22 @@ public class GridController {
 
     public boolean gameSolved() {
         return isles.stream().allMatch(isle -> isle.getMissingBridgeCount() == 0);
+    }
+
+    public boolean connected() {
+        if (isles.size() == 0) return false;
+//        List<Isle> notConnected = new ArrayList<>(isles);
+        Set<Isle> connected = new HashSet<>();
+        Isle initialIsle = isles.get(0);
+
+
+        for (Bridge bridge : initialIsle.getBridges()) {
+            connected.add(bridge.getStartIsle());
+            connected.add(bridge.getEndIsle());
+        }
+        for (Isle isle : connected) {
+
+        }
+        return false;
     }
 }

@@ -93,7 +93,7 @@ public class MainFrame extends BorderPane {
 //        Optional<ButtonType> result = alert.showAndWait();
 //        if (result.get() == ButtonType.OK)
         window.close();
-        board.stopAutoSolve();
+        board.shutdownAutoSolve();
 //        else
 //            alert.close();
     }

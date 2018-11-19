@@ -66,7 +66,7 @@ public class MainFrame extends BorderPane {
         hBox.setPrefWidth(100);
         Button solveBtn = new Button("Automatisch lösen");
         solveBtn.setMinWidth(hBox.getPrefWidth());
-        solveBtn.setOnAction(e -> board.autoSolve());
+        solveBtn.setOnAction(e -> board.startAutoSolve());
         Button nextBtn = new Button("Nächste Brücke");
         nextBtn.setMinWidth(hBox.getPrefWidth());
         nextBtn.setOnAction(e -> board.getNextBridge());

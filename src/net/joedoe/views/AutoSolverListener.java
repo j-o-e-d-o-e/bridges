@@ -1,6 +1,6 @@
 package net.joedoe.views;
 
-public interface SolverListener {
+public interface AutoSolverListener {
 
     void onChange();
 }

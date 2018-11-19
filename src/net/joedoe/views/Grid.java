@@ -48,6 +48,11 @@ class Grid extends GridPane {
         controller = new GridController();
         controller.setIsles(isles);
         autoSolver = new AutoSolver(controller);
+        autoSolver.addListener(() ->
+                Platform.runLater(() ->
+                        addBridge(autoSolver.getNextBridge())
+                )
+        );
     }
 
     private void addIsles(List<int[]> isles) {
@@ -165,15 +170,14 @@ class Grid extends GridPane {
             addBridge(controller.getNextBridge());
     }
 
-    void autoSolve() {
-        System.out.println("auto solve");
-        autoSolver.addListener(() ->
-                Platform.runLater(() ->
-                        addBridge(autoSolver.getNextBridge())));
+    void startAutoSolve() {
+        if (!autoSolver.isRunning())
+            autoSolver.start();
     }
 
     void stopAutoSolve() {
-        autoSolver.stop();
+        if (autoSolver.isRunning())
+            autoSolver.stop();
     }
 
     void setStatusListener(EventHandler<StatusEvent> statusListener) {

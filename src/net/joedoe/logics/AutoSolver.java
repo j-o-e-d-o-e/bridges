@@ -32,6 +32,7 @@ public class AutoSolver {
 
     public void stop() {
         running = false;
+        System.out.println("Terminate");
         service.shutdown();
     }
 

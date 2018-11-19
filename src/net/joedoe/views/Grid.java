@@ -28,18 +28,16 @@ class Grid extends GridPane {
 
 
     Grid() {
-//        setGridLinesVisible(true);
-        setAlignment(Pos.CENTER);
-        setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        IntStream.range(0, Mocks.ROWS).mapToObj(i -> new RowConstraints(ONE_TILE)).forEach(row -> getRowConstraints().add(row));
-        IntStream.range(0, Mocks.COLS).mapToObj(i -> new ColumnConstraints(ONE_TILE)).forEachOrdered(column -> getColumnConstraints().add(column));
-        isleListener = new IsleListener(this);
-        addIsles(Mocks.ISLES);
-        controller = new GridController();
-        controller.setIsles(Mocks.ISLES);
+        this(Mocks.ROWS, Mocks.COLS, Mocks.ISLES);
     }
 
     Grid(int height, int width, List<int[]> isles, List<Coordinate[]> bridges) {
+        this(height, width, isles);
+        controller.setSolution(bridges);
+//        addBridges(bridges);
+    }
+
+    private Grid(int height, int width, List<int[]> isles) {
 //        setGridLinesVisible(true);
         setAlignment(Pos.CENTER);
         setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
@@ -47,10 +45,9 @@ class Grid extends GridPane {
         IntStream.range(0, width).mapToObj(i -> new ColumnConstraints(ONE_TILE)).forEachOrdered(column -> getColumnConstraints().add(column));
         isleListener = new IsleListener(this);
         addIsles(isles);
-//        addBridges(bridges); // for testing only
         controller = new GridController();
         controller.setIsles(isles);
-        controller.setSolution(bridges);
+        autoSolver = new AutoSolver(controller);
     }
 
     private void addIsles(List<int[]> isles) {
@@ -62,7 +59,7 @@ class Grid extends GridPane {
         }
     }
 
-    //    for testing only
+    // for testing only
     @SuppressWarnings("unused")
     private void addBridges(List<Coordinate[]> bridgesData) {
         for (Coordinate[] data : bridgesData) {
@@ -169,7 +166,6 @@ class Grid extends GridPane {
     }
 
     void autoSolve() {
-        autoSolver = new AutoSolver(controller);
         autoSolver.addListener(() ->
                 Platform.runLater(() ->
                         addBridge(autoSolver.getNextBridge())));

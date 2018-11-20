@@ -3,6 +3,8 @@ package net.joedoe.views;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import net.joedoe.logics.AutoSolver;
@@ -15,6 +17,7 @@ import net.joedoe.utils.Mocks;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static net.joedoe.utils.GameInfo.*;
@@ -49,9 +52,7 @@ class Grid extends GridPane {
         solver = new Solver(controller, checker);
         autoSolver = new AutoSolver(solver);
         autoSolver.addListener(() ->
-                Platform.runLater(() ->
-                        addBridge(autoSolver.getNextBridge())
-                )
+                Platform.runLater(this::getNextBridgeAuto)
         );
         setSolution(bridges);
     }
@@ -176,7 +177,20 @@ class Grid extends GridPane {
     }
 
     void getNextBridge() {
-        addBridge(solver.getNextBridge());
+        Coordinate[] next = solver.getNextBridge();
+        if (next == null)
+            nextBridgeAlert();
+        else
+            addBridge(next);
+    }
+
+    private void getNextBridgeAuto() {
+        Coordinate[] next = autoSolver.getNextBridge();
+        if (next == null) {
+            autoSolver.stop();
+            nextBridgeAlert();
+        } else
+            addBridge(next);
     }
 
     void startAutoSolve() {
@@ -191,6 +205,17 @@ class Grid extends GridPane {
 
     void shutdownAutoSolve() {
         autoSolver.shutdown();
+    }
+
+
+    private void nextBridgeAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Nächste Brücke");
+        alert.setHeaderText("Keine Brücke gefunden, " +
+                "die sicher ergänzt werden kann.");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK)
+            alert.close();
     }
 
     void setStatusListener(EventHandler<StatusEvent> statusListener) {

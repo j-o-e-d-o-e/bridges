@@ -26,9 +26,6 @@ public class StatusCheckerTest {
         controller.setBridges(Mocks.BRIDGES);
     }
 
-    @Test
-    public void error() {
-    }
 
     @Test
     public void unsolvable() {

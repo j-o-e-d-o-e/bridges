@@ -29,19 +29,17 @@ public class GridController {
         Isle endIsle = getEndIsle(startIsle, direction);
         if (endIsle == null) return null;
         Bridge bridge;
-        boolean reversed = false;
         if (startIsle.getBridge(endIsle, true) == null)
             bridge = new Bridge(startIsle, endIsle);
-        else if (endIsle.getBridge(startIsle, true) == null) {
+        else if (endIsle.getBridge(startIsle, true) == null)
             bridge = new Bridge(endIsle, startIsle);
-            reversed = true;
-        } else
+        else
             return null;
         if (collides(bridge)) return null;
         startIsle.addBridge(bridge);
         endIsle.addBridge(bridge);
         bridges.add(bridge);
-        return Converter.convertBridgeToData(bridge, reversed);
+        return Converter.convertBridgeToData(bridge);
     }
 
     public Coordinate[] removeBridge(int y, int x, Direction direction) {
@@ -50,16 +48,13 @@ public class GridController {
         Isle endIsle = getEndIsle(startIsle, direction);
         if (endIsle == null) return null;
         Bridge bridge = startIsle.getBridge(endIsle, true);
-        boolean reversed = false;
-        if (bridge == null) {
+        if (bridge == null)
             bridge = endIsle.getBridge(startIsle, true);
-            reversed = true;
-        }
         if (bridge == null) return null;
         startIsle.removeBridge(bridge);
         endIsle.removeBridge(bridge);
         bridges.remove(bridge);
-        return Converter.convertBridgeToData(bridge, reversed);
+        return Converter.convertBridgeToData(bridge);
     }
 
     /*Returns the nearest isle to the specified isle in the specified direction

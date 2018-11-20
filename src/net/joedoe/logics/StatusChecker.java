@@ -22,11 +22,11 @@ public class StatusChecker {
     }
 
     public boolean unsolvable() {
-        return controller.getIsles().stream().anyMatch(isle -> !connectible(isle));
+        return controller.getIsles().stream().filter(isle -> isle.getMissingBridgeCount() > 0)
+                .anyMatch(this::isolated);
     }
 
-    private boolean connectible(Isle isle) {
-        if (isle.getMissingBridgeCount() == 0) return true;
+    private boolean isolated(Isle isle) {
         List<Isle> connectables = new ArrayList<>();
         Direction[] directions = Direction.values();
         for (Direction direction : directions) {
@@ -34,7 +34,7 @@ public class StatusChecker {
             if (endIsle != null && !controller.collides(new Bridge(isle, endIsle)))
                 connectables.add(endIsle);
         }
-        return connectables.stream().allMatch(
+        return isle.getMissingBridgeCount() > 0 && connectables.stream().allMatch(
                 connectable -> connectable.getMissingBridgeCount() <= 0);
     }
 

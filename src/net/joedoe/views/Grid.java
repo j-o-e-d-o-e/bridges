@@ -46,17 +46,18 @@ class Grid extends GridPane {
         controller = new GridController();
         controller.setIsles(isles);
         checker = new StatusChecker(controller);
-        solver = new Solver(controller);
+        solver = new Solver(controller, checker);
         autoSolver = new AutoSolver(solver);
         autoSolver.addListener(() ->
                 Platform.runLater(() ->
                         addBridge(autoSolver.getNextBridge())
                 )
         );
-//        showSolution(bridges);
+//        setSolution(bridges);
     }
 
-    private void showSolution(List<Coordinate[]> bridges) {
+    @SuppressWarnings("unused")
+    private void setSolution(List<Coordinate[]> bridges) {
         solver.setSolution(bridges);
         controller.setBridges(bridges);
         addBridges(bridges);
@@ -175,8 +176,7 @@ class Grid extends GridPane {
     }
 
     void getNextBridge() {
-        if (!checker.solved())
-            addBridge(solver.getNextBridge());
+        addBridge(solver.getNextBridge());
     }
 
     void startAutoSolve() {

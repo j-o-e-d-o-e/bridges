@@ -32,17 +32,11 @@ class Grid extends GridPane {
 
 
     Grid() {
-        this(Mocks.ROWS, Mocks.COLS, Mocks.ISLES);
+        this(Mocks.ROWS, Mocks.COLS, Mocks.ISLES, Mocks.BRIDGES);
     }
 
     Grid(int height, int width, List<int[]> isles, List<Coordinate[]> bridges) {
-        this(height, width, isles);
-        solver.setSolution(bridges);
-//        addBridges(bridges);
-    }
-
-    private Grid(int height, int width, List<int[]> isles) {
-//        setGridLinesVisible(true);
+        //        setGridLinesVisible(true);
         setAlignment(Pos.CENTER);
         setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         IntStream.range(0, height).mapToObj(i -> new RowConstraints(ONE_TILE)).forEach(row -> getRowConstraints().add(row));
@@ -59,6 +53,15 @@ class Grid extends GridPane {
                         addBridge(autoSolver.getNextBridge())
                 )
         );
+        showSolution(bridges);
+    }
+
+    private void showSolution(List<Coordinate[]> bridges) {
+        solver.setSolution(bridges);
+        controller.setBridges(bridges);
+        addBridges(bridges);
+        updatePanes();
+        lines.forEach(line -> line.setStroke(STD_COLOR));
     }
 
     private void addIsles(List<int[]> isles) {

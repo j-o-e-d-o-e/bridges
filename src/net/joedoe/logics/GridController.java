@@ -8,7 +8,6 @@ import net.joedoe.utils.Direction;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -118,7 +117,7 @@ public class GridController {
         return isles.stream().filter(isle -> isle.getY() == y && isle.getX() == x).findFirst().orElse(null);
     }
 
-    List<Isle> getIsles(){
+    List<Isle> getIsles() {
         return isles;
     }
 
@@ -134,6 +133,18 @@ public class GridController {
 
     public List<Bridge> getBridges() {
         return bridges;
+    }
+
+
+    public void setBridges(List<Coordinate[]> bridgesData) {
+        for (Coordinate[] coordinates : bridgesData) {
+            Isle startIsle = getIsle(coordinates[0].getY(), coordinates[0].getX());
+            Isle endIsle = getIsle(coordinates[1].getY(), coordinates[1].getX());
+            Bridge bridge = new Bridge(startIsle, endIsle);
+            startIsle.addBridge(bridge);
+            endIsle.addBridge(bridge);
+            bridges.add(bridge);
+        }
     }
 
     public int getBridgeCount(int y, int x) {

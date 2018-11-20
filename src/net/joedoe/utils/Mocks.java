@@ -20,4 +20,72 @@ public class Mocks {
             new int[]{6, 4, 5},
             new int[]{6, 6, 3}
     );
+    public static final List<Coordinate[]> BRIDGES = Arrays.asList(
+            new Coordinate[]{
+                    new Coordinate(0, 0),
+                    new Coordinate(0, 4)},
+            new Coordinate[]{
+                    new Coordinate(0, 0),
+                    new Coordinate(3, 0)},
+            new Coordinate[]{
+                    new Coordinate(3, 0),
+                    new Coordinate(0, 0)},
+
+            new Coordinate[]{
+                    new Coordinate(3, 0),
+                    new Coordinate(5, 0)},
+            new Coordinate[]{
+                    new Coordinate(5, 0),
+                    new Coordinate(3, 0)},
+
+            new Coordinate[]{
+                    new Coordinate(0, 4),
+                    new Coordinate(0, 6)},
+            new Coordinate[]{
+                    new Coordinate(0, 6),
+                    new Coordinate(0, 4)},
+            new Coordinate[]{
+                    new Coordinate(0, 4),
+                    new Coordinate(6, 4)},
+            new Coordinate[]{
+                    new Coordinate(6, 4),
+                    new Coordinate(0, 4)},
+
+            new Coordinate[]{
+                    new Coordinate(0, 6),
+                    new Coordinate(6, 6)},
+            new Coordinate[]{
+                    new Coordinate(6, 6),
+                    new Coordinate(0, 6)},
+
+            new Coordinate[]{
+                    new Coordinate(6, 6),
+                    new Coordinate(6, 4)},
+
+            new Coordinate[]{
+                    new Coordinate(6, 4),
+                    new Coordinate(6, 1)},
+            new Coordinate[]{
+                    new Coordinate(6, 1),
+                    new Coordinate(6, 4)},
+
+            new Coordinate[]{
+                    new Coordinate(6, 1),
+                    new Coordinate(1, 1)},
+
+            new Coordinate[]{
+                    new Coordinate(1, 1),
+                    new Coordinate(1, 3)},
+
+            new Coordinate[]{
+                    new Coordinate(1, 3),
+                    new Coordinate(3, 3)},
+            new Coordinate[]{
+                    new Coordinate(3, 3),
+                    new Coordinate(1, 3)},
+
+            new Coordinate[]{
+                    new Coordinate(5, 3),
+                    new Coordinate(3, 3)}
+    );
 }

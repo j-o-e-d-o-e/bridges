@@ -1,14 +1,15 @@
 package tests.logics;
 
-import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.logics.GridController;
 import net.joedoe.logics.StatusChecker;
+import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
 import net.joedoe.utils.Mocks;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertFalse;
@@ -25,7 +26,6 @@ public class StatusCheckerTest {
         controller.setIsles(Mocks.ISLES);
         controller.setBridges(Mocks.BRIDGES);
     }
-
 
     @Test
     public void unsolvable() {
@@ -51,5 +51,19 @@ public class StatusCheckerTest {
 
         //then
         assertTrue(status);
+    }
+
+    @Test
+    public void notSolved() {
+        //given
+        List<Coordinate[]> bridges = new ArrayList<>(Mocks.BRIDGES);
+        bridges.remove(0);
+        controller.setBridges(bridges);
+
+        //when
+        boolean status = checker.solved();
+
+        //then
+        assertFalse(status);
     }
 }

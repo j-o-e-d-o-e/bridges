@@ -53,7 +53,8 @@ public class Generator {
                     if (random.nextBoolean() && startIsle.getBridgeCount() < 8)
                         bridges.add(createBridge(endIsle, startIsle));
                     break;
-                } else if (startIsle == isles.get(isles.size() - 1)) {
+                }
+                if (startIsle == isles.get(isles.size() - 1)) {
                     isles.clear();
                     bridges.clear();
                     generateGame();

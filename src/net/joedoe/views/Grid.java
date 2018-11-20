@@ -53,7 +53,7 @@ class Grid extends GridPane {
                         addBridge(autoSolver.getNextBridge())
                 )
         );
-        showSolution(bridges);
+//        showSolution(bridges);
     }
 
     private void showSolution(List<Coordinate[]> bridges) {
@@ -142,7 +142,7 @@ class Grid extends GridPane {
 
     private void checkStatus() {
         if (checker.error())
-            statusListener.handle(new StatusEvent(null, "Enthält einen Fehler."));
+            statusListener.handle(new StatusEvent(null, "Enthält Fehler."));
         else if (checker.unsolvable())
             statusListener.handle(new StatusEvent(null, "Nicht mehr lösbar."));
         else if (checker.solved()) {

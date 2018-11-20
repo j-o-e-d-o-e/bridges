@@ -57,11 +57,20 @@ class Grid extends GridPane {
 //        setSolution(bridges);
     }
 
+    //for testing only
     @SuppressWarnings("unused")
-    private void setSolution(List<Coordinate[]> bridges) {
-//        solver.setSolution(bridges);
-//        controller.setBridges(bridges);
-        addBridges(bridges);
+    private void setSolution(List<Coordinate[]> bridgesData) {
+        controller.setBridges(bridgesData);
+        for (Coordinate[] data : bridgesData) {
+            BridgeLine line = new BridgeLine(
+                    data[0].getY(),
+                    data[0].getX(),
+                    data[1].getY(),
+                    data[1].getX()
+            );
+            lines.add(line);
+            add(line, line.getXStart(), line.getYStart());
+        }
         updatePanes();
         lines.forEach(line -> line.setStroke(STD_COLOR));
     }
@@ -75,21 +84,6 @@ class Grid extends GridPane {
         }
     }
 
-    // for testing only
-    @SuppressWarnings("unused")
-    private void addBridges(List<Coordinate[]> bridgesData) {
-        for (Coordinate[] data : bridgesData) {
-            BridgeLine line = new BridgeLine(
-                    data[0].getY(),
-                    data[0].getX(),
-                    data[1].getY(),
-                    data[1].getX()
-            );
-            lines.add(line);
-            add(line, line.getXStart(), line.getYStart());
-        }
-    }
-
     void addBridge(IslePane pane, Direction direction) {
         Coordinate[] coordinates = controller.addBridge(pane.getY(), pane.getX(), direction);
         addBridge(coordinates);
@@ -98,11 +92,7 @@ class Grid extends GridPane {
     private void addBridge(Coordinate[] data) {
         if (data != null) {
             updateLines();
-            BridgeLine line = new BridgeLine(
-                    data[0].getY(),
-                    data[0].getX(),
-                    data[1].getY(),
-                    data[1].getX());
+            BridgeLine line = new BridgeLine(data[0].getY(), data[0].getX(), data[1].getY(), data[1].getX());
             lines.add(line);
             add(line, line.getXStart(), line.getYStart());
             updatePanes();
@@ -179,7 +169,7 @@ class Grid extends GridPane {
     void getNextBridge() {
         Coordinate[] next = solver.getNextBridge();
         if (next == null)
-            nextBridgeAlert();
+            setAlert();
         else
             addBridge(next);
     }
@@ -188,7 +178,7 @@ class Grid extends GridPane {
         Coordinate[] next = autoSolver.getNextBridge();
         if (next == null) {
             autoSolver.stop();
-            nextBridgeAlert();
+            setAlert();
         } else
             addBridge(next);
     }
@@ -208,7 +198,7 @@ class Grid extends GridPane {
     }
 
 
-    private void nextBridgeAlert() {
+    private void setAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Nächste Brücke");
         alert.setHeaderText("Keine Brücke gefunden, " +

@@ -3,6 +3,7 @@ package net.joedoe.logics;
 import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.utils.Alignment;
+import net.joedoe.utils.Converter;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
 
@@ -241,13 +242,8 @@ public class Generator {
 
     public List<int[]> getFinalIsles() {
         List<int[]> finalIsles = new ArrayList<>();
-        for (Isle isle : isles) {
-            finalIsles.add(new int[]{
-                    isle.getY(),
-                    isle.getX(),
-                    isle.getBridgeCount()
-            });
-        }
+        for (Isle isle : isles)
+            finalIsles.add(Converter.convertIsleToData(isle));
         return finalIsles;
     }
 
@@ -257,16 +253,8 @@ public class Generator {
 
     public List<Coordinate[]> getFinalBridges() {
         List<Coordinate[]> finalBridges = new ArrayList<>();
-        for (Bridge bridge : bridges) {
-            finalBridges.add(new Coordinate[]{
-                    new Coordinate(
-                            bridge.getStartIsle().getY(),
-                            bridge.getStartIsle().getX()),
-                    new Coordinate(
-                            bridge.getEndIsle().getY(),
-                            bridge.getEndIsle().getX())}
-            );
-        }
+        for (Bridge bridge : bridges)
+            finalBridges.add(Converter.convertBridgeToData(bridge));
         return finalBridges;
     }
 

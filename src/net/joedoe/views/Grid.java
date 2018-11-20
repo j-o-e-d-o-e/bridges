@@ -59,11 +59,11 @@ class Grid extends GridPane {
 
     @SuppressWarnings("unused")
     private void setSolution(List<Coordinate[]> bridges) {
-        solver.setSolution(bridges);
+//        solver.setSolution(bridges);
 //        controller.setBridges(bridges);
-//        addBridges(bridges);
-//        updatePanes();
-//        lines.forEach(line -> line.setStroke(STD_COLOR));
+        addBridges(bridges);
+        updatePanes();
+        lines.forEach(line -> line.setStroke(STD_COLOR));
     }
 
     private void addIsles(List<int[]> isles) {
@@ -95,14 +95,14 @@ class Grid extends GridPane {
         addBridge(coordinates);
     }
 
-    private void addBridge(Coordinate[] coordinates) {
-        if (coordinates != null) {
+    private void addBridge(Coordinate[] data) {
+        if (data != null) {
             updateLines();
             BridgeLine line = new BridgeLine(
-                    coordinates[0].getY(),
-                    coordinates[0].getX(),
-                    coordinates[1].getY(),
-                    coordinates[1].getX());
+                    data[0].getY(),
+                    data[0].getX(),
+                    data[1].getY(),
+                    data[1].getX());
             lines.add(line);
             add(line, line.getXStart(), line.getYStart());
             updatePanes();
@@ -111,14 +111,14 @@ class Grid extends GridPane {
     }
 
     void removeBridge(IslePane pane, Direction direction) {
-        Coordinate[] coordinates = controller.removeBridge(pane.getY(), pane.getX(), direction);
-        if (coordinates != null) {
+        Coordinate[] data = controller.removeBridge(pane.getY(), pane.getX(), direction);
+        if (data != null) {
             updateLines();
             BridgeLine line = lines.stream().filter(
-                    l -> l.getYStart() == coordinates[0].getY()
-                            && l.getXStart() == coordinates[0].getX()
-                            && l.getYEnd() == coordinates[1].getY()
-                            && l.getXEnd() == coordinates[1].getX()).findFirst().orElse(null);
+                    l -> l.getYStart() == data[0].getY()
+                            && l.getXStart() == data[0].getX()
+                            && l.getYEnd() == data[1].getY()
+                            && l.getXEnd() == data[1].getX()).findFirst().orElse(null);
             lines.remove(line);
             getChildren().remove(line);
             updatePanes();

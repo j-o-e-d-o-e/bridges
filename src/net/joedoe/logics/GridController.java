@@ -3,6 +3,7 @@ package net.joedoe.logics;
 import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.utils.Alignment;
+import net.joedoe.utils.Converter;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
 
@@ -40,16 +41,7 @@ public class GridController {
         startIsle.addBridge(bridge);
         endIsle.addBridge(bridge);
         bridges.add(bridge);
-        if (!reversed)
-            return new Coordinate[]{
-                    new Coordinate(startIsle.getY(), startIsle.getX()),
-                    new Coordinate(endIsle.getY(), endIsle.getX())
-            };
-        else
-            return new Coordinate[]{
-                    new Coordinate(endIsle.getY(), endIsle.getX()),
-                    new Coordinate(startIsle.getY(), startIsle.getX())
-            };
+        return Converter.convertBridgeToData(bridge, reversed);
     }
 
     public Coordinate[] removeBridge(int y, int x, Direction direction) {
@@ -67,16 +59,7 @@ public class GridController {
         startIsle.removeBridge(bridge);
         endIsle.removeBridge(bridge);
         bridges.remove(bridge);
-        if (!reversed)
-            return new Coordinate[]{
-                    new Coordinate(startIsle.getY(), startIsle.getX()),
-                    new Coordinate(endIsle.getY(), endIsle.getX())
-            };
-        else
-            return new Coordinate[]{
-                    new Coordinate(endIsle.getY(), endIsle.getX()),
-                    new Coordinate(startIsle.getY(), startIsle.getX())
-            };
+        return Converter.convertBridgeToData(bridge, reversed);
     }
 
     /*Returns the nearest isle to the specified isle in the specified direction
@@ -123,11 +106,7 @@ public class GridController {
 
     public void setIsles(List<int[]> islesData) {
         for (int[] isle : islesData)
-            isles.add(new Isle(
-                    isle[0],
-                    isle[1],
-                    isle[2]
-            ));
+            isles.add(Converter.convertDataToIsle(isle));
         Collections.sort(isles);
     }
 
@@ -135,7 +114,7 @@ public class GridController {
         return bridges;
     }
 
-
+    // for testing only
     public void setBridges(List<Coordinate[]> bridgesData) {
         for (Coordinate[] coordinates : bridgesData) {
             Isle startIsle = getIsle(coordinates[0].getY(), coordinates[0].getX());

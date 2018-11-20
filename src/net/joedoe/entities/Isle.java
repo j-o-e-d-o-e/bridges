@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public class Isle implements Comparable<Isle> {
-    private Coordinate position;
+    private final Coordinate position;
     private int bridgeCount;
     private List<Bridge> bridges = new ArrayList<>();
     private Set<Isle> neighbours = new HashSet<>();

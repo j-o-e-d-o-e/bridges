@@ -7,13 +7,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class AutoSolver {
-    private GridController controller;
+    private Solver solver;
     private final ExecutorService service = Executors.newCachedThreadPool();
     private boolean running;
     private SolverListener listener;
 
-    public AutoSolver(GridController controller) {
-        this.controller = controller;
+    public AutoSolver(Solver solver) {
+        this.solver = solver;
     }
 
     public void start() {
@@ -33,7 +33,7 @@ public class AutoSolver {
     }
 
     public Coordinate[] getNextBridge() {
-        return controller.getNextBridge();
+        return solver.getNextBridge();
     }
 
 
@@ -41,7 +41,7 @@ public class AutoSolver {
         running = false;
     }
 
-    public void shutdown(){
+    public void shutdown() {
         running = false;
         service.shutdown();
     }

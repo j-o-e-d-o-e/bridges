@@ -6,14 +6,16 @@ import net.joedoe.utils.Alignment;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GridController {
     private List<Isle> isles = new ArrayList<>();
     private List<Bridge> bridges = new ArrayList<>();
-    private List<Bridge> solution = new ArrayList<>();
 
     private final static Logger LOGGER = Logger.getLogger(GridController.class.getName());
 
@@ -116,18 +118,8 @@ public class GridController {
         return isles.stream().filter(isle -> isle.getY() == y && isle.getX() == x).findFirst().orElse(null);
     }
 
-    public List<Bridge> getBridges() {
-        return bridges;
-    }
-
-    public int getMissingBridgeCount(int y, int x) {
-        Isle isle = getIsle(y, x);
-        return isle.getMissingBridgeCount();
-    }
-
-    public int getBridgeCount(int y, int x) {
-        Isle isle = getIsle(y, x);
-        return isle.getBridgeCount();
+    List<Isle> getIsles(){
+        return isles;
     }
 
     public void setIsles(List<int[]> islesData) {
@@ -140,70 +132,22 @@ public class GridController {
         Collections.sort(isles);
     }
 
-    public void setSolution(List<Coordinate[]> bridgesData) {
-        for (Coordinate[] data : bridgesData)
-            solution.add(new Bridge(
-                    getIsle(data[0].getY(), data[0].getX()),
-                    getIsle(data[1].getY(), data[1].getX())
-            ));
+    public List<Bridge> getBridges() {
+        return bridges;
+    }
+
+    public int getBridgeCount(int y, int x) {
+        Isle isle = getIsle(y, x);
+        return isle.getBridgeCount();
+    }
+
+    public int getMissingBridgeCount(int y, int x) {
+        Isle isle = getIsle(y, x);
+        return isle.getMissingBridgeCount();
     }
 
     public void reset() {
         bridges.clear();
         isles.forEach(Isle::clearBridges);
-    }
-
-    public Coordinate[] getNextBridge() {
-        /*todo: find first bridge from solution whose unique combination of start- and endisle
-         * is not present in the bridges list*/
-//        Bridge next = solution.stream().filter(bridge -> !bridges.contains(bridge))
-//                .findFirst().orElse(null);
-        Bridge next = solution.stream().filter(bridge -> bridges.stream().allMatch(
-                b -> bridge.getStartIsle() != b.getStartIsle()
-                        && bridge.getEndIsle() != b.getEndIsle())).findFirst().orElse(null);
-        if (next == null) return null;
-        bridges.add(next);
-        Isle startIsle = next.getStartIsle();
-        startIsle.addBridge(next);
-        Isle endIsle = next.getEndIsle();
-        endIsle.addBridge(next);
-        if (startIsle.compareTo(endIsle) > 0)
-            return new Coordinate[]{
-                    new Coordinate(next.getStartY(), next.getStartX()),
-                    new Coordinate(next.getEndY(), next.getEndX())
-            };
-        return new Coordinate[]{
-                new Coordinate(next.getEndY(), next.getEndX()),
-                new Coordinate(next.getStartY(), next.getStartX())
-        };
-    }
-
-    public boolean errorOccured() {
-        return isles.stream().anyMatch(isle -> isle.getMissingBridgeCount() < 0);
-    }
-
-    public boolean gameUnsolvable() {
-        return isles.stream().allMatch(isle -> isle.getMissingBridgeCount() <= 0);
-    }
-
-    public boolean gameSolved() {
-        return isles.stream().allMatch(isle -> isle.getMissingBridgeCount() == 0);
-    }
-
-    public boolean connected() {
-        if (isles.size() == 0) return false;
-//        List<Isle> notConnected = new ArrayList<>(isles);
-        Set<Isle> connected = new HashSet<>();
-        Isle initialIsle = isles.get(0);
-
-
-        for (Bridge bridge : initialIsle.getBridges()) {
-            connected.add(bridge.getStartIsle());
-            connected.add(bridge.getEndIsle());
-        }
-        for (Isle isle : connected) {
-
-        }
-        return false;
     }
 }

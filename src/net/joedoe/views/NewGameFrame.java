@@ -6,7 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import net.joedoe.logics.GameGenerator;
+import net.joedoe.logics.Generator;
 
 import java.util.Optional;
 
@@ -14,7 +14,7 @@ import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 
 class NewGameFrame extends Stage {
     private Board board;
-    private GameGenerator generator;
+    private Generator generator;
     private RadioButton autoBtn;
     private Label heightLabel, widthLabel, islesLabel;
     private TextField heightTxt, widthTxt, islesTxt;
@@ -22,7 +22,7 @@ class NewGameFrame extends Stage {
 
     NewGameFrame(Board board) {
         this.board = board;
-        generator = new GameGenerator();
+        generator = new Generator();
         setTitle("Neues Rätsel");
         Scene scene = new Scene(setLayout(), 400, 350);
         setScene(scene);

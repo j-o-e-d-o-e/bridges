@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class GameGenerator {
+public class Generator {
     private static final int MAX = 25;
     private static final int MIN = 2;
     private int height, width, isleCount;
@@ -24,9 +24,9 @@ public class GameGenerator {
     private List<Integer> indices = new ArrayList<>();
     private Random random = new Random();
 
-    private final static Logger LOGGER = Logger.getLogger(GameGenerator.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(Generator.class.getName());
 
-    public GameGenerator() {
+    public Generator() {
         LOGGER.setLevel(Level.OFF);
     }
 

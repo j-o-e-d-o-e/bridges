@@ -7,6 +7,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import net.joedoe.logics.AutoSolver;
 import net.joedoe.logics.GridController;
+import net.joedoe.logics.Solver;
+import net.joedoe.logics.StatusChecker;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
 import net.joedoe.utils.Mocks;
@@ -24,6 +26,8 @@ class Grid extends GridPane {
     private EventHandler<StatusEvent> statusListener;
     private IsleListener isleListener;
     private boolean showMissingBridges = true;
+    private StatusChecker checker;
+    private Solver solver;
     private AutoSolver autoSolver;
 
 
@@ -33,7 +37,7 @@ class Grid extends GridPane {
 
     Grid(int height, int width, List<int[]> isles, List<Coordinate[]> bridges) {
         this(height, width, isles);
-        controller.setSolution(bridges);
+        solver.setSolution(bridges);
 //        addBridges(bridges);
     }
 
@@ -47,7 +51,9 @@ class Grid extends GridPane {
         addIsles(isles);
         controller = new GridController();
         controller.setIsles(isles);
-        autoSolver = new AutoSolver(controller);
+        checker = new StatusChecker(controller);
+        solver = new Solver(controller);
+        autoSolver = new AutoSolver(solver);
         autoSolver.addListener(() ->
                 Platform.runLater(() ->
                         addBridge(autoSolver.getNextBridge())
@@ -132,12 +138,12 @@ class Grid extends GridPane {
     }
 
     private void checkStatus() {
-        if (controller.gameSolved()) {
+        if (checker.connected()) {
             lines.get(lines.size() - 1).setStroke(STD_COLOR);
             statusListener.handle(new StatusEvent(null, "Gelöst!"));
-        } else if (controller.gameUnsolvable())
+        } else if (checker.unsolvable())
             statusListener.handle(new StatusEvent(null, "Nicht mehr lösbar."));
-        else if (controller.errorOccured())
+        else if (checker.errorOccured())
             statusListener.handle(new StatusEvent(null, "Enthält einen Fehler."));
         else
             statusListener.handle(new StatusEvent(null, "Noch nicht gelöst."));
@@ -166,8 +172,8 @@ class Grid extends GridPane {
     }
 
     void getNextBridge() {
-        if (!controller.gameSolved())
-            addBridge(controller.getNextBridge());
+        if (!checker.connected())
+            addBridge(solver.getNextBridge());
     }
 
     void startAutoSolve() {

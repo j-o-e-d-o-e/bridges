@@ -1,6 +1,6 @@
-package tests.controllers;
+package tests.logics;
 
-import net.joedoe.logics.GameGenerator;
+import net.joedoe.logics.Generator;
 import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.utils.Direction;
@@ -16,15 +16,15 @@ import java.util.stream.IntStream;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class GameGeneratorTest {
-    private GameGenerator controller;
+public class GeneratorTest {
+    private Generator controller;
     private static final int HEIGHT = 25; //MIN: 2, MAX: 25
     private static final int WIDTH = 25;
-    private final static Logger LOGGER = Logger.getLogger(GameGeneratorTest.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(GeneratorTest.class.getName());
 
     @Before
     public void setUp() {
-        controller = new GameGenerator();
+        controller = new Generator();
         controller.setHeight(HEIGHT);
         controller.setWidth(WIDTH);
         int maxIsles = (int) (0.2 * HEIGHT * WIDTH);

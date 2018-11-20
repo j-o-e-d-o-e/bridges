@@ -53,16 +53,16 @@ class Grid extends GridPane {
                         addBridge(autoSolver.getNextBridge())
                 )
         );
-//        setSolution(bridges);
+        setSolution(bridges);
     }
 
     @SuppressWarnings("unused")
     private void setSolution(List<Coordinate[]> bridges) {
         solver.setSolution(bridges);
-        controller.setBridges(bridges);
-        addBridges(bridges);
-        updatePanes();
-        lines.forEach(line -> line.setStroke(STD_COLOR));
+//        controller.setBridges(bridges);
+//        addBridges(bridges);
+//        updatePanes();
+//        lines.forEach(line -> line.setStroke(STD_COLOR));
     }
 
     private void addIsles(List<int[]> isles) {

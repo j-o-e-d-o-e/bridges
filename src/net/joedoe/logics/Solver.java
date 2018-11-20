@@ -18,7 +18,7 @@ public class Solver {
     }
 
     public Coordinate[] getNextBridge() {
-        if (!checker.error() || !checker.unsolvable() || !checker.solved()) return null;
+        if (checker.error() || checker.unsolvable() || checker.solved()) return null;
         List<Bridge> bridges = controller.getBridges();
         Bridge next = solution.stream().filter(bridge -> bridges.stream().allMatch(
                 b -> bridge.getStartIsle() != b.getStartIsle()

@@ -87,4 +87,8 @@ public class Isle implements Comparable<Isle> {
     public void clearBridges() {
         bridges.clear();
     }
+
+    public void clearNeighbours() {
+        neighbours.clear();
+    }
 }

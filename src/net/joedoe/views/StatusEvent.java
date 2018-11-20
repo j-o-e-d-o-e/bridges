@@ -6,8 +6,8 @@ import javafx.event.EventType;
 class StatusEvent extends Event {
     private String message;
 
-    StatusEvent(EventType<? extends Event> eventType, String message) {
-        super(eventType);
+    StatusEvent(String message) {
+        super(null);
         this.message = message;
     }
 

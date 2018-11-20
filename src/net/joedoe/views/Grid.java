@@ -134,14 +134,14 @@ class Grid extends GridPane {
 
     private void checkStatus() {
         if (checker.error())
-            statusListener.handle(new StatusEvent(null, "Enthält Fehler."));
+            statusListener.handle(new StatusEvent("Enthält Fehler."));
         else if (checker.unsolvable())
-            statusListener.handle(new StatusEvent(null, "Nicht mehr lösbar."));
+            statusListener.handle(new StatusEvent("Nicht mehr lösbar."));
         else if (checker.solved()) {
             lines.get(lines.size() - 1).setStroke(STD_COLOR);
-            statusListener.handle(new StatusEvent(null, "Gelöst!"));
+            statusListener.handle(new StatusEvent("Gelöst!"));
         } else
-            statusListener.handle(new StatusEvent(null, "Noch nicht gelöst."));
+            statusListener.handle(new StatusEvent("Noch nicht gelöst."));
     }
 
     void setShowMissingBridges(boolean showMissingBridges) {

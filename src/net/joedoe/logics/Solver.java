@@ -11,14 +11,14 @@ import java.util.List;
 public class Solver {
     private GridController controller;
     private StatusChecker checker;
-    private List<Bridge> solution = new ArrayList<>();
 
     public Solver(GridController controller, StatusChecker checker) {
         this.controller = controller;
         this.checker = checker;
     }
 
-    public Coordinate[] getNextBridge(){
+    public Coordinate[] getNextBridge() {
+        if (checker.error() || checker.unsolvable() || checker.solved()) return null;
         return null;
     }
 

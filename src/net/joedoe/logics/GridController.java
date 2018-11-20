@@ -134,5 +134,6 @@ public class GridController {
     public void reset() {
         bridges.clear();
         isles.forEach(Isle::clearBridges);
+        isles.forEach(Isle::clearNeighbours);
     }
 }

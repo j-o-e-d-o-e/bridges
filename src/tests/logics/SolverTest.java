@@ -5,6 +5,7 @@ import net.joedoe.logics.Solver;
 import net.joedoe.logics.StatusChecker;
 import net.joedoe.utils.Coordinate;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class SolverTest {
@@ -18,6 +19,7 @@ public class SolverTest {
     }
 
     @Test
+    @Ignore
     public void getNextBridge() {
         //given
 

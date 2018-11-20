@@ -35,8 +35,6 @@ public class Generator {
         int index = random.nextInt(indices.size());
         Isle initialIsle = createIsle(index / width, index % width);
         isles.add(initialIsle);
-        int missingIsles = isleCount;
-        missingIsles--;
         LOGGER.info("Height: " + height
                 + " Width: " + width
                 + " Isles: " + isleCount
@@ -44,14 +42,13 @@ public class Generator {
                 + " Initial Isle: " + initialIsle.toString()
                 + "\nIndices Size: " + indices.size()
                 + "\n");
-        while (missingIsles > 0) {
+        while (isleCount - isles.size() > 0) {
             Collections.shuffle(isles);
             for (Isle startIsle : isles) {
                 if (startIsle.getBridgeCount() == 8) continue;
                 Isle endIsle = getEndIsle(startIsle);
                 if (endIsle != null) {
                     isles.add(endIsle);
-                    missingIsles--;
                     bridges.add(createBridge(startIsle, endIsle));
                     if (random.nextBoolean() && startIsle.getBridgeCount() < 8)
                         bridges.add(createBridge(endIsle, startIsle));

@@ -1,7 +1,10 @@
 package net.joedoe.logics;
 
+import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
+import net.joedoe.utils.Direction;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,22 +16,34 @@ public class StatusChecker {
         this.controller = controller;
     }
 
-
-    public boolean errorOccured() {
+    public boolean error() {
         List<Isle> isles = controller.getIsles();
         return isles.stream().anyMatch(isle -> isle.getMissingBridgeCount() < 0);
     }
 
     public boolean unsolvable() {
-        List<Isle> isles = controller.getIsles();
-        return isles.stream().allMatch(isle -> isle.getMissingBridgeCount() <= 0);
+        return controller.getIsles().stream().anyMatch(isle -> !connectible(isle));
     }
 
-    public boolean connected() {
-        Set<Isle> connectedIsles = new HashSet<>();
+    private boolean connectible(Isle isle) {
+        if (isle.getMissingBridgeCount() == 0) return true;
+        List<Isle> connectables = new ArrayList<>();
+        Direction[] directions = Direction.values();
+        for (Direction direction : directions) {
+            Isle endIsle = controller.getEndIsle(isle, direction);
+            if (endIsle != null && !controller.collides(new Bridge(isle, endIsle)))
+                connectables.add(endIsle);
+        }
+        return connectables.stream().allMatch(
+                connectable -> connectable.getMissingBridgeCount() <= 0);
+    }
+
+    public boolean solved() {
         List<Isle> isles = controller.getIsles();
+        Set<Isle> connectedIsles = new HashSet<>();
         connected(isles.get(0), connectedIsles);
-        return isles.stream().allMatch(isle -> isle.getMissingBridgeCount() == 0) && connectedIsles.size() == isles.size();
+        return isles.stream().allMatch(isle -> isle.getMissingBridgeCount() == 0)
+                && connectedIsles.size() == isles.size();
     }
 
     private void connected(Isle isle, Set<Isle> connected) {

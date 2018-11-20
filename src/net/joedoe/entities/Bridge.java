@@ -3,6 +3,9 @@ package net.joedoe.entities;
 import net.joedoe.utils.Alignment;
 import net.joedoe.utils.Coordinate;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Bridge {
     private Isle startIsle, endIsle;
     private Coordinate start, end;
@@ -27,6 +30,11 @@ public class Bridge {
 
     public Isle getEndIsle() {
         return endIsle;
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public List<Isle> getIsles() {
+        return Arrays.asList(startIsle, endIsle);
     }
 
     public int getStartY() {

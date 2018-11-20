@@ -141,14 +141,14 @@ class Grid extends GridPane {
     }
 
     private void checkStatus() {
-        if (checker.connected()) {
+        if (checker.error())
+            statusListener.handle(new StatusEvent(null, "Enthält einen Fehler."));
+        else if (checker.unsolvable())
+            statusListener.handle(new StatusEvent(null, "Nicht mehr lösbar."));
+        else if (checker.solved()) {
             lines.get(lines.size() - 1).setStroke(STD_COLOR);
             statusListener.handle(new StatusEvent(null, "Gelöst!"));
-        } else if (checker.unsolvable())
-            statusListener.handle(new StatusEvent(null, "Nicht mehr lösbar."));
-        else if (checker.errorOccured())
-            statusListener.handle(new StatusEvent(null, "Enthält einen Fehler."));
-        else
+        } else
             statusListener.handle(new StatusEvent(null, "Noch nicht gelöst."));
     }
 
@@ -175,7 +175,7 @@ class Grid extends GridPane {
     }
 
     void getNextBridge() {
-        if (!checker.connected())
+        if (!checker.solved())
             addBridge(solver.getNextBridge());
     }
 

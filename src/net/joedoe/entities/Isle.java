@@ -26,8 +26,12 @@ public class Isle implements Comparable<Isle> {
 
     public void removeBridge(Bridge bridge) {
         bridges.remove(bridge);
-        if (bridge.getStartIsle() != this) neighbours.remove(bridge.getStartIsle());
-        else if (bridge.getEndIsle() != this) neighbours.remove(bridge.getEndIsle());
+        for (Isle isle : bridge.getIsles()) {
+            if (isle == this) continue;
+            boolean remove = bridges.stream().noneMatch(b ->
+                    b.getStartIsle() == isle || b.getEndIsle() == isle);
+            if (remove) neighbours.remove(isle);
+        }
     }
 
     public Bridge getBridge(Isle isle, boolean outgoing) {

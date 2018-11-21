@@ -29,6 +29,11 @@ public class GridController {
         Isle endIsle = getEndIsle(startIsle, direction);
         if (endIsle == null) return null;
         if (collides(startIsle.getPos(), endIsle.getPos())) return null;
+        Bridge bridge = addBridge(startIsle, endIsle);
+        return Converter.convertBridgeToData(bridge);
+    }
+
+    Bridge addBridge(Isle startIsle, Isle endIsle){
         Bridge bridge;
         if (startIsle.getBridge(endIsle) == null)
             bridge = new Bridge(startIsle, endIsle);
@@ -38,7 +43,7 @@ public class GridController {
         startIsle.addBridge(bridge);
         endIsle.addBridge(bridge);
         bridges.add(bridge);
-        return Converter.convertBridgeToData(bridge);
+        return bridge;
     }
 
     public Coordinate[] removeBridge(int x, int y, Direction direction) {

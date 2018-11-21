@@ -13,6 +13,7 @@ import net.joedoe.logics.Solver;
 import net.joedoe.logics.StatusChecker;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
+import net.joedoe.utils.GameInfo;
 import net.joedoe.utils.Mocks;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ class Grid extends GridPane {
     Grid(int height, int width, List<int[]> isles, List<Coordinate[]> bridges) {
         //        setGridLinesVisible(true);
         setAlignment(Pos.CENTER);
-        setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        setBorder(new Border(new BorderStroke(GameInfo.STD_COLOR, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         IntStream.range(0, height).mapToObj(i -> new RowConstraints(ONE_TILE)).forEach(row -> getRowConstraints().add(row));
         IntStream.range(0, width).mapToObj(i -> new ColumnConstraints(ONE_TILE)).forEachOrdered(column -> getColumnConstraints().add(column));
         isleListener = new IsleListener(this);

@@ -44,6 +44,11 @@ public class Isle implements Comparable<Isle> {
         this.bridgeCount++;
     }
 
+    public boolean hasTwoBridgesTo(Isle endIsle){
+        return bridges.stream().anyMatch(bridge -> bridge.getStartIsle() == endIsle)
+                && bridges.stream().anyMatch(bridge -> bridge.getEndIsle() == endIsle);
+    }
+
     public Coordinate getPos() {
         return pos;
     }

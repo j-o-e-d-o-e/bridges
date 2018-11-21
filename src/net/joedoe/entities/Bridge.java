@@ -15,11 +15,11 @@ public class Bridge {
         this.startIsle = startIsle;
         this.endIsle = endIsle;
         if (startIsle.compareTo(endIsle) < 0) {
-            start = new Coordinate(startIsle.getY(), startIsle.getX());
-            end = new Coordinate(endIsle.getY(), endIsle.getX());
+            start = new Coordinate(startIsle.getX(), startIsle.getY());
+            end = new Coordinate(endIsle.getX(), endIsle.getY());
         } else {
-            start = new Coordinate(endIsle.getY(), endIsle.getX());
-            end = new Coordinate(startIsle.getY(), startIsle.getX());
+            start = new Coordinate(endIsle.getX(), endIsle.getY());
+            end = new Coordinate(startIsle.getX(), startIsle.getY());
         }
         this.alignment = Alignment.getAlignment(startIsle.getY(), endIsle.getY());
     }

@@ -77,7 +77,7 @@ public class GeneratorTest {
     @Test
     public void getDirectionsBORDER() {
         //given
-        Isle startIsle = new Isle(2, WIDTH - 2, 0);
+        Isle startIsle = new Isle(WIDTH - 2, 2, 0);
 
         //when
         List<Direction> directions = controller.getDirections(startIsle);
@@ -91,7 +91,7 @@ public class GeneratorTest {
         //given
         int y = HEIGHT - 2;
         int x = WIDTH - 2;
-        Isle startIsle = new Isle(y, x, 0);
+        Isle startIsle = new Isle(x, y, 0);
 
         //when
         List<Direction> directions = controller.getDirections(startIsle);
@@ -103,7 +103,7 @@ public class GeneratorTest {
     @Test
     public void getDistancesUP() {
         //given
-        Isle startIsle = new Isle(9, 0, 0);
+        Isle startIsle = new Isle(0, 9, 0);
         Direction direction = Direction.UP;
         int expectedSize = startIsle.getY() - 1;
         if (expectedSize < 0) expectedSize = 0;
@@ -133,7 +133,7 @@ public class GeneratorTest {
     @Test
     public void getDistancesDOWN() {
         //given
-        Isle startIsle = new Isle(7, 3, 0);
+        Isle startIsle = new Isle(3, 7, 0);
         Direction direction = Direction.DOWN;
         int expectedSize = HEIGHT - startIsle.getY() - 2;
         if (expectedSize < 0) expectedSize = 0;
@@ -148,7 +148,7 @@ public class GeneratorTest {
     @Test
     public void getDistancesRIGHT() {
         //given
-        Isle startIsle = new Isle(8, 6, 0);
+        Isle startIsle = new Isle(6, 8, 0);
         Direction direction = Direction.RIGHT;
         int expectedSize = WIDTH - startIsle.getX() - 2;
         if (expectedSize < 0) expectedSize = 0;
@@ -164,8 +164,8 @@ public class GeneratorTest {
     public void collidesIslesVERTICAL() {
         //given: vertical connection
         Isle startIsle = new Isle(3, 3, 0);
-        Isle endIsle = new Isle(6, 3, 0);
-        Isle isle = controller.createIsle(4, 3);
+        Isle endIsle = new Isle(3, 6, 0);
+        Isle isle = controller.createIsle(3, 4);
         controller.getIsles().add(isle);
 
         //when
@@ -178,8 +178,8 @@ public class GeneratorTest {
     @Test
     public void collidesIslesHORIZONTAL() {
         //given: horizontal connection
-        Isle startIsle = new Isle(4, 2, 0);
-        Isle endIsle = new Isle(4, 5, 0);
+        Isle startIsle = new Isle(2, 4, 0);
+        Isle endIsle = new Isle(5, 4, 0);
         Isle isle = controller.createIsle(4, 4);
         controller.getIsles().add(isle);
 
@@ -194,12 +194,12 @@ public class GeneratorTest {
     public void collidesBridgesVERTICAL() {
         //given: vertical bridge
         Isle startIsle = new Isle(3, 3, 0);
-        Isle endIsle = new Isle(6, 3, 0);
+        Isle endIsle = new Isle(3, 6, 0);
         Bridge bridge = controller.createBridge(startIsle, endIsle);
         controller.getBridges().add(bridge);
 
         //when: horizontal bridge
-        boolean collides = controller.collidesBridges(4, 2, 4, 5);
+        boolean collides = controller.collidesBridges(2, 4, 5, 4);
 
         //then
         assertTrue(collides);
@@ -208,13 +208,13 @@ public class GeneratorTest {
     @Test
     public void collidesBridgesHORIZONTAL() {
         //given: horizontal bridge
-        Isle startIsle = new Isle(4, 2, 0);
-        Isle endIsle = new Isle(4, 5, 0);
+        Isle startIsle = new Isle(2, 4, 0);
+        Isle endIsle = new Isle(5, 4, 0);
         Bridge bridge = controller.createBridge(startIsle, endIsle);
         controller.getBridges().add(bridge);
 
         //when: vertical bridge
-        boolean collides = controller.collidesBridges(3, 3, 6, 3);
+        boolean collides = controller.collidesBridges(3, 3, 3, 6);
 
         //then
         assertTrue(collides);
@@ -242,8 +242,8 @@ public class GeneratorTest {
         List<Integer> indices = IntStream.range(0, HEIGHT * WIDTH).boxed().collect(Collectors.toList());
         controller.setIndices(indices);
         int expectedSize = indices.size() - Math.abs(endX - startX);
-        Isle startIsle = new Isle(3, startX, 0);
-        Isle endIsle = new Isle(3, endX, 0);
+        Isle startIsle = new Isle(startX, 3, 0);
+        Isle endIsle = new Isle(endX, 3, 0);
 
         //when
         controller.createBridge(startIsle, endIsle);
@@ -260,8 +260,8 @@ public class GeneratorTest {
         List<Integer> indices = IntStream.range(0, HEIGHT * WIDTH).boxed().collect(Collectors.toList());
         controller.setIndices(indices);
         int expectedSize = indices.size() - Math.abs(endY - startY);
-        Isle startIsle = new Isle(startY, 3, 0);
-        Isle endIsle = new Isle(endY, 3, 0);
+        Isle startIsle = new Isle(3, startY, 0);
+        Isle endIsle = new Isle(3, endY, 0);
 
         //when
         controller.createBridge(startIsle, endIsle);

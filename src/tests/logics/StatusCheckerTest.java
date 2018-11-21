@@ -31,11 +31,11 @@ public class StatusCheckerTest {
     public void unsolvable() {
         //given
         Isle isle1 = controller.getIsle(0, 0);
-        controller.removeBridge(isle1.getY(), isle1.getX(), Direction.DOWN);
-        controller.addBridge(isle1.getY(), isle1.getX(), Direction.RIGHT);
-        Isle isle2 = controller.getIsle(6, 4);
-        controller.removeBridge(isle2.getY(), isle2.getX(), Direction.UP);
-        controller.addBridge(isle2.getY(), isle2.getX(), Direction.RIGHT);
+        controller.removeBridge(isle1.getX(), isle1.getY(), Direction.DOWN);
+        controller.addBridge(isle1.getX(), isle1.getY(), Direction.RIGHT);
+        Isle isle2 = controller.getIsle(4, 6);
+        controller.removeBridge(isle2.getX(), isle2.getY(), Direction.UP);
+        controller.addBridge(isle2.getX(), isle2.getY(), Direction.RIGHT);
 
         //when
         boolean status = checker.unsolvable();

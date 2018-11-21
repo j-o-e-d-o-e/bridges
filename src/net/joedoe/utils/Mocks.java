@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Mocks {
-    public static final int ROWS = 7;
-    public static final int COLS = 7;
+    public static final int HEIGHT = 7;
+    public static final int WIDTH = 7;
     public static final List<int[]> ISLES = Arrays.asList(
             new int[]{0, 0, 3},
             new int[]{0, 4, 5},
@@ -23,69 +23,69 @@ public class Mocks {
     public static final List<Coordinate[]> BRIDGES = Arrays.asList(
             new Coordinate[]{
                     new Coordinate(0, 0),
-                    new Coordinate(0, 4)},
+                    new Coordinate(4, 0)},
             new Coordinate[]{
                     new Coordinate(0, 0),
-                    new Coordinate(3, 0)},
+                    new Coordinate(0, 3)},
             new Coordinate[]{
-                    new Coordinate(3, 0),
+                    new Coordinate(0, 3),
                     new Coordinate(0, 0)},
 
             new Coordinate[]{
-                    new Coordinate(3, 0),
-                    new Coordinate(5, 0)},
+                    new Coordinate(0, 3),
+                    new Coordinate(0, 5)},
             new Coordinate[]{
-                    new Coordinate(5, 0),
-                    new Coordinate(3, 0)},
+                    new Coordinate(0, 5),
+                    new Coordinate(0, 3)},
 
             new Coordinate[]{
-                    new Coordinate(0, 4),
-                    new Coordinate(0, 6)},
+                    new Coordinate(4, 0),
+                    new Coordinate(6, 0)},
             new Coordinate[]{
-                    new Coordinate(0, 6),
-                    new Coordinate(0, 4)},
+                    new Coordinate(6, 0),
+                    new Coordinate(4, 0)},
             new Coordinate[]{
-                    new Coordinate(0, 4),
-                    new Coordinate(6, 4)},
+                    new Coordinate(4, 0),
+                    new Coordinate(4, 6)},
             new Coordinate[]{
-                    new Coordinate(6, 4),
-                    new Coordinate(0, 4)},
+                    new Coordinate(4, 6),
+                    new Coordinate(4, 0)},
 
             new Coordinate[]{
-                    new Coordinate(0, 6),
+                    new Coordinate(6, 0),
                     new Coordinate(6, 6)},
             new Coordinate[]{
                     new Coordinate(6, 6),
-                    new Coordinate(0, 6)},
+                    new Coordinate(6, 0)},
 
             new Coordinate[]{
                     new Coordinate(6, 6),
-                    new Coordinate(6, 4)},
+                    new Coordinate(4, 6)},
 
             new Coordinate[]{
-                    new Coordinate(6, 4),
-                    new Coordinate(6, 1)},
+                    new Coordinate(4, 6),
+                    new Coordinate(1, 6)},
             new Coordinate[]{
-                    new Coordinate(6, 1),
-                    new Coordinate(6, 4)},
+                    new Coordinate(1, 6),
+                    new Coordinate(4, 6)},
 
             new Coordinate[]{
-                    new Coordinate(6, 1),
+                    new Coordinate(1, 6),
                     new Coordinate(1, 1)},
 
             new Coordinate[]{
                     new Coordinate(1, 1),
-                    new Coordinate(1, 3)},
+                    new Coordinate(3, 1)},
 
             new Coordinate[]{
-                    new Coordinate(1, 3),
+                    new Coordinate(3, 1),
                     new Coordinate(3, 3)},
             new Coordinate[]{
                     new Coordinate(3, 3),
-                    new Coordinate(1, 3)},
+                    new Coordinate(3, 1)},
 
             new Coordinate[]{
-                    new Coordinate(5, 3),
+                    new Coordinate(3, 5),
                     new Coordinate(3, 3)}
     );
 }

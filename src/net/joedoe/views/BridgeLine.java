@@ -9,7 +9,7 @@ import static net.joedoe.utils.GameInfo.*;
 class BridgeLine extends Line {
     private int xStart, xEnd, yStart, yEnd;
 
-    BridgeLine(int yStart, int xStart, int yEnd, int xEnd) {
+    BridgeLine(int xStart, int yStart, int xEnd, int yEnd) {
         this.yStart = yStart;
         this.xStart = xStart;
         this.yEnd = yEnd;

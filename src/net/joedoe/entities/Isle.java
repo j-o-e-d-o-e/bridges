@@ -13,8 +13,8 @@ public class Isle implements Comparable<Isle> {
     private List<Bridge> bridges = new ArrayList<>();
     private Set<Isle> neighbours = new HashSet<>();
 
-    public Isle(int y, int x, int bridgeCount) {
-        position = new Coordinate(y, x);
+    public Isle(int x, int y, int bridgeCount) {
+        position = new Coordinate(x, y);
         this.bridgeCount = bridgeCount;
     }
 

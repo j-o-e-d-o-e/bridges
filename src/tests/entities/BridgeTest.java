@@ -12,8 +12,8 @@ public class BridgeTest {
     @Test
     public void create() {
         //given
-        Isle startIsle = new Isle(3, 4, 0);
-        Isle endIsle = new Isle(3, 1, 2);
+        Isle startIsle = new Isle(4, 3, 0);
+        Isle endIsle = new Isle(1, 3, 2);
 
         //when
         Bridge bridge = new Bridge(startIsle, endIsle);

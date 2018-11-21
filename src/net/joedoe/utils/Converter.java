@@ -10,16 +10,16 @@ public class Converter {
         Isle endIsle = bridge.getEndIsle();
             return new Coordinate[]{
                     new Coordinate(
-                            startIsle.getY(),
-                            startIsle.getX()),
+                            startIsle.getX(), startIsle.getY()
+                    ),
                     new Coordinate(
-                            endIsle.getY(),
-                            endIsle.getX()),
+                            endIsle.getX(), endIsle.getY()
+                    ),
             };
     }
 
     public static Isle convertDataToIsle(int[] isle) {
-        return new Isle(isle[0], isle[1], isle[2]);
+        return new Isle(isle[1], isle[0], isle[2]);
     }
 
     public static int[] convertIsleToData(Isle isle) {

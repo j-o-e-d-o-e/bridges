@@ -34,7 +34,7 @@ public class Generator {
     public void generateGame() {
         indices = IntStream.range(0, height * width).boxed().collect(Collectors.toList());
         int index = random.nextInt(indices.size());
-        Isle initialIsle = createIsle(index / width, index % width);
+        Isle initialIsle = createIsle(index % width, index / width);
         isles.add(initialIsle);
         LOGGER.info("Height: " + height
                 + " Width: " + width
@@ -90,8 +90,8 @@ public class Generator {
                     x = startIsle.getX() + distance;
                 }
                 //collision detection for new isle & for new bridge
-                if (indices.contains(y * width + x) && !collides(startIsle.getY(), startIsle.getX(), y, x)) {
-                    Isle endIsle = createIsle(y, x);
+                if (indices.contains(y * width + x) && !collides(startIsle.getX(), startIsle.getY(), x, y)) {
+                    Isle endIsle = createIsle(x, y);
                     LOGGER.info("Start Isle: " + startIsle.toString()
                             + " Direction: " + direction.toString()
                             + " Distance: " + distance
@@ -147,11 +147,11 @@ public class Generator {
      * @param endY - the end y point of the new bridge
      * @param endX - the end x point of the new bridge
      * */
-    private boolean collides(int startY, int startX, int endY, int endX) {
+    private boolean collides(int startX, int startY, int endX, int endY) {
         if (startY + startX > endY + endX) {
-            return collidesIsles(endY, endX, startY, startX) || collidesBridges(endY, endX, startY, startX);
+            return collidesIsles(endY, endX, startY, startX) || collidesBridges(endX, endY, startX, startY);
         }
-        return collidesIsles(startY, startX, endY, endX) || collidesBridges(startY, startX, endY, endX);
+        return collidesIsles(startY, startX, endY, endX) || collidesBridges(startX, startY, endX, endY);
     }
 
     public boolean collidesIsles(int startY, int startX, int endY, int endX) {
@@ -159,7 +159,7 @@ public class Generator {
                 || i.getX() > startX && i.getX() < endX && i.getY() == startY);
     }
 
-    public boolean collidesBridges(int startY, int startX, int endY, int endX) {
+    public boolean collidesBridges(int startX, int startY, int endX, int endY) {
         if (Alignment.getAlignment(startY, endY) == Alignment.HORIZONTAL)
             return bridges.stream().anyMatch(b -> b.getAlignment() == Alignment.VERTICAL
                     && b.getStartY() < startY && b.getEndY() > startY
@@ -170,8 +170,8 @@ public class Generator {
                     && startY < b.getStartY() && endY > b.getStartY());
     }
 
-    public Isle createIsle(int y, int x) {
-        Isle isle = new Isle(y, x, 0);
+    public Isle createIsle(int x, int y) {
+        Isle isle = new Isle(x, y, 0);
         int index = y * width + x;
         indices.remove(new Integer(index - width));
         indices.remove(new Integer(index - 1));

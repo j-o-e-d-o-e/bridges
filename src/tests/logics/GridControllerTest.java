@@ -31,8 +31,8 @@ public class GridControllerTest {
         Isle endIsle = controller.getEndIsle(startIsle, direction);
 
         //when
-        controller.addBridge(startIsle.getY(), startIsle.getX(), direction);
-        controller.addBridge(startIsle.getY(), startIsle.getX(), direction);
+        controller.addBridge(startIsle.getX(), startIsle.getY(), direction);
+        controller.addBridge(startIsle.getX(), startIsle.getY(), direction);
 
         //then
         assertEquals(2, startIsle.getBridges().size());
@@ -47,10 +47,10 @@ public class GridControllerTest {
         //given
         Direction direction = Direction.DOWN;
         Isle startIsle = controller.getIsle(0, 0);
-        Coordinate[] added = controller.addBridge(startIsle.getY(), startIsle.getX(), direction);
+        Coordinate[] added = controller.addBridge(startIsle.getX(), startIsle.getY(), direction);
 
         //when
-        Coordinate[] removed = controller.removeBridge(startIsle.getY(), startIsle.getX(), direction);
+        Coordinate[] removed = controller.removeBridge(startIsle.getX(), startIsle.getY(), direction);
 
         //then
         assertEquals(added[0].getY(), removed[0].getY());
@@ -62,7 +62,7 @@ public class GridControllerTest {
     @Test
     public void findIsleUP() {
         //given
-        Isle startIsle = controller.getIsle(5, 3);
+        Isle startIsle = controller.getIsle(3, 5);
 
         //when
         Isle endIsle = controller.getEndIsle(startIsle, Direction.UP);
@@ -88,7 +88,7 @@ public class GridControllerTest {
     @Test
     public void findIsleDOWN() {
         //given
-        Isle startIsle = controller.getIsle(1, 3);
+        Isle startIsle = controller.getIsle(3, 1);
 
         //when
         Isle endIsle = controller.getEndIsle(startIsle, Direction.DOWN);
@@ -101,7 +101,7 @@ public class GridControllerTest {
     @Test
     public void findIsleRIGHT() {
         //given
-        Isle startIsle = controller.getIsle(6, 1);
+        Isle startIsle = controller.getIsle(1, 6);
 
         //when
         Isle endIsle = controller.getEndIsle(startIsle, Direction.RIGHT);
@@ -114,12 +114,12 @@ public class GridControllerTest {
     @Test
     public void collidesHORIZONTAL() {
         //given
-        Bridge vertical = new Bridge(new Isle(6, 1, 1), new Isle(1, 1, 1));
+        Bridge vertical = new Bridge(new Isle(1, 6, 1), new Isle(1, 1, 1));
         List<Bridge> bridges = controller.getBridges();
         bridges.add(vertical);
 
         //when
-        Bridge horizontal = new Bridge(new Isle(3, 0, 1), new Isle(3, 3, 1));
+        Bridge horizontal = new Bridge(new Isle(0, 3, 1), new Isle(3, 3, 1));
         boolean collides = controller.collides(horizontal);
 
         //then
@@ -129,12 +129,12 @@ public class GridControllerTest {
     @Test
     public void collidesVERTICAL() {
         //given
-        Bridge horizontal = new Bridge(new Isle(3, 0, 1), new Isle(3, 3, 1));
+        Bridge horizontal = new Bridge(new Isle(0, 3, 1), new Isle(3, 3, 1));
         List<Bridge> bridges = controller.getBridges();
         bridges.add(horizontal);
 
         //when
-        Bridge vertical = new Bridge(new Isle(6, 1, 1), new Isle(1, 1, 1));
+        Bridge vertical = new Bridge(new Isle(1, 6, 1), new Isle(1, 1, 1));
         boolean collides = controller.collides(vertical);
 
         //then

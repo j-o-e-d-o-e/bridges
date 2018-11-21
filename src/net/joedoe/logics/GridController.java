@@ -23,8 +23,8 @@ public class GridController {
         LOGGER.setLevel(Level.OFF);
     }
 
-    public Coordinate[] addBridge(int y, int x, Direction direction) {
-        Isle startIsle = getIsle(y, x);
+    public Coordinate[] addBridge(int x, int y, Direction direction) {
+        Isle startIsle = getIsle(x, y);
         if (startIsle == null) return null;
         Isle endIsle = getEndIsle(startIsle, direction);
         if (endIsle == null) return null;
@@ -42,8 +42,8 @@ public class GridController {
         return Converter.convertBridgeToData(bridge);
     }
 
-    public Coordinate[] removeBridge(int y, int x, Direction direction) {
-        Isle startIsle = getIsle(y, x);
+    public Coordinate[] removeBridge(int x, int y, Direction direction) {
+        Isle startIsle = getIsle(x, y);
         if (startIsle == null) return null;
         Isle endIsle = getEndIsle(startIsle, direction);
         if (endIsle == null) return null;
@@ -91,7 +91,7 @@ public class GridController {
                     && bridge.getStartY() < b.getStartY() && bridge.getEndY() > b.getStartY());
     }
 
-    public Isle getIsle(int y, int x) {
+    public Isle getIsle(int x, int y) {
         return isles.stream().filter(isle -> isle.getY() == y && isle.getX() == x).findFirst().orElse(null);
     }
 
@@ -112,8 +112,8 @@ public class GridController {
     // for testing only
     public void setBridges(List<Coordinate[]> bridgesData) {
         for (Coordinate[] coordinates : bridgesData) {
-            Isle startIsle = getIsle(coordinates[0].getY(), coordinates[0].getX());
-            Isle endIsle = getIsle(coordinates[1].getY(), coordinates[1].getX());
+            Isle startIsle = getIsle(coordinates[0].getX(), coordinates[0].getY());
+            Isle endIsle = getIsle(coordinates[1].getX(), coordinates[1].getY());
             Bridge bridge = new Bridge(startIsle, endIsle);
             startIsle.addBridge(bridge);
             endIsle.addBridge(bridge);
@@ -121,13 +121,13 @@ public class GridController {
         }
     }
 
-    public int getBridgeCount(int y, int x) {
-        Isle isle = getIsle(y, x);
+    public int getBridgeCount(int x, int y) {
+        Isle isle = getIsle(x, y);
         return isle.getBridgeCount();
     }
 
-    public int getMissingBridgeCount(int y, int x) {
-        Isle isle = getIsle(y, x);
+    public int getMissingBridgeCount(int x, int y) {
+        Isle isle = getIsle(x, y);
         return isle.getMissingBridgeCount();
     }
 

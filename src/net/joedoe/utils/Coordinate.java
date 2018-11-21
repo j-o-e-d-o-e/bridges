@@ -3,7 +3,7 @@ package net.joedoe.utils;
 public class Coordinate {
     private int y, x;
 
-    public Coordinate(int y, int x) {
+    public Coordinate(int x, int y) {
         this.y = y;
         this.x = x;
     }

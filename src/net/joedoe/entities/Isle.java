@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Set;
 
 public class Isle implements Comparable<Isle> {
-    private final Coordinate position;
+    private final Coordinate pos;
     private int bridgeCount;
     private List<Bridge> bridges = new ArrayList<>();
     private Set<Isle> neighbours = new HashSet<>();
 
     public Isle(int x, int y, int bridgeCount) {
-        position = new Coordinate(x, y);
+        pos = new Coordinate(x, y);
         this.bridgeCount = bridgeCount;
     }
 
@@ -64,25 +64,25 @@ public class Isle implements Comparable<Isle> {
     }
 
     public Coordinate getPos() {
-        return position;
+        return pos;
     }
 
     public int getY() {
-        return position.getY();
+        return pos.getY();
     }
 
     public int getX() {
-        return position.getX();
+        return pos.getX();
     }
 
     @Override
     public int compareTo(Isle other) {
-        return position.compareTo(other.position);
+        return pos.compareTo(other.pos);
     }
 
     @Override
     public String toString() {
-        return "Isle{" + "position=" + position + "bridgeCount=" + bridgeCount + '}';
+        return "Isle{" + "pos=" + pos + "bridgeCount=" + bridgeCount + '}';
     }
 
     public void clearBridges() {

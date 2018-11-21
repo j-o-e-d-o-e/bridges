@@ -3,59 +3,67 @@ package net.joedoe.views;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import net.joedoe.utils.Alignment;
+import net.joedoe.utils.Coordinate;
 
 import static net.joedoe.utils.GameInfo.*;
 
-class BridgeLine extends Line {
-    private int xStart, xEnd, yStart, yEnd;
+class BridgeLine {
+    private Coordinate start, end;
+    private Line line = new Line();
 
-    BridgeLine(int xStart, int yStart, int xEnd, int yEnd) {
-        this.yStart = yStart;
-        this.xStart = xStart;
-        this.yEnd = yEnd;
-        this.xEnd = xEnd;
-        setStrokeWidth(1.5);
-        setStroke(Color.CORAL);
+    BridgeLine(Coordinate start, Coordinate end) {
+        this.start = start;
+        this.end = end;
+        line.setStrokeWidth(1.5);
+        line.setStroke(Color.CORAL);
         translateToLayout();
     }
 
     private void translateToLayout() {
-        if (Alignment.getAlignment(yStart, yEnd) == Alignment.HORIZONTAL) {
-            int tiles = Math.abs(xStart - xEnd);
-            setEndX(ONE_TILE * (tiles - 1) + BRIDGE_OVERLAP * 2);
-            if (xStart < xEnd) {
-                setTranslateX(ONE_TILE - BRIDGE_OVERLAP);
-                setTranslateY(BRIDGE_OFFSET);
+        if (Alignment.getAlignment(start.getY(), end.getY()) == Alignment.HORIZONTAL) {
+            int tiles = Math.abs(start.getX() - end.getX());
+            line.setEndX(ONE_TILE * (tiles - 1) + BRIDGE_OVERLAP * 2);
+            if (start.getX() < end.getX()) {
+                line.setTranslateX(ONE_TILE - BRIDGE_OVERLAP);
+                line.setTranslateY(BRIDGE_OFFSET);
             } else {
-                setTranslateX(-ONE_TILE * (tiles - 1) - BRIDGE_OVERLAP);
-                setTranslateY(-BRIDGE_OFFSET);
+                line.setTranslateX(-ONE_TILE * (tiles - 1) - BRIDGE_OVERLAP);
+                line.setTranslateY(-BRIDGE_OFFSET);
             }
         } else {
-            int tiles = Math.abs(yStart - yEnd);
-            setEndY(ONE_TILE * (tiles - 1) + BRIDGE_OVERLAP * 2);
-            if (yStart < yEnd) {
-                setTranslateX((ONE_TILE >> 1) + BRIDGE_OFFSET);
-                setTranslateY((ONE_TILE >> 1) * tiles);
+            int tiles = Math.abs(start.getY() - end.getY());
+            line.setEndY(ONE_TILE * (tiles - 1) + BRIDGE_OVERLAP * 2);
+            if (start.getY() < end.getY()) {
+                line.setTranslateX((ONE_TILE >> 1) + BRIDGE_OFFSET);
+                line.setTranslateY((ONE_TILE >> 1) * tiles);
             } else {
-                setTranslateX((ONE_TILE >> 1) - BRIDGE_OFFSET);
-                setTranslateY(-(ONE_TILE >> 1) * tiles);
+                line.setTranslateX((ONE_TILE >> 1) - BRIDGE_OFFSET);
+                line.setTranslateY(-(ONE_TILE >> 1) * tiles);
             }
         }
     }
 
-    int getXStart() {
-        return xStart;
+    int getStartX() {
+        return start.getX();
     }
 
-    int getXEnd() {
-        return xEnd;
+    int getEndX() {
+        return end.getX();
     }
 
-    int getYStart() {
-        return yStart;
+    int getStartY() {
+        return start.getY();
     }
 
-    int getYEnd() {
-        return yEnd;
+    int getEndY() {
+        return end.getY();
+    }
+
+    void setStdColor() {
+        line.setStroke(STD_COLOR);
+    }
+
+    Line getLine() {
+        return line;
     }
 }

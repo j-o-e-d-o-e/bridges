@@ -4,18 +4,18 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import net.joedoe.utils.Coordinate;
 
 import static net.joedoe.utils.GameInfo.CIRCLE_RADIUS;
 import static net.joedoe.utils.GameInfo.STD_COLOR;
 
 public class IslePane extends StackPane {
-    private int y, x;
+    private Coordinate pos;
     private Circle circle;
     private Label label;
 
     IslePane(int x, int y, int bridgeCount) {
-        this.y = y;
-        this.x = x;
+        pos = new Coordinate(x, y);
         circle = new Circle(CIRCLE_RADIUS, STD_COLOR);
         label = new Label(Integer.toString(bridgeCount));
         getChildren().addAll(circle, label);
@@ -30,15 +30,15 @@ public class IslePane extends StackPane {
     }
 
     int getY() {
-        return y;
+        return pos.getY();
     }
 
     int getX() {
-        return x;
+        return pos.getX();
     }
 
     @Override
     public String toString() {
-        return "IslePane{" + "y=" + y + ", x=" + x + '}';
+        return "IslePane{" + "y=" + pos.getY() + ", x=" + pos.getX() + '}';
     }
 }

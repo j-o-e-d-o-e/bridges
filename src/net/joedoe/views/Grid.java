@@ -54,7 +54,7 @@ class Grid extends GridPane {
         autoSolver.addListener(() ->
                 Platform.runLater(this::getNextBridgeAuto)
         );
-//        setSolution(bridges);
+        setSolution(bridges);
     }
 
     //for testing only

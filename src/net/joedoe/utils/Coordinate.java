@@ -1,6 +1,6 @@
 package net.joedoe.utils;
 
-public class Coordinate {
+public class Coordinate implements Comparable<Coordinate> {
     private int y, x;
 
     public Coordinate(int x, int y) {
@@ -19,5 +19,13 @@ public class Coordinate {
     @Override
     public String toString() {
         return "Coordinate{" + "y=" + y + ", x=" + x + '}';
+    }
+
+    @Override
+    public int compareTo(Coordinate other) {
+        if (x + y > other.x + other.y)
+            return 1;
+        else
+            return -1;
     }
 }

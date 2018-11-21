@@ -90,7 +90,7 @@ public class Generator {
                     x = startIsle.getX() + distance;
                 }
                 //collision detection for new isle & for new bridge
-                if (indices.contains(y * width + x) && !collides(startIsle.getX(), startIsle.getY(), x, y)) {
+                if (indices.contains(y * width + x) && !collides(startIsle.getPos(), new Coordinate(x, y))) {
                     Isle endIsle = createIsle(x, y);
                     LOGGER.info("Start Isle: " + startIsle.toString()
                             + " Direction: " + direction.toString()
@@ -141,33 +141,27 @@ public class Generator {
         return distances;
     }
 
-    /*Returns boolean whether new bridge collides with existing isles or bridges
-     * @param startY - the start y point of the new bridge
-     * @param startX - the start x point of the new bridge
-     * @param endY - the end y point of the new bridge
-     * @param endX - the end x point of the new bridge
-     * */
-    private boolean collides(int startX, int startY, int endX, int endY) {
-        if (startY + startX > endY + endX) {
-            return collidesIsles(endY, endX, startY, startX) || collidesBridges(endX, endY, startX, startY);
+    private boolean collides(Coordinate start, Coordinate end) {
+        if (start.compareTo(end) > 0) {
+            return collidesIsles(end, start) || collidesBridges(end, start);
         }
-        return collidesIsles(startY, startX, endY, endX) || collidesBridges(startX, startY, endX, endY);
+        return collidesIsles(start, end) || collidesBridges(start, end);
     }
 
-    public boolean collidesIsles(int startY, int startX, int endY, int endX) {
-        return isles.stream().anyMatch(i -> i.getY() > startY && i.getY() < endY && i.getX() == startX
-                || i.getX() > startX && i.getX() < endX && i.getY() == startY);
+    public boolean collidesIsles(Coordinate start, Coordinate end) {
+        return isles.stream().anyMatch(i -> i.getY() > start.getY() && i.getY() < end.getY() && i.getX() == start.getX()
+                || i.getX() > start.getX() && i.getX() < end.getX() && i.getY() == start.getY());
     }
 
-    public boolean collidesBridges(int startX, int startY, int endX, int endY) {
-        if (Alignment.getAlignment(startY, endY) == Alignment.HORIZONTAL)
+    public boolean collidesBridges(Coordinate start, Coordinate end) {
+        if (Alignment.getAlignment(start.getY(), end.getY()) == Alignment.HORIZONTAL)
             return bridges.stream().anyMatch(b -> b.getAlignment() == Alignment.VERTICAL
-                    && b.getStartY() < startY && b.getEndY() > startY
-                    && startX < b.getStartX() && endX > b.getStartX());
+                    && b.getStartY() < start.getY() && b.getEndY() > start.getY()
+                    && start.getX() < b.getStartX() && end.getX() > b.getStartX());
         else
             return bridges.stream().anyMatch(b -> b.getAlignment() == Alignment.HORIZONTAL
-                    && b.getStartX() < startX && b.getEndX() > startX
-                    && startY < b.getStartY() && endY > b.getStartY());
+                    && b.getStartX() < start.getX() && b.getEndX() > start.getX()
+                    && start.getY() < b.getStartY() && end.getY() > b.getStartY());
     }
 
     public Isle createIsle(int x, int y) {

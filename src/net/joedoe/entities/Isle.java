@@ -63,6 +63,10 @@ public class Isle implements Comparable<Isle> {
         return neighbours;
     }
 
+    public Coordinate getPos() {
+        return position;
+    }
+
     public int getY() {
         return position.getY();
     }
@@ -72,11 +76,8 @@ public class Isle implements Comparable<Isle> {
     }
 
     @Override
-    public int compareTo(Isle isle) {
-        if (isle.getY() + isle.getX() < getY() + getX())
-            return 1;
-        else
-            return -1;
+    public int compareTo(Isle other) {
+        return position.compareTo(other.position);
     }
 
     @Override

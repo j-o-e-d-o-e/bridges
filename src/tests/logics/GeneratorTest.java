@@ -3,6 +3,7 @@ package tests.logics;
 import net.joedoe.logics.Generator;
 import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
+import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
 import org.junit.Before;
 import org.junit.Test;
@@ -169,7 +170,7 @@ public class GeneratorTest {
         controller.getIsles().add(isle);
 
         //when
-        boolean collides = controller.collidesIsles(startIsle.getY(), startIsle.getX(), endIsle.getY(), endIsle.getX());
+        boolean collides = controller.collidesIsles(startIsle.getPos(), endIsle.getPos());
 
         //then
         assertTrue(collides);
@@ -184,7 +185,7 @@ public class GeneratorTest {
         controller.getIsles().add(isle);
 
         //when
-        boolean collides = controller.collidesIsles(startIsle.getY(), startIsle.getX(), endIsle.getY(), endIsle.getX());
+        boolean collides = controller.collidesIsles(startIsle.getPos(), endIsle.getPos());
 
         //then
         assertTrue(collides);
@@ -197,9 +198,11 @@ public class GeneratorTest {
         Isle endIsle = new Isle(3, 6, 0);
         Bridge bridge = controller.createBridge(startIsle, endIsle);
         controller.getBridges().add(bridge);
+        Coordinate start = new Coordinate(2, 4);
+        Coordinate end = new Coordinate(5, 4);
 
         //when: horizontal bridge
-        boolean collides = controller.collidesBridges(2, 4, 5, 4);
+        boolean collides = controller.collidesBridges(start, end);
 
         //then
         assertTrue(collides);
@@ -212,9 +215,12 @@ public class GeneratorTest {
         Isle endIsle = new Isle(5, 4, 0);
         Bridge bridge = controller.createBridge(startIsle, endIsle);
         controller.getBridges().add(bridge);
+        Coordinate start = new Coordinate(3, 3);
+        Coordinate end = new Coordinate(3, 6);
+
 
         //when: vertical bridge
-        boolean collides = controller.collidesBridges(3, 3, 3, 6);
+        boolean collides = controller.collidesBridges(start, end);
 
         //then
         assertTrue(collides);

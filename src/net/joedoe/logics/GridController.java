@@ -28,13 +28,13 @@ public class GridController {
         if (startIsle == null) return null;
         Isle endIsle = getEndIsle(startIsle, direction);
         if (endIsle == null) return null;
+        if (collides(startIsle.getPos(), endIsle.getPos())) return null;
         Bridge bridge;
         if (startIsle.getBridge(endIsle) == null)
             bridge = new Bridge(startIsle, endIsle);
         else if (endIsle.getBridge(startIsle) == null)
             bridge = new Bridge(endIsle, startIsle);
         else return null;
-        if (collides(bridge)) return null;
         startIsle.addBridge(bridge);
         endIsle.addBridge(bridge);
         bridges.add(bridge);
@@ -77,16 +77,23 @@ public class GridController {
                     .findFirst().orElse(null);
     }
 
-    public boolean collides(Bridge bridge) {
-        LOGGER.info(bridge.toString());
-        if (bridge.getAlignment() == Alignment.HORIZONTAL)
+    public boolean collides(Coordinate start, Coordinate end) {
+        Coordinate finalStart, finalEnd;
+        if (start.compareTo(end) > 0) {
+            finalStart = end;
+            finalEnd = start;
+        } else {
+            finalStart = start;
+            finalEnd = end;
+        }
+        if (Alignment.getAlignment(finalStart.getY(), finalEnd.getY()) == Alignment.HORIZONTAL)
             return bridges.stream().anyMatch(b -> b.getAlignment() == Alignment.VERTICAL
-                    && b.getStartY() < bridge.getStartY() && b.getEndY() > bridge.getStartY()
-                    && bridge.getStartX() < b.getStartX() && bridge.getEndX() > b.getStartX());
+                    && b.getStartY() < finalStart.getY() && b.getEndY() > finalStart.getY()
+                    && finalStart.getX() < b.getStartX() && finalEnd.getX() > b.getStartX());
         else
             return bridges.stream().anyMatch(b -> b.getAlignment() == Alignment.HORIZONTAL
-                    && b.getStartX() < bridge.getStartX() && b.getEndX() > bridge.getStartX()
-                    && bridge.getStartY() < b.getStartY() && bridge.getEndY() > b.getStartY());
+                    && b.getStartX() < finalStart.getX() && b.getEndX() > finalStart.getX()
+                    && finalStart.getY() < b.getStartY() && finalEnd.getY() > b.getStartY());
     }
 
     public Isle getIsle(int x, int y) {

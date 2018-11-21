@@ -1,8 +1,8 @@
 package tests.logics;
 
-import net.joedoe.logics.GridController;
 import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
+import net.joedoe.logics.GridController;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
 import net.joedoe.utils.Mocks;
@@ -111,13 +111,15 @@ public class GridControllerTest {
     @Test
     public void collidesHORIZONTAL() {
         //given
-        Bridge vertical = new Bridge(new Isle(1, 6, 1), new Isle(1, 1, 1));
+        Isle startIsle = new Isle(1, 6, 1);
+        Isle endIsle = new Isle(1, 1, 1);
         List<Bridge> bridges = controller.getBridges();
-        bridges.add(vertical);
+        bridges.add(new Bridge(startIsle, endIsle));
+        Coordinate start = new Coordinate(0, 3);
+        Coordinate end = new Coordinate(3, 3);
 
         //when
-        Bridge horizontal = new Bridge(new Isle(0, 3, 1), new Isle(3, 3, 1));
-        boolean collides = controller.collides(horizontal);
+        boolean collides = controller.collides(start, end);
 
         //then
         assertTrue(collides);
@@ -126,13 +128,15 @@ public class GridControllerTest {
     @Test
     public void collidesVERTICAL() {
         //given
-        Bridge horizontal = new Bridge(new Isle(0, 3, 1), new Isle(3, 3, 1));
+        Isle startIsle = new Isle(0, 3, 1);
+        Isle endIsle = new Isle(3, 3, 1);
         List<Bridge> bridges = controller.getBridges();
-        bridges.add(horizontal);
+        bridges.add(new Bridge(startIsle, endIsle));
+        Coordinate start = new Coordinate(1, 1);
+        Coordinate end = new Coordinate(1, 6);
 
         //when
-        Bridge vertical = new Bridge(new Isle(1, 6, 1), new Isle(1, 1, 1));
-        boolean collides = controller.collides(vertical);
+        boolean collides = controller.collides(start, end);
 
         //then
         assertTrue(collides);

@@ -31,7 +31,7 @@ public class StatusChecker {
         Direction[] directions = Direction.values();
         for (Direction direction : directions) {
             Isle endIsle = controller.getEndIsle(isle, direction);
-            if (endIsle != null && !controller.collides(new Bridge(isle, endIsle)))
+            if (endIsle != null && !controller.collides(isle.getPos(), endIsle.getPos()))
                 connectables.add(endIsle);
         }
         return isle.getMissingBridgeCount() > 0 && connectables.stream().allMatch(

@@ -40,13 +40,17 @@ public class Isle implements Comparable<Isle> {
         return bridgeCount - bridges.size();
     }
 
+    public int getBridgesSize(){
+        return bridges.size();
+    }
+
     public void increaseBridgeCount() {
         this.bridgeCount++;
     }
 
-    public boolean hasTwoBridgesTo(Isle endIsle){
-        return bridges.stream().anyMatch(bridge -> bridge.getStartIsle() == endIsle)
-                && bridges.stream().anyMatch(bridge -> bridge.getEndIsle() == endIsle);
+    public int getBridgesTo(Isle endIsle) {
+        return (int) bridges.stream().filter(bridge ->
+                bridge.getStartIsle() == endIsle || bridge.getEndIsle() == endIsle).count();
     }
 
     public Coordinate getPos() {

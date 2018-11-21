@@ -6,8 +6,8 @@ import net.joedoe.utils.Converter;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class Solver {
@@ -26,57 +26,68 @@ public class Solver {
         if (checker.error() || checker.unsolvable() || checker.solved()) return null;
         for (Isle startIsle : controller.getIsles()) {
             int missingBridges = startIsle.getMissingBridgeCount();
-            Map<Direction, Isle> neighbours = getNeighbours(startIsle);
-            int neighboursSize = neighbours.size();
-            for (Map.Entry<Direction, Isle> neighbour : neighbours.entrySet()) {
-                if (bridgesForEach(missingBridges, neighboursSize)) {
+            List<Isle> endIsles = getEndIsles(startIsle);
+            int endIslesSize = endIsles.size();
+            for (Isle endIsle : endIsles) {
+                if (bridgesForEach(missingBridges, endIslesSize)) {
                     LOGGER.info("bridges for each: "
-                            + "\n" + missingBridges + " + 1 >= " + neighboursSize + " * 2");
-                    return createBridge(startIsle, neighbour.getValue());
+                            + "\n" + missingBridges + " + 1 >= " + endIslesSize + " * 2");
+                    return createBridge(startIsle, endIsle);
                 }
-                //                if (twoBridgesForEach(missingBridges, neighboursSize)) {
-//                    LOGGER.info("two bridges for each: "
-//                            + "\n" + missingBridges + " == " + neighboursSize + " * 2");
-//                    return createBridge(startIsle, neighbour.getValue());
-//                }
-//                if (oneBridgeForEach(missingBridges, neighboursSize)) {
-//                    LOGGER.info("one bridge for each"
-//                            + "\n" + missingBridges + " == " + neighboursSize + " * 2 - 1");
-//                    return createBridge(startIsle, neighbour.getValue());
-//                }
+                if (bridgesForEachButOne(startIsle, endIsle, endIslesSize)) {
+                    LOGGER.info("bridges for each but one: "
+                            + "\n" + missingBridges + " + 1 >= (" + endIslesSize + " - 1) * 2");
+                    Isle finalEndIsle = endIsles.stream().filter(i -> i != endIsle).findFirst().orElse(null);
+                    if (finalEndIsle != null) return createBridge(startIsle, finalEndIsle);
+                }
+                if (bridgesForEachButTwo(startIsle, endIsles)) {
+                    LOGGER.info("bridges for each but two: "
+                            + "\n" + missingBridges + " == " + endIslesSize);
+                    Isle finalEndIsle = endIsles.stream()
+                            .filter(isle -> isle.getMissingBridgeCount() != 1).findFirst().orElse(null);
+                    if (finalEndIsle != null) return createBridge(startIsle, finalEndIsle);
+                }
             }
         }
         return null;
     }
 
-    private Map<Direction, Isle> getNeighbours(Isle startIsle) {
-        Map<Direction, Isle> neighbours = new LinkedHashMap<>();
+    private List<Isle> getEndIsles(Isle startIsle) {
+        List<Isle> endIsles = new ArrayList<>();
         for (Direction direction : Direction.values()) {
             Isle endIsle = controller.getEndIsle(startIsle, direction);
-            if (validNeighbour(startIsle, endIsle))
-                neighbours.put(direction, endIsle);
+            if (validEndIsle(startIsle, endIsle))
+                endIsles.add(endIsle);
         }
-        return neighbours;
+        return endIsles;
     }
 
-    private boolean validNeighbour(Isle startIsle, Isle endIsle) {
+    private boolean validEndIsle(Isle startIsle, Isle endIsle) {
         return endIsle != null
-                && !(endIsle.getMissingBridgeCount() == 0)
+                && endIsle.getMissingBridgeCount() != 0
+                && !(startIsle.getBridgeCount() == 1 && endIsle.getBridgeCount() == 1)
                 && !controller.collides(startIsle.getPos(), endIsle.getPos())
-                && !startIsle.hasTwoBridgesTo(endIsle);
+                && !(startIsle.getBridgesTo(endIsle) == 2)
+                && !(startIsle.getMissingBridgeCount() == 1 && endIsle.getMissingBridgeCount() == 1
+                && startIsle.getBridgesTo(endIsle) == 1
+                && startIsle.getBridgesSize() == 1
+                && endIsle.getBridgesSize() == 1);
     }
 
-    private boolean bridgesForEach(int missingBridges, int neighboursSize) {
-        return missingBridges + 1 >= neighboursSize * 2;
+    private boolean bridgesForEach(int missingBridges, int endIslesSize) {
+        return missingBridges + 1 >= endIslesSize * 2;
     }
 
-    private boolean twoBridgesForEach(int missingBridges, int neighboursSize) {
-        return missingBridges == neighboursSize * 2; // for both: missingBridges + 1 >= neighboursSize * 2;
+    private boolean bridgesForEachButOne(Isle startIsle, Isle endIsle, int endIslesSize) {
+        return endIsle.getMissingBridgeCount() == 1
+                && startIsle.getMissingBridgeCount() == (endIslesSize - 1) * 2;
     }
 
-    private boolean oneBridgeForEach(int missingBridges, int neighboursSize) {
-        return missingBridges == neighboursSize * 2 - 1;
+    private boolean bridgesForEachButTwo(Isle startIsle, List<Isle> endIsles) {
+        return endIsles.stream().filter(i -> i.getMissingBridgeCount() == 1).count() == 2
+                && startIsle.getMissingBridgeCount() == endIsles.size();
     }
+
 
     private Coordinate[] createBridge(Isle startIsle, Isle endIsle) {
         Bridge bridge = controller.addBridge(startIsle, endIsle);

@@ -6,7 +6,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import net.joedoe.logics.AutoSolver;
 import net.joedoe.logics.GridController;
 import net.joedoe.logics.Solver;
@@ -108,7 +107,7 @@ class Grid extends GridPane {
         }
     }
 
-    private BridgeLine getBridge(Coordinate start, Coordinate end){
+    private BridgeLine getBridge(Coordinate start, Coordinate end) {
         return bridges.stream().filter(
                 bridge -> bridge.getStartY() == start.getY()
                         && bridge.getStartX() == start.getX()
@@ -170,7 +169,7 @@ class Grid extends GridPane {
 
     void getNextBridge() {
         Coordinate[] next = solver.getNextBridge();
-        if (next == null)
+        if (next == null && !checker.solved())
             setAlert();
         else
             addBridge(next);
@@ -178,7 +177,7 @@ class Grid extends GridPane {
 
     private void getNextBridgeAuto() {
         Coordinate[] next = autoSolver.getNextBridge();
-        if (next == null) {
+        if (next == null && !checker.solved()) {
             autoSolver.stop();
             setAlert();
         } else

@@ -29,12 +29,11 @@ public class GridController {
         Isle endIsle = getEndIsle(startIsle, direction);
         if (endIsle == null) return null;
         Bridge bridge;
-        if (startIsle.getBridge(endIsle, true) == null)
+        if (startIsle.getBridge(endIsle) == null)
             bridge = new Bridge(startIsle, endIsle);
-        else if (endIsle.getBridge(startIsle, true) == null)
+        else if (endIsle.getBridge(startIsle) == null)
             bridge = new Bridge(endIsle, startIsle);
-        else
-            return null;
+        else return null;
         if (collides(bridge)) return null;
         startIsle.addBridge(bridge);
         endIsle.addBridge(bridge);
@@ -47,9 +46,8 @@ public class GridController {
         if (startIsle == null) return null;
         Isle endIsle = getEndIsle(startIsle, direction);
         if (endIsle == null) return null;
-        Bridge bridge = startIsle.getBridge(endIsle, true);
-        if (bridge == null)
-            bridge = endIsle.getBridge(startIsle, true);
+        Bridge bridge = startIsle.getBridge(endIsle);
+        if (bridge == null) bridge = endIsle.getBridge(startIsle);
         if (bridge == null) return null;
         startIsle.removeBridge(bridge);
         endIsle.removeBridge(bridge);
@@ -134,6 +132,5 @@ public class GridController {
     public void reset() {
         bridges.clear();
         isles.forEach(Isle::clearBridges);
-        isles.forEach(Isle::clearNeighbours);
     }
 }

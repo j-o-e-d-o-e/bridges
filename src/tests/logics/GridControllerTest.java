@@ -37,9 +37,6 @@ public class GridControllerTest {
         //then
         assertEquals(2, startIsle.getBridges().size());
         assertEquals(2, endIsle.getBridges().size());
-        Bridge startBridge = startIsle.getBridge(endIsle, false);
-        Bridge endBridge = endIsle.getBridge(startIsle, true);
-        assertEquals(startBridge, endBridge);
     }
 
     @Test

@@ -17,15 +17,13 @@ public class Coordinate implements Comparable<Coordinate> {
     }
 
     @Override
-    public String toString() {
-        return "Coordinate{" + "y=" + y + ", x=" + x + '}';
+    public int compareTo(Coordinate other) {
+        if (x + y > other.x + other.y) return 1;
+        else return -1;
     }
 
     @Override
-    public int compareTo(Coordinate other) {
-        if (x + y > other.x + other.y)
-            return 1;
-        else
-            return -1;
+    public String toString() {
+        return "Coordinate{" + "y=" + y + ", x=" + x + '}';
     }
 }

@@ -23,34 +23,36 @@ public class Isle implements Comparable<Isle> {
         bridges.remove(bridge);
     }
 
-    public Bridge getBridge(Isle isle) {
-        return bridges.stream().filter(bridge -> bridge.getStartIsle() == this
-                && bridge.getEndIsle() == isle).findFirst().orElse(null);
-    }
-
-    public List<Bridge> getBridges() {
-        return bridges;
-    }
-
     public int getBridgeCount() {
         return bridgeCount;
-    }
-
-    public int getMissingBridgeCount() {
-        return bridgeCount - bridges.size();
-    }
-
-    public int getBridgesSize(){
-        return bridges.size();
     }
 
     public void increaseBridgeCount() {
         this.bridgeCount++;
     }
 
-    public int getBridgesTo(Isle endIsle) {
+    public int getMissingBridgeCount() {
+        return bridgeCount - bridges.size();
+    }
+
+    public int getBridgeCountTo(Isle neighbour) {
         return (int) bridges.stream().filter(bridge ->
-                bridge.getStartIsle() == endIsle || bridge.getEndIsle() == endIsle).count();
+                bridge.getStartIsle() == neighbour || bridge.getEndIsle() == neighbour).count();
+    }
+
+    public Bridge getBridgeTo(Isle neighbour) {
+        return bridges.stream().filter(bridge -> bridge.getStartIsle() == this
+                && bridge.getEndIsle() == neighbour).findFirst().orElse(null);
+    }
+
+    public List<Isle> getNeighbours() {
+        List<Isle> neighbours = new ArrayList<>();
+        for (Bridge bridge : bridges) {
+            Isle startIsle = bridge.getStartIsle();
+            if (startIsle != this) neighbours.add(startIsle);
+            else neighbours.add(bridge.getEndIsle());
+        }
+        return neighbours;
     }
 
     public Coordinate getPos() {
@@ -65,18 +67,12 @@ public class Isle implements Comparable<Isle> {
         return pos.getX();
     }
 
-    public void clearBridges() {
-        bridges.clear();
+    public List<Bridge> getBridges() {
+        return bridges;
     }
 
-    public List<Isle> getNeighbours() {
-        List<Isle> neighbours = new ArrayList<>();
-        for (Bridge bridge : bridges) {
-            Isle startIsle = bridge.getStartIsle();
-            if (startIsle != this) neighbours.add(startIsle);
-            else neighbours.add(bridge.getEndIsle());
-        }
-        return neighbours;
+    public void clearBridges() {
+        bridges.clear();
     }
 
     @Override

@@ -30,7 +30,7 @@ public class IsleTest {
         assertEquals(1, startIsle.getBridges().size());
         assertEquals(1, startIsle.getNeighbours().size());
         assertEquals(initialBridgeCount - 1, startIsle.getMissingBridgeCount());
-        assertEquals(bridge, startIsle.getBridge(endIsle));
+        assertEquals(bridge, startIsle.getBridgeTo(endIsle));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class IsleTest {
         assertEquals(0, startIsle.getBridges().size());
         assertEquals(0, startIsle.getNeighbours().size());
         assertEquals(missingBridgeCount + 1, startIsle.getMissingBridgeCount());
-        assertNull(startIsle.getBridge(endIsle));
+        assertNull(startIsle.getBridgeTo(endIsle));
 
     }
 }

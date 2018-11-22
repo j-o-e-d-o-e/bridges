@@ -51,6 +51,6 @@ public class Bridge {
 
     @Override
     public String toString() {
-        return "Bridge{" + "startIsle=" + startIsle + ", endIsle=" + endIsle + '}';
+        return "Bridge{" + "start=" + startIsle + ", end=" + endIsle + '}';
     }
 }

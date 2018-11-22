@@ -82,6 +82,6 @@ public class Isle implements Comparable<Isle> {
 
     @Override
     public String toString() {
-        return "Isle{" + "pos=" + pos + "bridgeCount=" + bridgeCount + '}';
+        return "Isle{" + "pos=" + pos + "missingBridges=" + getMissingBridgeCount() + '}';
     }
 }

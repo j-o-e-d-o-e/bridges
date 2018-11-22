@@ -9,6 +9,7 @@ import net.joedoe.utils.Direction;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,11 +34,11 @@ public class GridController {
         return Converter.convertBridgeToData(bridge);
     }
 
-    Bridge addBridge(Isle startIsle, Isle endIsle){
+    Bridge addBridge(Isle startIsle, Isle endIsle) {
         Bridge bridge;
-        if (startIsle.getBridge(endIsle) == null)
+        if (startIsle.getBridgeTo(endIsle) == null)
             bridge = new Bridge(startIsle, endIsle);
-        else if (endIsle.getBridge(startIsle) == null)
+        else if (endIsle.getBridgeTo(startIsle) == null)
             bridge = new Bridge(endIsle, startIsle);
         else return null;
         startIsle.addBridge(bridge);
@@ -51,8 +52,8 @@ public class GridController {
         if (startIsle == null) return null;
         Isle endIsle = getEndIsle(startIsle, direction);
         if (endIsle == null) return null;
-        Bridge bridge = startIsle.getBridge(endIsle);
-        if (bridge == null) bridge = endIsle.getBridge(startIsle);
+        Bridge bridge = startIsle.getBridgeTo(endIsle);
+        if (bridge == null) bridge = endIsle.getBridgeTo(startIsle);
         if (bridge == null) return null;
         startIsle.removeBridge(bridge);
         endIsle.removeBridge(bridge);
@@ -139,6 +140,10 @@ public class GridController {
     public int getMissingBridgeCount(int x, int y) {
         Isle isle = getIsle(x, y);
         return isle.getMissingBridgeCount();
+    }
+
+    int getIslesSize(){
+        return isles.size();
     }
 
     public void reset() {

@@ -9,7 +9,6 @@ import net.joedoe.utils.Direction;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,6 +30,7 @@ public class GridController {
         if (endIsle == null) return null;
         if (collides(startIsle.getPos(), endIsle.getPos())) return null;
         Bridge bridge = addBridge(startIsle, endIsle);
+        if (bridge == null) return null;
         return Converter.convertBridgeToData(bridge);
     }
 
@@ -142,7 +142,7 @@ public class GridController {
         return isle.getMissingBridgeCount();
     }
 
-    int getIslesSize(){
+    int getIslesSize() {
         return isles.size();
     }
 

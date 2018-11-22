@@ -1,6 +1,5 @@
 package net.joedoe.logics;
 
-import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.utils.Direction;
 

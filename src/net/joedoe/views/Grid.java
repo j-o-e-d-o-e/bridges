@@ -38,8 +38,8 @@ class Grid extends GridPane {
         this(Mocks.HEIGHT, Mocks.WIDTH, Mocks.ISLES, Mocks.BRIDGES);
     }
 
-    Grid(int height, int width, List<int[]> isles, List<Coordinate[]> bridges) {
-        //        setGridLinesVisible(true);
+    Grid(int height, int width, Object[][] isles, Coordinate[][] bridges) {
+//        setGridLinesVisible(true);
         setAlignment(Pos.CENTER);
         setBorder(new Border(new BorderStroke(GameInfo.STD_COLOR, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         IntStream.range(0, height).mapToObj(i -> new RowConstraints(ONE_TILE)).forEach(row -> getRowConstraints().add(row));
@@ -59,7 +59,7 @@ class Grid extends GridPane {
 
     //for testing only
     @SuppressWarnings("unused")
-    private void setSolution(List<Coordinate[]> bridgesData) {
+    private void setSolution(Coordinate[][] bridgesData) {
         controller.setBridges(bridgesData);
         for (Coordinate[] data : bridgesData) {
             BridgeLine bridge = new BridgeLine(data[0], data[1]);
@@ -70,9 +70,11 @@ class Grid extends GridPane {
         bridges.forEach(BridgeLine::setStdColor);
     }
 
-    private void addIsles(List<int[]> islesData) {
-        for (int[] data : islesData) {
-            IslePane isle = new IslePane(data[1], data[0], data[2]);
+    private void addIsles(Object[][] islesData) {
+        for (Object[] data : islesData) {
+            Coordinate coordinate = (Coordinate) data[0];
+            int bridgeCount = (int) data[1];
+            IslePane isle = new IslePane(coordinate.getX(), coordinate.getY(), bridgeCount);
             isle.setOnMouseClicked(e -> isleListener.handle(e));
             isles.add(isle);
             add(isle, isle.getX(), isle.getY());

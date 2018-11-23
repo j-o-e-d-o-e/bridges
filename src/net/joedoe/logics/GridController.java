@@ -110,9 +110,12 @@ public class GridController {
         return isles;
     }
 
-    public void setIsles(List<int[]> islesData) {
-        for (int[] isle : islesData)
-            isles.add(Converter.convertDataToIsle(isle));
+    public void setIsles(Object[][] islesData) {
+        for (Object[] isle : islesData){
+            Coordinate coordinate = (Coordinate) isle[0];
+            int bridgeCount = (int) isle[1];
+            isles.add(new Isle(coordinate.getX(), coordinate.getY(), bridgeCount));
+        }
         Collections.sort(isles);
     }
 
@@ -121,7 +124,7 @@ public class GridController {
     }
 
     // for testing only
-    public void setBridges(List<Coordinate[]> bridgesData) {
+    public void setBridges(Coordinate[][] bridgesData) {
         for (Coordinate[] coordinates : bridgesData) {
             Isle startIsle = getIsle(coordinates[0].getX(), coordinates[0].getY());
             Isle endIsle = getIsle(coordinates[1].getX(), coordinates[1].getY());

@@ -1,91 +1,47 @@
 package net.joedoe.utils;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class Mocks {
     public static final int HEIGHT = 7;
     public static final int WIDTH = 7;
-    public static final List<int[]> ISLES = Arrays.asList(
-            new int[]{0, 0, 3},
-            new int[]{0, 4, 5},
-            new int[]{0, 6, 4},
-            new int[]{1, 1, 2},
-            new int[]{1, 3, 3},
-            new int[]{3, 0, 4},
-            new int[]{3, 3, 3},
-            new int[]{5, 0, 2},
-            new int[]{5, 3, 1},
-            new int[]{6, 1, 3},
-            new int[]{6, 4, 5},
-            new int[]{6, 6, 3}
-    );
-    public static final List<Coordinate[]> BRIDGES = Arrays.asList(
-            new Coordinate[]{
-                    new Coordinate(0, 0),
-                    new Coordinate(4, 0)},
-            new Coordinate[]{
-                    new Coordinate(0, 0),
-                    new Coordinate(0, 3)},
-            new Coordinate[]{
-                    new Coordinate(0, 3),
-                    new Coordinate(0, 0)},
 
-            new Coordinate[]{
-                    new Coordinate(0, 3),
-                    new Coordinate(0, 5)},
-            new Coordinate[]{
-                    new Coordinate(0, 5),
-                    new Coordinate(0, 3)},
+    public static final Object[][] ISLES = {
+            {new Coordinate(0, 0), 3},
+            {new Coordinate(0, 3), 4},
+            {new Coordinate(0, 5), 2},
+            {new Coordinate(1, 1), 2},
+            {new Coordinate(1, 6), 3},
+            {new Coordinate(3, 1), 3},
+            {new Coordinate(3, 3), 3},
+            {new Coordinate(3, 5), 1},
+            {new Coordinate(4, 0), 5},
+            {new Coordinate(4, 6), 5},
+            {new Coordinate(6, 0), 4},
+            {new Coordinate(6, 6), 3},
+    };
 
-            new Coordinate[]{
-                    new Coordinate(4, 0),
-                    new Coordinate(6, 0)},
-            new Coordinate[]{
-                    new Coordinate(6, 0),
-                    new Coordinate(4, 0)},
-            new Coordinate[]{
-                    new Coordinate(4, 0),
-                    new Coordinate(4, 6)},
-            new Coordinate[]{
-                    new Coordinate(4, 6),
-                    new Coordinate(4, 0)},
+    public static final Coordinate[][] BRIDGES = {
+            {(Coordinate) ISLES[0][0], (Coordinate) ISLES[1][0]},
+            {(Coordinate) ISLES[1][0], (Coordinate) ISLES[0][0]},
+            {(Coordinate) ISLES[1][0], (Coordinate) ISLES[2][0]},
+            {(Coordinate) ISLES[2][0], (Coordinate) ISLES[1][0]},
 
-            new Coordinate[]{
-                    new Coordinate(6, 0),
-                    new Coordinate(6, 6)},
-            new Coordinate[]{
-                    new Coordinate(6, 6),
-                    new Coordinate(6, 0)},
+            {(Coordinate) ISLES[3][0], (Coordinate) ISLES[4][0]},
+            {(Coordinate) ISLES[3][0], (Coordinate) ISLES[5][0]},
+            {(Coordinate) ISLES[4][0], (Coordinate) ISLES[9][0]},
 
-            new Coordinate[]{
-                    new Coordinate(6, 6),
-                    new Coordinate(4, 6)},
+            {(Coordinate) ISLES[5][0], (Coordinate) ISLES[6][0]},
+            {(Coordinate) ISLES[6][0], (Coordinate) ISLES[5][0]},
+            {(Coordinate) ISLES[7][0], (Coordinate) ISLES[6][0]},
 
-            new Coordinate[]{
-                    new Coordinate(4, 6),
-                    new Coordinate(1, 6)},
-            new Coordinate[]{
-                    new Coordinate(1, 6),
-                    new Coordinate(4, 6)},
+            {(Coordinate) ISLES[8][0], (Coordinate) ISLES[0][0]},
+            {(Coordinate) ISLES[8][0], (Coordinate) ISLES[9][0]},
+            {(Coordinate) ISLES[8][0], (Coordinate) ISLES[10][0]},
+            {(Coordinate) ISLES[9][0], (Coordinate) ISLES[4][0]},
+            {(Coordinate) ISLES[9][0], (Coordinate) ISLES[8][0]},
+            {(Coordinate) ISLES[9][0], (Coordinate) ISLES[11][0]},
 
-            new Coordinate[]{
-                    new Coordinate(1, 6),
-                    new Coordinate(1, 1)},
-
-            new Coordinate[]{
-                    new Coordinate(1, 1),
-                    new Coordinate(3, 1)},
-
-            new Coordinate[]{
-                    new Coordinate(3, 1),
-                    new Coordinate(3, 3)},
-            new Coordinate[]{
-                    new Coordinate(3, 3),
-                    new Coordinate(3, 1)},
-
-            new Coordinate[]{
-                    new Coordinate(3, 5),
-                    new Coordinate(3, 3)}
-    );
+            {(Coordinate) ISLES[10][0], (Coordinate) ISLES[8][0]},
+            {(Coordinate) ISLES[10][0], (Coordinate) ISLES[11][0]},
+            {(Coordinate) ISLES[11][0], (Coordinate) ISLES[10][0]},
+    };
 }

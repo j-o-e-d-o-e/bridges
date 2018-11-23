@@ -234,10 +234,12 @@ public class Generator {
         return isles;
     }
 
-    public List<int[]> getFinalIsles() {
-        List<int[]> finalIsles = new ArrayList<>();
-        for (Isle isle : isles)
-            finalIsles.add(Converter.convertIsleToData(isle));
+    public Object[][] getFinalIsles() {
+        Object[][] finalIsles = new Object[isles.size()][2];
+        for (int i = 0; i < isles.size(); i++) {
+            Isle isle = isles.get(i);
+            finalIsles[i] = new Object[]{isle.getPos(), isle.getBridgeCount()};
+        }
         return finalIsles;
     }
 
@@ -245,10 +247,10 @@ public class Generator {
         return bridges;
     }
 
-    public List<Coordinate[]> getFinalBridges() {
-        List<Coordinate[]> finalBridges = new ArrayList<>();
-        for (Bridge bridge : bridges)
-            finalBridges.add(Converter.convertBridgeToData(bridge));
+    public Coordinate[][] getFinalBridges() {
+        Coordinate[][] finalBridges = new Coordinate[bridges.size()][2];
+        for (int i = 0; i < bridges.size(); i++)
+            finalBridges[i] = Converter.convertBridgeToData(bridges.get(i));
         return finalBridges;
     }
 

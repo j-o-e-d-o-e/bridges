@@ -123,15 +123,22 @@ public class GridController {
         return bridges;
     }
 
-    // for testing only
-    public void setBridges(Coordinate[][] bridgesData) {
-        for (Coordinate[] coordinates : bridgesData) {
-            Isle startIsle = getIsle(coordinates[0].getX(), coordinates[0].getY());
-            Isle endIsle = getIsle(coordinates[1].getX(), coordinates[1].getY());
+    public void setBridges(Object[][] bridgesData) {
+        for (Object[] data : bridgesData) {
+            Coordinate start = (Coordinate) data[0];
+            Coordinate end = (Coordinate) data[1];
+            Isle startIsle = getIsle(start.getX(), start.getY());
+            Isle endIsle = getIsle(end.getX(), end.getY());
             Bridge bridge = new Bridge(startIsle, endIsle);
             startIsle.addBridge(bridge);
             endIsle.addBridge(bridge);
             bridges.add(bridge);
+            if((boolean)data[2]){
+                bridge = new Bridge(startIsle, endIsle);
+                startIsle.addBridge(bridge);
+                endIsle.addBridge(bridge);
+                bridges.add(bridge);
+            }
         }
     }
 

@@ -38,22 +38,21 @@ class Grid extends GridPane {
         this(Mocks.HEIGHT, Mocks.WIDTH, Mocks.ISLES, Mocks.BRIDGES);
     }
 
-    Grid(int height, int width, Object[][] isles, Coordinate[][] bridges) {
+    Grid(int height, int width, Object[][] isles, Object[][] bridges) {
 //        setGridLinesVisible(true);
         setAlignment(Pos.CENTER);
         setBorder(new Border(new BorderStroke(GameInfo.STD_COLOR, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         IntStream.range(0, height).mapToObj(i -> new RowConstraints(ONE_TILE)).forEach(row -> getRowConstraints().add(row));
         IntStream.range(0, width).mapToObj(i -> new ColumnConstraints(ONE_TILE)).forEachOrdered(column -> getColumnConstraints().add(column));
         isleListener = new IsleListener(this);
-        setIsles(isles);
         controller = new GridController();
-        controller.setIsles(isles);
         checker = new StatusChecker(controller);
         solver = new Solver(controller, checker);
         autoSolver = new AutoSolver(solver);
         autoSolver.addListener(() ->
                 Platform.runLater(this::getNextBridgeAuto)
         );
+        setIsles(isles);
         setBridges(bridges);
     }
 
@@ -121,18 +120,27 @@ class Grid extends GridPane {
             statusListener.handle(new StatusEvent("Noch nicht gelöst."));
     }
 
-    private void setBridges(Coordinate[][] bridgesData) {
+    private void setBridges(Object[][] bridgesData) {
         controller.setBridges(bridgesData);
-        for (Coordinate[] data : bridgesData) {
-            BridgeLine bridge = new BridgeLine(data[0], data[1]);
-            bridges.add(bridge);
+        for (Object[] data : bridgesData) {
+            Coordinate start = (Coordinate) data[0];
+            Coordinate end = (Coordinate) data[1];
+            BridgeLine bridge = new BridgeLine(start, end);
             add(bridge.getLine(), bridge.getStartX(), bridge.getStartY());
+            bridges.add(bridge);
+            if((boolean)data[2]){
+                bridge = new BridgeLine(end, start);
+                bridges.add(bridge);
+                add(bridge.getLine(), bridge.getStartX(), bridge.getStartY());
+                bridges.add(bridge);
+            }
         }
         updateIsles();
         bridges.forEach(BridgeLine::setStdColor);
     }
 
     private void setIsles(Object[][] islesData) {
+        controller.setIsles(islesData);
         for (Object[] data : islesData) {
             Coordinate coordinate = (Coordinate) data[0];
             int bridgeCount = (int) data[1];

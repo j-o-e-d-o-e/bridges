@@ -1,8 +1,8 @@
 package net.joedoe.utils;
 
 public class Mocks {
-    public static final int HEIGHT = 7;
     public static final int WIDTH = 7;
+    public static final int HEIGHT = 7;
 
     public static final Object[][] ISLES = {
             {new Coordinate(0, 0), 3},
@@ -19,29 +19,18 @@ public class Mocks {
             {new Coordinate(6, 6), 3},
     };
 
-    public static final Coordinate[][] BRIDGES = {
-            {(Coordinate) ISLES[0][0], (Coordinate) ISLES[1][0]},
-            {(Coordinate) ISLES[1][0], (Coordinate) ISLES[0][0]},
-            {(Coordinate) ISLES[1][0], (Coordinate) ISLES[2][0]},
-            {(Coordinate) ISLES[2][0], (Coordinate) ISLES[1][0]},
-
-            {(Coordinate) ISLES[3][0], (Coordinate) ISLES[4][0]},
-            {(Coordinate) ISLES[3][0], (Coordinate) ISLES[5][0]},
-            {(Coordinate) ISLES[4][0], (Coordinate) ISLES[9][0]},
-
-            {(Coordinate) ISLES[5][0], (Coordinate) ISLES[6][0]},
-            {(Coordinate) ISLES[6][0], (Coordinate) ISLES[5][0]},
-            {(Coordinate) ISLES[7][0], (Coordinate) ISLES[6][0]},
-
-            {(Coordinate) ISLES[8][0], (Coordinate) ISLES[0][0]},
-            {(Coordinate) ISLES[8][0], (Coordinate) ISLES[9][0]},
-            {(Coordinate) ISLES[8][0], (Coordinate) ISLES[10][0]},
-            {(Coordinate) ISLES[9][0], (Coordinate) ISLES[4][0]},
-            {(Coordinate) ISLES[9][0], (Coordinate) ISLES[8][0]},
-            {(Coordinate) ISLES[9][0], (Coordinate) ISLES[11][0]},
-
-            {(Coordinate) ISLES[10][0], (Coordinate) ISLES[8][0]},
-            {(Coordinate) ISLES[10][0], (Coordinate) ISLES[11][0]},
-            {(Coordinate) ISLES[11][0], (Coordinate) ISLES[10][0]},
+    public static final Object[][] BRIDGES = {
+            {ISLES[0][0], ISLES[1][0], true},
+            {ISLES[0][0], ISLES[8][0], false},
+            {ISLES[1][0], ISLES[2][0], true},
+            {ISLES[3][0], ISLES[4][0], false},
+            {ISLES[3][0], ISLES[5][0], false},
+            {ISLES[4][0], ISLES[9][0], true},
+            {ISLES[5][0], ISLES[6][0], true},
+            {ISLES[6][0], ISLES[7][0], false},
+            {ISLES[8][0], ISLES[9][0], true},
+            {ISLES[8][0], ISLES[10][0], true},
+            {ISLES[9][0], ISLES[11][0], false},
+            {ISLES[10][0], ISLES[11][0], true},
     };
 }

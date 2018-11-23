@@ -23,6 +23,7 @@ class Board extends StackPane {
 
     void setGrid(int height, int width, List<int[]> isles, List<Coordinate[]> bridges) {
         getChildren().remove(grid);
+        grid.shutdownAutoSolve();
         grid = new Grid(height, width, isles, bridges);
         grid.setStatusListener(statusListener);
         getChildren().add(grid);

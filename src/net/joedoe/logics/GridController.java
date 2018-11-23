@@ -52,8 +52,8 @@ public class GridController {
         if (startIsle == null) return null;
         Isle endIsle = getEndIsle(startIsle, direction);
         if (endIsle == null) return null;
-        Bridge bridge = startIsle.getBridgeTo(endIsle);
-        if (bridge == null) bridge = endIsle.getBridgeTo(startIsle);
+        Bridge bridge = endIsle.getBridgeTo(startIsle);
+        if (bridge == null) bridge = startIsle.getBridgeTo(endIsle);
         if (bridge == null) return null;
         startIsle.removeBridge(bridge);
         endIsle.removeBridge(bridge);

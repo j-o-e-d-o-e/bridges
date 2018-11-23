@@ -77,6 +77,7 @@ public class MainFrame extends BorderPane {
     }
 
     private void createNewGame() {
+        board.stopAutoSolve();
         NewGameFrame newGameFrame = new NewGameFrame(board);
         newGameFrame.initOwner(window);
         newGameFrame.show();

@@ -36,7 +36,6 @@ public class AutoSolver {
         return solver.getNextBridge();
     }
 
-
     public void stop() {
         running = false;
     }

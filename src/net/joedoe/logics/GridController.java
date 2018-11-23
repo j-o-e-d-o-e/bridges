@@ -142,7 +142,7 @@ public class GridController {
         return isle.getMissingBridgeCount();
     }
 
-    int getIslesSize() {
+    public int getIslesSize() {
         return isles.size();
     }
 

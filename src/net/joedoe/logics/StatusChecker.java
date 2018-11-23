@@ -27,8 +27,7 @@ public class StatusChecker {
 
     private boolean isolated(Isle isle) {
         List<Isle> connectables = new ArrayList<>();
-        Direction[] directions = Direction.values();
-        for (Direction direction : directions) {
+        for (Direction direction : Direction.values()) {
             Isle endIsle = controller.getEndIsle(isle, direction);
             if (endIsle != null && !controller.collides(isle.getPos(), endIsle.getPos()))
                 connectables.add(endIsle);

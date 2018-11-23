@@ -2,6 +2,9 @@ package tests.entities;
 
 import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
+import net.joedoe.logics.GridController;
+import net.joedoe.utils.Direction;
+import net.joedoe.utils.Mocks;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,6 +50,30 @@ public class IsleTest {
         assertEquals(0, startIsle.getNeighbours().size());
         assertEquals(missingBridgeCount + 1, startIsle.getMissingBridgeCount());
         assertNull(startIsle.getBridgeTo(endIsle));
+    }
+
+    @Test
+    public void getBridgeCountTo(){
+        //given
+        GridController controller = new GridController();
+        controller.setIsles(Mocks.ISLES);
+        Isle startIsle = controller.getIsle(0, 0);
+        Isle endIsle = controller.getEndIsle(startIsle, Direction.RIGHT);
+        Bridge bridge1 = new Bridge(startIsle, endIsle);
+        Bridge bridge2 = new Bridge(endIsle, startIsle);
+//        startIsle.addBridge(bridge1);
+        startIsle.addBridge(bridge2);
+        endIsle.addBridge(bridge1);
+//        endIsle.addBridge(bridge2);
+
+        //when
+        int count1 = startIsle.getBridgeCountTo(endIsle);
+        int count2 = endIsle.getBridgeCountTo(startIsle);
+
+        //then
+        assertEquals(count1,count2);
+        assertEquals(1, count1);
+        assertEquals(1, count2);
 
     }
 }

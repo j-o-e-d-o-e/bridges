@@ -27,6 +27,10 @@ public class Isle implements Comparable<Isle> {
         return bridgeCount;
     }
 
+    public void setBridgeCount(int bridgeCount){
+        this.bridgeCount = bridgeCount;
+    }
+
     public void increaseBridgeCount() {
         this.bridgeCount++;
     }

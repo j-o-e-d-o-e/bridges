@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Line;
 import net.joedoe.logics.AutoSolver;
 import net.joedoe.logics.GridController;
 import net.joedoe.logics.Solver;
@@ -125,19 +126,35 @@ class Grid extends GridPane {
         for (Object[] data : bridgesData) {
             Coordinate start = (Coordinate) data[0];
             Coordinate end = (Coordinate) data[1];
-            BridgeLine bridge = new BridgeLine(start, end);
-            add(bridge.getLine(), bridge.getStartX(), bridge.getStartY());
-            bridges.add(bridge);
-            if((boolean)data[2]){
-                bridge = new BridgeLine(end, start);
-                bridges.add(bridge);
-                add(bridge.getLine(), bridge.getStartX(), bridge.getStartY());
-                bridges.add(bridge);
+            boolean doubleBridge = (boolean) data[2];
+            BridgeLine bridge = new BridgeLine(start, end, doubleBridge);
+            for (Line line : bridge.getLines()) {
+                add(line, bridge.getStartX(), bridge.getStartY());
             }
+            bridges.add(bridge);
         }
-        updateIsles();
+//        updateIsles();
         bridges.forEach(BridgeLine::setStdColor);
     }
+
+//    private void setBridges(Object[][] bridgesData) {
+//        controller.setBridges(bridgesData);
+//        for (Object[] data : bridgesData) {
+//            Coordinate start = (Coordinate) data[0];
+//            Coordinate end = (Coordinate) data[1];
+//            BridgeLine bridge = new BridgeLine(start, end);
+//            add(bridge.getLine(), bridge.getStartX(), bridge.getStartY());
+//            bridges.add(bridge);
+//            if((boolean)data[2]){
+//                bridge = new BridgeLine(end, start);
+//                bridges.add(bridge);
+//                add(bridge.getLine(), bridge.getStartX(), bridge.getStartY());
+//                bridges.add(bridge);
+//            }
+//        }
+//        updateIsles();
+//        bridges.forEach(BridgeLine::setStdColor);
+//    }
 
     private void setIsles(Object[][] islesData) {
         controller.setIsles(islesData);

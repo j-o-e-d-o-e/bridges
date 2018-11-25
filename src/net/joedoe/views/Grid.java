@@ -38,7 +38,7 @@ class Grid extends GridPane {
         this(Mocks.HEIGHT, Mocks.WIDTH, Mocks.ISLES, Mocks.BRIDGES);
     }
 
-    Grid(int height, int width, Object[][] isles, Coordinate[][] bridges) {
+    Grid(int height, int width, Object[][] isles, Object[][] bridges) {
 //        setGridLinesVisible(true);
         setAlignment(Pos.CENTER);
         setBorder(new Border(new BorderStroke(GameInfo.STD_COLOR, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
@@ -121,10 +121,12 @@ class Grid extends GridPane {
             statusListener.handle(new StatusEvent("Noch nicht gelöst."));
     }
 
-    private void setBridges(Coordinate[][] bridgesData) {
+    private void setBridges(Object[][] bridgesData) {
         controller.setBridges(bridgesData);
-        for (Coordinate[] data : bridgesData) {
-            BridgeLine bridge = new BridgeLine(data[0], data[1]);
+        for (Object[] data : bridgesData) {
+            Coordinate start = (Coordinate) data[0];
+            Coordinate end = (Coordinate) data[1];
+            BridgeLine bridge = new BridgeLine(start, end);
             bridges.add(bridge);
             add(bridge.getLine(), bridge.getStartX(), bridge.getStartY());
         }

@@ -133,7 +133,6 @@ public class GridController {
         Collections.sort(isles);
     }
 
-
     public int getBridgeCount(Coordinate pos) {
         Isle isle = getIsle(pos);
         return isle.getBridgeCount();

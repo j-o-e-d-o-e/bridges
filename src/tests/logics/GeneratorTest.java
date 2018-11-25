@@ -196,7 +196,7 @@ public class GeneratorTest {
         //given: vertical bridge
         Isle startIsle = new Isle(3, 3, 0);
         Isle endIsle = new Isle(3, 6, 0);
-        Bridge bridge = controller.createBridge(startIsle, endIsle);
+        Bridge bridge = controller.createBridge(startIsle, endIsle, false);
         controller.getBridges().add(bridge);
         Coordinate start = new Coordinate(2, 4);
         Coordinate end = new Coordinate(5, 4);
@@ -213,7 +213,7 @@ public class GeneratorTest {
         //given: horizontal bridge
         Isle startIsle = new Isle(2, 4, 0);
         Isle endIsle = new Isle(5, 4, 0);
-        Bridge bridge = controller.createBridge(startIsle, endIsle);
+        Bridge bridge = controller.createBridge(startIsle, endIsle, false);
         controller.getBridges().add(bridge);
         Coordinate start = new Coordinate(3, 3);
         Coordinate end = new Coordinate(3, 6);
@@ -252,7 +252,7 @@ public class GeneratorTest {
         Isle endIsle = new Isle(endX, 3, 0);
 
         //when
-        controller.createBridge(startIsle, endIsle);
+        controller.createBridge(startIsle, endIsle, false);
 
         //then
         assertEquals(expectedSize, controller.getIndices().size());
@@ -270,7 +270,7 @@ public class GeneratorTest {
         Isle endIsle = new Isle(3, endY, 0);
 
         //when
-        controller.createBridge(startIsle, endIsle);
+        controller.createBridge(startIsle, endIsle, false);
 
         //then
         assertEquals(expectedSize, controller.getIndices().size());

@@ -34,7 +34,8 @@ public class Generator {
     public void generateGame() {
         indices = IntStream.range(0, height * width).boxed().collect(Collectors.toList());
         int index = random.nextInt(indices.size());
-        Isle initialIsle = createIsle(index % width, index / width);
+        Coordinate start = new Coordinate(index % width, index / width);
+        Isle initialIsle = createIsle(start);
         isles.add(initialIsle);
         LOGGER.info("Height: " + height
                 + " Width: " + width
@@ -50,9 +51,10 @@ public class Generator {
                 Isle endIsle = getEndIsle(startIsle);
                 if (endIsle != null) {
                     isles.add(endIsle);
-                    bridges.add(createBridge(startIsle, endIsle));
                     if (random.nextBoolean() && startIsle.getBridgeCount() < 8)
-                        bridges.add(createBridge(endIsle, startIsle));
+                        bridges.add(createBridge(endIsle, startIsle, true));
+                    else
+                        bridges.add(createBridge(endIsle, startIsle, false));
                     break;
                 }
                 if (startIsle == isles.get(isles.size() - 1)) {
@@ -90,8 +92,9 @@ public class Generator {
                     x = startIsle.getX() + distance;
                 }
                 //collision detection for new isle & for new bridge
-                if (indices.contains(y * width + x) && !collides(startIsle.getPos(), new Coordinate(x, y))) {
-                    Isle endIsle = createIsle(x, y);
+                Coordinate end = new Coordinate(x, y);
+                if (indices.contains(y * width + x) && !collides(startIsle.getPos(), end)) {
+                    Isle endIsle = createIsle(end);
                     LOGGER.info("Start Isle: " + startIsle.toString()
                             + " Direction: " + direction.toString()
                             + " Distance: " + distance
@@ -164,9 +167,9 @@ public class Generator {
                     && start.getY() < b.getStartY() && end.getY() > b.getStartY());
     }
 
-    public Isle createIsle(int x, int y) {
-        Isle isle = new Isle(x, y, 0);
-        int index = y * width + x;
+    private Isle createIsle(Coordinate pos) {
+        Isle isle = new Isle(pos, 0);
+        int index = pos.getY() * width + pos.getX();
         indices.remove(new Integer(index - width));
         indices.remove(new Integer(index - 1));
         indices.remove(new Integer(index));
@@ -175,12 +178,21 @@ public class Generator {
         return isle;
     }
 
-    public Bridge createBridge(Isle startIsle, Isle endIsle) {
-        Bridge bridge = new Bridge(startIsle, endIsle);
-        startIsle.addBridge(bridge);
-        startIsle.increaseBridgeCount();
-        endIsle.addBridge(bridge);
-        endIsle.increaseBridgeCount();
+    public Isle createIsle(int x, int y){
+        return createIsle(new Coordinate(x, y));
+    }
+
+    public Bridge createBridge(Isle startIsle, Isle endIsle, boolean doubleBridge) {
+        Bridge bridge;
+        if (doubleBridge) {
+            bridge = new Bridge(startIsle, endIsle, true);
+            startIsle.increaseBridgeCount(2);
+            endIsle.increaseBridgeCount(2);
+        } else {
+            bridge = new Bridge(startIsle, endIsle, false);
+            startIsle.increaseBridgeCount(1);
+            endIsle.increaseBridgeCount(1);
+        }
         int startIndex = bridge.getStartY() * width + bridge.getStartX();
         int endIndex = bridge.getEndY() * width + bridge.getEndX();
         if (bridge.getAlignment() == Alignment.HORIZONTAL)
@@ -189,6 +201,50 @@ public class Generator {
             IntStream.range(startIndex, endIndex).filter(i -> i % width == bridge.getStartX())
                     .boxed().forEach(i -> indices.remove(i));
         return bridge;
+    }
+
+    public Object[][] getFinalIsles() {
+        Object[][] finalIsles = new Object[isles.size()][2];
+        for (int i = 0; i < isles.size(); i++) {
+            Isle isle = isles.get(i);
+            finalIsles[i][0] = isle.getPos();
+            finalIsles[i][1] = isle.getBridgeCount();
+        }
+        return finalIsles;
+    }
+
+    public Object[][] getFinalBridges() {
+        Object[][] finalBridges = new Object[bridges.size()][3];
+        for (int i = 0; i < bridges.size(); i++) {
+            Bridge bridge = bridges.get(i);
+            Coordinate[] data = Converter.convertBridgeToData(bridge);
+            finalBridges[i][0] = data[0];
+            finalBridges[i][1] = data[1];
+            finalBridges[i][2] = bridge.isDoubleBridge();
+        }
+        return finalBridges;
+    }
+
+
+    public List<Bridge> getBridges() {
+        return bridges;
+    }
+
+    public void setIsleCount() {
+        int maxIsles = (int) (0.2 * height * width);
+        isleCount = random.nextInt((maxIsles - MIN) + 1) + MIN;
+    }
+
+    public void setIsleCount(int isleCount) {
+        this.isleCount = isleCount;
+    }
+
+    public int getIsleCount() {
+        return isleCount;
+    }
+
+    public List<Isle> getIsles() {
+        return isles;
     }
 
     @SuppressWarnings("unused")
@@ -215,43 +271,6 @@ public class Generator {
 
     public int getWidth() {
         return width;
-    }
-
-    public void setIsleCount() {
-        int maxIsles = (int) (0.2 * height * width);
-        isleCount = random.nextInt((maxIsles - MIN) + 1) + MIN;
-    }
-
-    public void setIsleCount(int isleCount) {
-        this.isleCount = isleCount;
-    }
-
-    public int getIsleCount() {
-        return isleCount;
-    }
-
-    public List<Isle> getIsles() {
-        return isles;
-    }
-
-    public Object[][] getFinalIsles() {
-        Object[][] finalIsles = new Object[isles.size()][2];
-        for (int i = 0; i < isles.size(); i++) {
-            Isle isle = isles.get(i);
-            finalIsles[i] = new Object[]{isle.getPos(), isle.getBridgeCount()};
-        }
-        return finalIsles;
-    }
-
-    public List<Bridge> getBridges() {
-        return bridges;
-    }
-
-    public Coordinate[][] getFinalBridges() {
-        Coordinate[][] finalBridges = new Coordinate[bridges.size()][2];
-        for (int i = 0; i < bridges.size(); i++)
-            finalBridges[i] = Converter.convertBridgeToData(bridges.get(i));
-        return finalBridges;
     }
 
     public void setIndices(List<Integer> indices) {

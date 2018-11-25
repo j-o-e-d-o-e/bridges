@@ -32,12 +32,12 @@ public class Isle implements Comparable<Isle> {
         return bridgeCount;
     }
 
-    public void setBridgeCount(int bridgeCount){
+    public void setBridgeCount(int bridgeCount) {
         this.bridgeCount = bridgeCount;
     }
 
-    public void increaseBridgeCount() {
-        this.bridgeCount++;
+    public void increaseBridgeCount(int bridgeCount) {
+        this.bridgeCount = this.bridgeCount + bridgeCount;
     }
 
     public int getMissingBridgeCount() {

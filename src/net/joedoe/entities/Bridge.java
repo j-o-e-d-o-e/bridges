@@ -6,6 +6,7 @@ import net.joedoe.utils.Coordinate;
 public class Bridge {
     private Isle startIsle, endIsle;
     private Coordinate start, end;
+    private boolean doubleBridge;
     private Alignment alignment;
 
     public Bridge(Isle startIsle, Isle endIsle) {
@@ -19,6 +20,11 @@ public class Bridge {
             end = endIsle.getPos();
         }
         this.alignment = Alignment.getAlignment(startIsle.getY(), endIsle.getY());
+    }
+
+    public Bridge(Isle startIsle, Isle endIsle, boolean doubleBridge){
+        this(startIsle, endIsle);
+        this.doubleBridge = doubleBridge;
     }
 
     public Isle getStartIsle() {
@@ -43,6 +49,10 @@ public class Bridge {
 
     public int getEndX() {
         return end.getX();
+    }
+
+    public boolean isDoubleBridge() {
+        return doubleBridge;
     }
 
     public Alignment getAlignment() {

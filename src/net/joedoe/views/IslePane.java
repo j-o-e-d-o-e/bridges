@@ -14,11 +14,23 @@ public class IslePane extends StackPane {
     private Circle circle;
     private Label label;
 
-    IslePane(int x, int y, int bridgeCount) {
-        pos = new Coordinate(x, y);
+    IslePane(Coordinate pos, int bridgeCount) {
+        this.pos = pos;
         circle = new Circle(CIRCLE_RADIUS, STD_COLOR);
         label = new Label(Integer.toString(bridgeCount));
         getChildren().addAll(circle, label);
+    }
+
+    int getX() {
+        return pos.getX();
+    }
+
+    int getY() {
+        return pos.getY();
+    }
+
+    public Coordinate getPos() {
+        return pos;
     }
 
     void setText(String text) {
@@ -27,14 +39,6 @@ public class IslePane extends StackPane {
 
     void setColor(Color color) {
         circle.setFill(color);
-    }
-
-    int getY() {
-        return pos.getY();
-    }
-
-    int getX() {
-        return pos.getX();
     }
 
     @Override

@@ -29,10 +29,10 @@ public class StatusCheckerTest {
     @Test
     public void unsolvable() {
         //given
-        controller.removeBridge(startIsle.getX(), startIsle.getY(), Direction.DOWN);
-        controller.addBridge(startIsle.getX(), startIsle.getY(), Direction.RIGHT);
-        controller.removeBridge(endIsle.getX(), endIsle.getY(), Direction.UP);
-        controller.addBridge(endIsle.getX(), endIsle.getY(), Direction.RIGHT);
+        controller.removeBridge(startIsle.getPos(), Direction.DOWN);
+        controller.addBridge(startIsle.getPos(), Direction.RIGHT);
+        controller.removeBridge(endIsle.getPos(), Direction.UP);
+        controller.addBridge(endIsle.getPos(), Direction.RIGHT);
 
         //when
         boolean status = checker.unsolvable();
@@ -53,7 +53,7 @@ public class StatusCheckerTest {
     @Test
     public void notSolved() {
         //given
-        controller.removeBridge(startIsle.getX(), startIsle.getY(), Direction.RIGHT);
+        controller.removeBridge(startIsle.getPos(), Direction.RIGHT);
 
         //when
         boolean status = checker.solved();

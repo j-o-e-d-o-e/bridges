@@ -31,8 +31,8 @@ public class GridControllerTest {
         Isle endIsle = controller.getEndIsle(startIsle, direction);
 
         //when
-        controller.addBridge(startIsle.getX(), startIsle.getY(), direction);
-        controller.addBridge(startIsle.getX(), startIsle.getY(), direction);
+        controller.addBridge(startIsle.getPos(), direction);
+        controller.addBridge(startIsle.getPos(), direction);
 
         //then
         assertEquals(2, startIsle.getBridges().size());
@@ -44,10 +44,10 @@ public class GridControllerTest {
         //given
         Direction direction = Direction.DOWN;
         Isle startIsle = controller.getIsle(0, 0);
-        Coordinate[] added = controller.addBridge(startIsle.getX(), startIsle.getY(), direction);
+        Coordinate[] added = controller.addBridge(startIsle.getPos(), direction);
 
         //when
-        Coordinate[] removed = controller.removeBridge(startIsle.getX(), startIsle.getY(), direction);
+        Coordinate[] removed = controller.removeBridge(startIsle.getPos(), direction);
 
         //then
         assertEquals(added[0].getY(), removed[0].getY());

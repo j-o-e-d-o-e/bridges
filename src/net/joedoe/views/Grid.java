@@ -16,6 +16,7 @@ import net.joedoe.utils.GameInfo;
 import net.joedoe.utils.Mocks;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -45,27 +46,31 @@ class Grid extends GridPane {
         IntStream.range(0, height).mapToObj(i -> new RowConstraints(ONE_TILE)).forEach(row -> getRowConstraints().add(row));
         IntStream.range(0, width).mapToObj(i -> new ColumnConstraints(ONE_TILE)).forEachOrdered(column -> getColumnConstraints().add(column));
         isleListener = new IsleListener(this);
-        setIsles(isles);
         controller = new GridController();
-        controller.setIsles(isles);
         checker = new StatusChecker(controller);
         solver = new Solver(controller, checker);
         autoSolver = new AutoSolver(solver);
-        autoSolver.addListener(() ->
-                Platform.runLater(this::getNextBridgeAuto)
-        );
+        autoSolver.addListener(() -> Platform.runLater(this::getNextBridgeAuto));
+        setIsles(isles);
         setBridges(bridges);
     }
 
     void addBridge(IslePane isle, Direction direction) {
-        Coordinate[] coordinates = controller.addBridge(isle.getX(), isle.getY(), direction);
+        Coordinate[] coordinates = controller.addBridge(isle.getPos(), direction);
         addBridge(coordinates);
     }
 
-    private void addBridge(Coordinate[] data) {
-        if (data != null) {
+    private void addBridge(Coordinate[] pos) {
+        if (pos != null) {
             updateBridges();
-            BridgeLine bridge = new BridgeLine(data[0], data[1]);
+            BridgeLine opposite = getBridge(pos[1], pos[0]);
+            BridgeLine bridge;
+            if (opposite == null)
+                bridge = new BridgeLine(pos[0], pos[1], false);
+            else {
+                bridge = new BridgeLine(pos[0], pos[1], true);
+                opposite.setOffset(true);
+            }
             bridges.add(bridge);
             add(bridge.getLine(), bridge.getStartX(), bridge.getStartY());
             updateIsles();
@@ -74,12 +79,14 @@ class Grid extends GridPane {
     }
 
     void removeBridge(IslePane isle, Direction direction) {
-        Coordinate[] data = controller.removeBridge(isle.getX(), isle.getY(), direction);
-        if (data != null) {
+        Coordinate[] pos = controller.removeBridge(isle.getPos(), direction);
+        if (pos != null) {
             updateBridges();
-            BridgeLine bridge = getBridge(data[0], data[1]);
+            BridgeLine bridge = getBridge(pos[0], pos[1]);
             bridges.remove(bridge);
             getChildren().remove(bridge.getLine());
+            BridgeLine opposite = getBridge(pos[1], pos[0]);
+            if (opposite != null) opposite.setOffset(false);
             updateIsles();
             checkStatus();
         }
@@ -87,38 +94,34 @@ class Grid extends GridPane {
 
     private BridgeLine getBridge(Coordinate start, Coordinate end) {
         return bridges.stream().filter(
-                bridge -> bridge.getStartY() == start.getY()
-                        && bridge.getStartX() == start.getX()
-                        && bridge.getEndY() == end.getY()
-                        && bridge.getEndX() == end.getX()).findFirst().orElse(null);
+                bridge -> bridge.getStart() == start
+                        && bridge.getEnd() == end)
+                .findFirst().orElse(null);
+    }
+
+    private void updateBridges(){
+        if (bridges.size() > 0) bridges.get(bridges.size() - 1).setStdColor();
     }
 
     private void updateIsles() {
         for (IslePane isle : isles) {
-            int bridgeCount = controller.getMissingBridgeCount(isle.getX(), isle.getY());
-            if (bridgeCount == 0) isle.setColor(SOLVED_COLOR);
-            else if (bridgeCount < 0) isle.setColor(ALERT_COLOR);
+            int bridges = controller.getMissingBridgeCount(isle.getPos());
+            if (bridges == 0) isle.setColor(SOLVED_COLOR);
+            else if (bridges < 0) isle.setColor(ALERT_COLOR);
             else isle.setColor(STD_COLOR);
-            if (!showMissingBridges) bridgeCount = controller.getBridgeCount(isle.getX(), isle.getY());
-            isle.setText(Integer.toString(bridgeCount));
+            if (!showMissingBridges) bridges = controller.getBridgeCount(isle.getPos());
+            isle.setText(Integer.toString(bridges));
         }
     }
 
-    private void updateBridges() {
-        if (bridges.size() > 0)
-            bridges.get(bridges.size() - 1).setStdColor();
-    }
-
-    private void checkStatus() {
-        if (checker.error())
-            statusListener.handle(new StatusEvent("Enthält Fehler."));
-        else if (checker.unsolvable())
-            statusListener.handle(new StatusEvent("Nicht mehr lösbar."));
-        else if (checker.solved()) {
-            bridges.get(bridges.size() - 1).setStdColor();
-            statusListener.handle(new StatusEvent("Gelöst!"));
-        } else
-            statusListener.handle(new StatusEvent("Noch nicht gelöst."));
+    private void setIsles(Object[][] islesData) {
+        controller.setIsles(islesData);
+        for (Object[] data : islesData) {
+            IslePane isle = new IslePane((Coordinate) data[0], (int) data[1]);
+            isle.setOnMouseClicked(e -> isleListener.handle(e));
+            isles.add(isle);
+            add(isle, isle.getX(), isle.getY());
+        }
     }
 
     private void setBridges(Object[][] bridgesData) {
@@ -126,23 +129,20 @@ class Grid extends GridPane {
         for (Object[] data : bridgesData) {
             Coordinate start = (Coordinate) data[0];
             Coordinate end = (Coordinate) data[1];
-            BridgeLine bridge = new BridgeLine(start, end);
-            bridges.add(bridge);
-            add(bridge.getLine(), bridge.getStartX(), bridge.getStartY());
+            if ((boolean) data[2]) {
+                List<BridgeLine> bridges = Arrays.asList(
+                        new BridgeLine(start, end, true),
+                        new BridgeLine(end, start, true));
+                this.bridges.addAll(bridges);
+                bridges.forEach(bridge -> add(bridge.getLine(), bridge.getStartX(), bridge.getStartY()));
+            } else {
+                BridgeLine bridge = new BridgeLine(start, end, false);
+                bridges.add(bridge);
+                add(bridge.getLine(), bridge.getStartX(), bridge.getStartY());
+            }
         }
-        updateIsles();
         bridges.forEach(BridgeLine::setStdColor);
-    }
-
-    private void setIsles(Object[][] islesData) {
-        for (Object[] data : islesData) {
-            Coordinate coordinate = (Coordinate) data[0];
-            int bridgeCount = (int) data[1];
-            IslePane isle = new IslePane(coordinate.getX(), coordinate.getY(), bridgeCount);
-            isle.setOnMouseClicked(e -> isleListener.handle(e));
-            isles.add(isle);
-            add(isle, isle.getX(), isle.getY());
-        }
+        updateIsles();
     }
 
     void setShowMissingBridges(boolean showMissingBridges) {
@@ -150,23 +150,21 @@ class Grid extends GridPane {
         for (IslePane isle : isles) {
             int bridgeCount;
             if (showMissingBridges)
-                bridgeCount = controller.getMissingBridgeCount(isle.getX(), isle.getY());
+                bridgeCount = controller.getMissingBridgeCount(isle.getPos());
             else
-                bridgeCount = controller.getBridgeCount(isle.getX(), isle.getY());
+                bridgeCount = controller.getBridgeCount(isle.getPos());
             isle.setText(Integer.toString(bridgeCount));
         }
     }
 
     void reset() {
-        for (BridgeLine bridge : bridges) {
-            getChildren().remove(bridge.getLine());
-        }
-        bridges.clear();
-        for (IslePane isle : isles) {
-            isle.setColor(STD_COLOR);
-            isle.setText(Integer.toString(controller.getBridgeCount(isle.getX(), isle.getY())));
-        }
         controller.reset();
+        bridges.forEach(bridge -> getChildren().remove(bridge.getLine()));
+        bridges.clear();
+        isles.forEach(isle -> {
+            isle.setColor(STD_COLOR);
+            isle.setText(Integer.toString(controller.getBridgeCount(isle.getPos())));
+        });
     }
 
     void getNextBridge() {
@@ -200,6 +198,17 @@ class Grid extends GridPane {
         autoSolver.shutdown();
     }
 
+    private void checkStatus() {
+        if (checker.error())
+            statusListener.handle(new StatusEvent("Enthält Fehler."));
+        else if (checker.unsolvable())
+            statusListener.handle(new StatusEvent("Nicht mehr lösbar."));
+        else if (checker.solved()) {
+            bridges.get(bridges.size() - 1).setStdColor();
+            statusListener.handle(new StatusEvent("Gelöst!"));
+        } else
+            statusListener.handle(new StatusEvent("Noch nicht gelöst."));
+    }
 
     private void setAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);

@@ -51,7 +51,7 @@ public class SolverTest {
 //        endIsle.setBridgeCount(0);
         startIsle.setBridgeCount(2);
         endIsle.setBridgeCount(2);
-        controller.addBridge(startIsle.getX(), startIsle.getY(), Direction.DOWN);
+        controller.addBridge(startIsle.getPos(), Direction.DOWN);
 
         //when
         List<Isle> neighbours = solver.getNeighbours(startIsle);
@@ -65,7 +65,7 @@ public class SolverTest {
         //given
         List<Isle> neighbours = solver.getNeighbours(startIsle);
 //        endIsle.setBridgeCount(1);
-        controller.addBridge(startIsle.getX(), startIsle.getY(), Direction.DOWN);
+        controller.addBridge(startIsle.getPos(), Direction.DOWN);
 
         //when
         int count = solver.getNeighboursOneBridge(neighbours, startIsle);
@@ -77,7 +77,7 @@ public class SolverTest {
     @Test
     public void getEndIsle(){
         //given
-        controller.addBridge(endIsle.getX(), endIsle.getY(), Direction.UP);
+        controller.addBridge(endIsle.getPos(), Direction.UP);
         List<Isle> neighbours = solver.getNeighbours(startIsle);
         Isle isle = controller.getIsle(4, 0);
 

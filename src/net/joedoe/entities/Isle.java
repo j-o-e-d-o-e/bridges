@@ -15,6 +15,11 @@ public class Isle implements Comparable<Isle> {
         this.bridgeCount = bridgeCount;
     }
 
+    public Isle(Coordinate pos, int bridgeCount) {
+        this.pos = pos;
+        this.bridgeCount = bridgeCount;
+    }
+
     public void addBridge(Bridge bridge) {
         bridges.add(bridge);
     }

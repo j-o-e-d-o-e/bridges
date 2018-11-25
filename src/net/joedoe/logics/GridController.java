@@ -23,8 +23,8 @@ public class GridController {
         LOGGER.setLevel(Level.OFF);
     }
 
-    public Coordinate[] addBridge(int x, int y, Direction direction) {
-        Isle startIsle = getIsle(x, y);
+    public Coordinate[] addBridge(Coordinate pos, Direction direction) {
+        Isle startIsle = getIsle(pos);
         if (startIsle == null) return null;
         Isle endIsle = getEndIsle(startIsle, direction);
         if (endIsle == null) return null;
@@ -47,13 +47,13 @@ public class GridController {
         return bridge;
     }
 
-    public Coordinate[] removeBridge(int x, int y, Direction direction) {
-        Isle startIsle = getIsle(x, y);
+    public Coordinate[] removeBridge(Coordinate pos, Direction direction) {
+        Isle startIsle = getIsle(pos);
         if (startIsle == null) return null;
         Isle endIsle = getEndIsle(startIsle, direction);
         if (endIsle == null) return null;
-        Bridge bridge = endIsle.getBridgeTo(startIsle);
-        if (bridge == null) bridge = startIsle.getBridgeTo(endIsle);
+        Bridge bridge = startIsle.getBridgeTo(endIsle);
+        if (bridge == null) bridge = endIsle.getBridgeTo(startIsle);
         if (bridge == null) return null;
         startIsle.removeBridge(bridge);
         endIsle.removeBridge(bridge);
@@ -106,35 +106,20 @@ public class GridController {
         return isles.stream().filter(isle -> isle.getY() == y && isle.getX() == x).findFirst().orElse(null);
     }
 
-    List<Isle> getIsles() {
-        return isles;
-    }
-
-    public void setIsles(Object[][] islesData) {
-        for (Object[] isle : islesData){
-            Coordinate coordinate = (Coordinate) isle[0];
-            int bridgeCount = (int) isle[1];
-            isles.add(new Isle(coordinate.getX(), coordinate.getY(), bridgeCount));
-        }
-        Collections.sort(isles);
-    }
-
-    public List<Bridge> getBridges() {
-        return bridges;
+    public Isle getIsle(Coordinate pos) {
+        return isles.stream().filter(isle -> isle.getPos() == pos).findFirst().orElse(null);
     }
 
     public void setBridges(Object[][] bridgesData) {
         for (Object[] data : bridgesData) {
-            Coordinate start = (Coordinate) data[0];
-            Coordinate end = (Coordinate) data[1];
-            Isle startIsle = getIsle(start.getX(), start.getY());
-            Isle endIsle = getIsle(end.getX(), end.getY());
+            Isle startIsle = getIsle( (Coordinate) data[0]);
+            Isle endIsle = getIsle((Coordinate) data[1]);
             Bridge bridge = new Bridge(startIsle, endIsle);
             startIsle.addBridge(bridge);
             endIsle.addBridge(bridge);
             bridges.add(bridge);
-            if((boolean)data[2]){
-                bridge = new Bridge(startIsle, endIsle);
+            if ((boolean) data[2]) {
+                bridge = new Bridge(endIsle, startIsle);
                 startIsle.addBridge(bridge);
                 endIsle.addBridge(bridge);
                 bridges.add(bridge);
@@ -142,14 +127,29 @@ public class GridController {
         }
     }
 
-    public int getBridgeCount(int x, int y) {
-        Isle isle = getIsle(x, y);
+    public void setIsles(Object[][] islesData) {
+        for (Object[] isle : islesData)
+            isles.add(new Isle((Coordinate) isle[0], (int) isle[1]));
+        Collections.sort(isles);
+    }
+
+
+    public int getBridgeCount(Coordinate pos) {
+        Isle isle = getIsle(pos);
         return isle.getBridgeCount();
     }
 
-    public int getMissingBridgeCount(int x, int y) {
-        Isle isle = getIsle(x, y);
+    public int getMissingBridgeCount(Coordinate pos) {
+        Isle isle = getIsle(pos);
         return isle.getMissingBridgeCount();
+    }
+
+    public List<Bridge> getBridges() {
+        return bridges;
+    }
+
+    List<Isle> getIsles() {
+        return isles;
     }
 
     public int getIslesSize() {

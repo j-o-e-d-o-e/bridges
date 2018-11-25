@@ -51,7 +51,7 @@ public class Generator {
                 Isle endIsle = getEndIsle(startIsle);
                 if (endIsle != null) {
                     isles.add(endIsle);
-                    if (random.nextBoolean() && startIsle.getBridgeCount() < 8)
+                    if (random.nextBoolean())
                         bridges.add(createBridge(endIsle, startIsle, true));
                     else
                         bridges.add(createBridge(endIsle, startIsle, false));
@@ -167,7 +167,7 @@ public class Generator {
                     && start.getY() < b.getStartY() && end.getY() > b.getStartY());
     }
 
-    private Isle createIsle(Coordinate pos) {
+    public Isle createIsle(Coordinate pos) {
         Isle isle = new Isle(pos, 0);
         int index = pos.getY() * width + pos.getX();
         indices.remove(new Integer(index - width));
@@ -176,10 +176,6 @@ public class Generator {
         indices.remove(new Integer(index + 1));
         indices.remove(new Integer(index + width));
         return isle;
-    }
-
-    public Isle createIsle(int x, int y){
-        return createIsle(new Coordinate(x, y));
     }
 
     public Bridge createBridge(Isle startIsle, Isle endIsle, boolean doubleBridge) {

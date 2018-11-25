@@ -50,7 +50,7 @@ public class GeneratorTest {
         //given
         List<Integer> indices = IntStream.range(0, HEIGHT * WIDTH).boxed().collect(Collectors.toList());
         controller.setIndices(indices);
-        Isle isle = controller.createIsle(3, 3);
+        Isle isle = controller.createIsle(new Coordinate(3,3));
         controller.getIsles().add(isle);
         Isle startIsle = controller.getIsles().get(0);
 
@@ -166,7 +166,7 @@ public class GeneratorTest {
         //given: vertical connection
         Isle startIsle = new Isle(3, 3, 0);
         Isle endIsle = new Isle(3, 6, 0);
-        Isle isle = controller.createIsle(3, 4);
+        Isle isle = controller.createIsle(new Coordinate(3,4));
         controller.getIsles().add(isle);
 
         //when
@@ -181,7 +181,7 @@ public class GeneratorTest {
         //given: horizontal connection
         Isle startIsle = new Isle(2, 4, 0);
         Isle endIsle = new Isle(5, 4, 0);
-        Isle isle = controller.createIsle(4, 4);
+        Isle isle = controller.createIsle(new Coordinate(4,4));
         controller.getIsles().add(isle);
 
         //when
@@ -234,7 +234,7 @@ public class GeneratorTest {
         int expectedSize = indices.size() - 5;
 
         //when
-        controller.createIsle(3, 3);
+        controller.createIsle(new Coordinate(3,3));
 
         //then
         assertEquals(expectedSize, controller.getIndices().size());

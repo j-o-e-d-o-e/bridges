@@ -24,17 +24,14 @@ public class MainFrame extends BorderPane {
         setTop(createMenuBar());
         setCenter(createBoard());
         setBottom(createControls());
-        setOnMouseClicked(e-> board.stopAutoSolve());
+        setOnMouseClicked(e -> board.stopAutoSolve());
     }
 
     private MenuBar createMenuBar() {
         MenuBar menuBar = new MenuBar();
         Menu menu = new Menu("Datei");
         MenuItem newGame = new MenuItem("Neues Rätsel");
-        newGame.setOnAction(e -> {
-            createNewGame();
-            status.setText("Das Rätsel ist noch nicht gelöst!");
-        });
+        newGame.setOnAction(e -> createNewGame());
         MenuItem reset = new MenuItem("Rätsel neu starten");
         reset.setOnAction(e -> board.reset());
         MenuItem loadGame = new MenuItem("Rätsel laden");

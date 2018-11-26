@@ -10,17 +10,23 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import net.joedoe.utils.FileHandler;
+
+import java.io.*;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 
 public class MainFrame extends BorderPane {
     private Stage window;
     private Board board;
+    private FileHandler fileHandler;
     private Label status;
 
     public MainFrame(Stage window) {
         this.window = window;
+        fileHandler = new FileHandler(window);
         setTop(createMenuBar());
         setCenter(createBoard());
         setBottom(createControls());
@@ -35,12 +41,15 @@ public class MainFrame extends BorderPane {
         MenuItem reset = new MenuItem("Rätsel neu starten");
         reset.setOnAction(e -> board.reset());
         MenuItem loadGame = new MenuItem("Rätsel laden");
-        MenuItem save = new MenuItem("Rätsel speichern");
-        MenuItem saveAs = new MenuItem("Rätsel speichern unter");
+        loadGame.setOnAction(e -> fileHandler.loadGame());
+        MenuItem saveGame = new MenuItem("Rätsel speichern");
+        saveGame.setOnAction(e-> fileHandler.saveGame());
+        MenuItem saveGameAs = new MenuItem("Rätsel speichern unter");
+        saveGameAs.setOnAction(e-> fileHandler.saveGame());
         MenuItem exit = new MenuItem("Beenden");
         exit.setAccelerator(new KeyCodeCombination(KeyCode.X, KeyCombination.ALT_ANY));
         exit.setOnAction(e -> close());
-        menu.getItems().addAll(newGame, reset, loadGame, save, saveAs, exit);
+        menu.getItems().addAll(newGame, reset, loadGame, saveGame, saveGameAs, exit);
         menuBar.getMenus().add(menu);
         return menuBar;
     }

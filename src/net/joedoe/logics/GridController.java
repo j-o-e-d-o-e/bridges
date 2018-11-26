@@ -23,6 +23,7 @@ public class GridController {
         LOGGER.setLevel(Level.OFF);
     }
 
+    @SuppressWarnings("Duplicates")
     public Coordinate[] addBridge(Coordinate pos, Direction direction) {
         Isle startIsle = getIsle(pos);
         if (startIsle == null) return null;
@@ -51,6 +52,7 @@ public class GridController {
         return bridge;
     }
 
+    @SuppressWarnings("Duplicates")
     public Coordinate[] removeBridge(Coordinate pos, Direction direction) {
         Isle startIsle = getIsle(pos);
         if (startIsle == null) return null;
@@ -87,6 +89,7 @@ public class GridController {
                     .findFirst().orElse(null);
     }
 
+    @SuppressWarnings("Duplicates")
     public boolean collidesBridges(Coordinate start, Coordinate end) {
         if (Alignment.getAlignment(start.getY(), end.getY()) == Alignment.HORIZONTAL)
             return bridges.stream().anyMatch(b -> b.getAlignment() == Alignment.VERTICAL

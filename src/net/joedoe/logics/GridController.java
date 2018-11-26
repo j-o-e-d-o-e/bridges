@@ -106,7 +106,7 @@ public class GridController {
         return isles.stream().filter(isle -> isle.getY() == y && isle.getX() == x).findFirst().orElse(null);
     }
 
-    public Isle getIsle(Coordinate pos) {
+    private Isle getIsle(Coordinate pos) {
         return isles.stream().filter(isle -> isle.getPos() == pos).findFirst().orElse(null);
     }
 

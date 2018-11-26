@@ -52,7 +52,7 @@ class Grid extends GridPane {
         autoSolver = new AutoSolver(solver);
         autoSolver.addListener(() -> Platform.runLater(this::getNextBridgeAuto));
         setIsles(isles);
-        setBridges(bridges);
+//        setBridges(bridges);
     }
 
     void addBridge(IslePane isle, Direction direction) {

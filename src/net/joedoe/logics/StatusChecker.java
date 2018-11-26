@@ -21,8 +21,13 @@ public class StatusChecker {
     }
 
     public boolean unsolvable() {
-        return controller.getIsles().stream().filter(isle -> isle.getMissingBridgeCount() > 0)
-                .anyMatch(this::isolated);
+        List<Isle> isles = controller.getIsles();
+        Set<Isle> connectedIsles = new HashSet<>();
+        connected(isles.get(0), connectedIsles);
+        return isles.stream().filter(isle -> isle.getMissingBridgeCount() > 0)
+                .anyMatch(this::isolated)
+                || (isles.stream().allMatch(isle -> isle.getMissingBridgeCount() == 0)
+                && connectedIsles.size() < isles.size());
     }
 
     private boolean isolated(Isle isle) {

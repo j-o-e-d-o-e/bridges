@@ -93,7 +93,7 @@ public class Generator {
                 }
                 //collision detection for new isle & for new bridge
                 Coordinate end = new Coordinate(x, y);
-                if (indices.contains(y * width + x) && !collides(startIsle.getPos(), end)) {
+                if (indices.contains(end.getY() * width + end.getX()) && !collides(startIsle.getPos(), end)) {
                     Isle endIsle = createIsle(end);
                     LOGGER.info("Start Isle: " + startIsle.toString()
                             + " Direction: " + direction.toString()

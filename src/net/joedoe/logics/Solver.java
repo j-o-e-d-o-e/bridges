@@ -133,10 +133,12 @@ public class Solver {
     }
 
     public Isle getEndIsle(List<Isle> neighbours, Isle startIsle) {
-        Isle endIsle;
-        endIsle = neighbours.stream()
-                .filter(isle -> isle.getMissingBridgeCount() > 1 && isle.getBridgeCountTo(startIsle) == 0)
-                .findFirst().orElse(null);
+        Isle endIsle = neighbours.stream()
+                .filter(isle -> getNeighbours(isle).size() == 1).findFirst().orElse(null);
+        if (endIsle == null)
+            endIsle = neighbours.stream()
+                    .filter(isle -> isle.getMissingBridgeCount() > 1 && isle.getBridgeCountTo(startIsle) == 0)
+                    .findFirst().orElse(null);
         if (endIsle == null) return neighbours.get(0);
         return endIsle;
     }

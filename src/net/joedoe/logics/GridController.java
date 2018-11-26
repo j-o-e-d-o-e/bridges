@@ -29,8 +29,9 @@ public class GridController {
         Isle endIsle = getEndIsle(startIsle, direction);
         if (endIsle == null) return null;
         boolean collides;
-        if (startIsle.compareTo(endIsle) > 0) collides = collides(endIsle.getPos(), startIsle.getPos());
-        else collides = collides(startIsle.getPos(), endIsle.getPos());
+        if (startIsle.compareTo(endIsle) > 0)
+            collides = collidesBridges(endIsle.getPos(), startIsle.getPos());
+        else collides = collidesBridges(startIsle.getPos(), endIsle.getPos());
         if (collides) return null;
         Bridge bridge = addBridge(startIsle, endIsle);
         if (bridge == null) return null;
@@ -86,7 +87,7 @@ public class GridController {
                     .findFirst().orElse(null);
     }
 
-    public boolean collides(Coordinate start, Coordinate end) {
+    public boolean collidesBridges(Coordinate start, Coordinate end) {
         if (Alignment.getAlignment(start.getY(), end.getY()) == Alignment.HORIZONTAL)
             return bridges.stream().anyMatch(b -> b.getAlignment() == Alignment.VERTICAL
                     && b.getStartY() < start.getY() && b.getEndY() > start.getY()

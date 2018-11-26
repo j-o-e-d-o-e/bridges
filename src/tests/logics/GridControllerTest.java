@@ -119,7 +119,7 @@ public class GridControllerTest {
         Coordinate end = new Coordinate(3, 3);
 
         //when
-        boolean collides = controller.collides(start, end);
+        boolean collides = controller.collidesBridges(start, end);
 
         //then
         assertTrue(collides);
@@ -136,7 +136,7 @@ public class GridControllerTest {
         Coordinate end = new Coordinate(1, 6);
 
         //when
-        boolean collides = controller.collides(start, end);
+        boolean collides = controller.collidesBridges(start, end);
 
         //then
         assertTrue(collides);

@@ -117,7 +117,7 @@ public class Solver {
 
     private boolean invalidNeighbour(Isle neighbour, Isle startIsle) {
         return neighbour == null
-                || controller.collides(neighbour.getPos(), startIsle.getPos())
+                || controller.collidesBridges(neighbour.getPos(), startIsle.getPos())
                 || neighbour.getMissingBridgeCount() == 0
                 || neighbour.getBridgeCountTo(startIsle) == 2
                 || (neighbour.getBridgeCount() == 1 && startIsle.getBridgeCount() == 1)

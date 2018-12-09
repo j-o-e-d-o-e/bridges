@@ -3,6 +3,7 @@ package net.joedoe.utils;
 public class Mocks {
     public static final int WIDTH = 7;
     public static final int HEIGHT = 7;
+//    public static final int ISLES_COUNT = 12;
 
     public static final Object[][] ISLES = {
             {new Coordinate(0, 0), 3},

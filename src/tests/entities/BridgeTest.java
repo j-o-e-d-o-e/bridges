@@ -1,30 +1,27 @@
-package tests.entities;
+package net.joedoe.entities;
 
 import net.joedoe.entities.Bridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.utils.Alignment;
+import net.joedoe.utils.Coordinate;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class BridgeTest {
 
     @Test
     public void create() {
-        //given
-        Isle startIsle = new Isle(4, 3, 0);
-        Isle endIsle = new Isle(1, 3, 2);
+        Isle startIsle = new Isle(new Coordinate(4, 3), 1);
+        Isle endIsle = new Isle(new Coordinate(1, 3), 2);
 
-        //when
-        Bridge bridge = new Bridge(startIsle, endIsle);
+        Bridge bridge = new Bridge(startIsle, endIsle, false);
 
-        //then
-        assertEquals(endIsle.getY(), bridge.getStartY());
-        assertEquals(endIsle.getX(), bridge.getStartX());
         assertEquals(Alignment.HORIZONTAL, bridge.getAlignment());
-        assertEquals(startIsle.getY(), bridge.getEndY());
-        assertEquals(startIsle.getX(), bridge.getEndX());
-        assertEquals(endIsle.getY(), bridge.getStartY());
-        assertEquals(endIsle.getY(), bridge.getStartY());
+        assertFalse(bridge.isDoubleBridge());
+        assertTrue(bridge.contains(startIsle, endIsle));
     }
 }

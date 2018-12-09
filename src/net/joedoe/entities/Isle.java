@@ -1,67 +1,51 @@
 package net.joedoe.entities;
 
 import net.joedoe.utils.Coordinate;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Isle implements Comparable<Isle> {
     private final Coordinate pos;
-    private int bridgeCount;
-    private List<Bridge> bridges = new ArrayList<>();
+    private int bridges;
+    private int missingBridges;
+    private Set<Isle> neighbours = new HashSet<>();
 
-    public Isle(int x, int y, int bridgeCount) {
-        pos = new Coordinate(x, y);
-        this.bridgeCount = bridgeCount;
-    }
-
-    public Isle(Coordinate pos, int bridgeCount) {
+    public Isle(Coordinate pos, int bridges) {
         this.pos = pos;
-        this.bridgeCount = bridgeCount;
+        this.bridges = bridges;
+        missingBridges = bridges;
     }
 
-    public void addBridge(Bridge bridge) {
-        bridges.add(bridge);
+    public void addBridge() {
+        missingBridges--;
     }
 
-    public void removeBridge(Bridge bridge) {
-        bridges.remove(bridge);
+    public void removeBridge() {
+        missingBridges++;
     }
 
-    public int getBridgeCount() {
-        return bridgeCount;
+    public void addNeighbour(Isle neighbour) {
+        neighbours.add(neighbour);
     }
 
-    public void setBridgeCount(int bridgeCount) {
-        this.bridgeCount = bridgeCount;
+    public void removeNeighbour(Isle neighbour) {
+        neighbours.remove(neighbour);
     }
 
-    public void increaseBridgeCount(int bridgeCount) {
-        this.bridgeCount = this.bridgeCount + bridgeCount;
-    }
-
-    public int getMissingBridgeCount() {
-        return bridgeCount - bridges.size();
-    }
-
-    public int getBridgeCountTo(Isle neighbour) {
-        return (int) bridges.stream().filter(bridge ->
-                bridge.getStartIsle() == neighbour || bridge.getEndIsle() == neighbour).count();
-    }
-
-    public Bridge getBridgeTo(Isle neighbour) {
-        return bridges.stream().filter(bridge -> bridge.getStartIsle() == this
-                && bridge.getEndIsle() == neighbour).findFirst().orElse(null);
-    }
-
-    public List<Isle> getNeighbours() {
-        List<Isle> neighbours = new ArrayList<>();
-        for (Bridge bridge : bridges) {
-            Isle startIsle = bridge.getStartIsle();
-            if (startIsle != this) neighbours.add(startIsle);
-            else neighbours.add(bridge.getEndIsle());
-        }
+    public Set<Isle> getNeighbours() {
         return neighbours;
+    }
+
+    public int getBridges() {
+        return bridges;
+    }
+
+    public void increaseBridges(int bridges) {
+        this.bridges += bridges;
+    }
+
+    public int getMissingBridges() {
+        return missingBridges;
     }
 
     public Coordinate getPos() {
@@ -76,12 +60,9 @@ public class Isle implements Comparable<Isle> {
         return pos.getX();
     }
 
-    public List<Bridge> getBridges() {
-        return bridges;
-    }
-
-    public void clearBridges() {
-        bridges.clear();
+    public void clear() {
+        missingBridges = bridges;
+        neighbours.clear();
     }
 
     @Override
@@ -91,6 +72,6 @@ public class Isle implements Comparable<Isle> {
 
     @Override
     public String toString() {
-        return "Isle{" + "pos=" + pos + "missingBridges=" + getMissingBridgeCount() + '}';
+        return "Isle{" + "pos=" + pos + "missingBridges=" + missingBridges + '}';
     }
 }

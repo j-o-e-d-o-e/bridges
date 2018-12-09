@@ -1,9 +1,22 @@
 package net.joedoe.views;
 
+import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -14,38 +27,38 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.joedoe.utils.FileHandler;
 
-import java.io.*;
-
-import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
-
 public class MainFrame extends BorderPane {
     private Stage window;
     private Board board;
-    private FileHandler fileHandler;
+    private FileChooser fileChooser;
     private Label status;
+    private String directory;
+    private String filepath;
 
     public MainFrame(Stage window) {
         this.window = window;
-        fileHandler = new FileHandler(window);
+        status = new Label();
+        fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Bridges (*.bgs)", "*.bgs");
+        fileChooser.getExtensionFilters().add(extFilter);
         setTop(createMenuBar());
         setCenter(createBoard());
         setBottom(createControls());
-        setOnMouseClicked(e -> board.stopAutoSolve());
     }
 
     private MenuBar createMenuBar() {
         MenuBar menuBar = new MenuBar();
         Menu menu = new Menu("Datei");
-        MenuItem newGame = new MenuItem("Neues RÃ¤tsel");
+        MenuItem newGame = new MenuItem("Neues Rätsel");
         newGame.setOnAction(e -> createNewGame());
-        MenuItem reset = new MenuItem("RÃ¤tsel neu starten");
+        MenuItem reset = new MenuItem("Rätsel neu starten");
         reset.setOnAction(e -> board.reset());
-        MenuItem loadGame = new MenuItem("RÃ¤tsel laden");
-        loadGame.setOnAction(e -> fileHandler.loadGame());
-        MenuItem saveGame = new MenuItem("RÃ¤tsel speichern");
-        saveGame.setOnAction(e-> fileHandler.saveGame());
-        MenuItem saveGameAs = new MenuItem("RÃ¤tsel speichern unter");
-        saveGameAs.setOnAction(e-> fileHandler.saveGame());
+        MenuItem loadGame = new MenuItem("Rätsel laden");
+        loadGame.setOnAction(e -> loadGame());
+        MenuItem saveGame = new MenuItem("Rätsel speichern");
+        saveGame.setOnAction(e -> saveGame());
+        MenuItem saveGameAs = new MenuItem("Rätsel speichern unter");
+        saveGameAs.setOnAction(e -> saveGameAs());
         MenuItem exit = new MenuItem("Beenden");
         exit.setAccelerator(new KeyCodeCombination(KeyCode.X, KeyCombination.ALT_ANY));
         exit.setOnAction(e -> close());
@@ -63,21 +76,23 @@ public class MainFrame extends BorderPane {
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
         vBox.setSpacing(CONTAINER_OFFSET);
-        CheckBox checkBox = new CheckBox("Anzahl fehlender BrÃ¼cken anzeigen");
+        CheckBox checkBox = new CheckBox("Anzahl fehlender Brücken anzeigen");
         checkBox.setSelected(true);
         checkBox.setOnAction(e -> board.setShowMissingBridges(checkBox.isSelected()));
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
         hBox.setSpacing(CONTAINER_OFFSET);
         hBox.setPrefWidth(100);
-        Button solveBtn = new Button("Automatisch lÃ¶sen");
+        Button solveBtn = new Button("Automatisch lösen");
         solveBtn.setMinWidth(hBox.getPrefWidth());
-        solveBtn.setOnAction(e -> board.startAutoSolve());
-        Button nextBtn = new Button("NÃ¤chste BrÃ¼cke");
+        solveBtn.setOnAction(e -> {
+            if (board.autoSolverIsRunning()) board.stopAutoSolve();
+            else board.startAutoSolve();
+        });
+        Button nextBtn = new Button("Nächste Brücke");
         nextBtn.setMinWidth(hBox.getPrefWidth());
         nextBtn.setOnAction(e -> board.getNextBridge());
         hBox.getChildren().addAll(solveBtn, nextBtn);
-        status = new Label("Noch nicht gelÃ¶st.");
         vBox.getChildren().addAll(checkBox, hBox, status);
         return vBox;
     }
@@ -89,19 +104,67 @@ public class MainFrame extends BorderPane {
         newGameFrame.show();
     }
 
+    private void loadGame() {
+        fileChooser.setTitle("Datei öffnen");
+        if (directory != null) fileChooser.setInitialDirectory(new File(directory));
+        File file = fileChooser.showOpenDialog(window);
+        if (file != null) {
+            directory = file.getParent();
+            String filepath = file.toString();
+            try {
+                FileHandler.loadGame(filepath);
+            } catch (IOException | IllegalArgumentException e) {
+                setAlert("Datei konnte nicht gelesen werden.");
+                return;
+            }
+            board.setLoadedGrid();
+        }
+    }
+
+    private void saveGame() {
+        if (filepath == null) {
+            saveGameAs();
+        } else {
+            board.saveGame();
+            try {
+                FileHandler.saveGame(filepath);
+            } catch (IOException e) {
+                setAlert("Datei konnte nicht gespeichert werden.");
+                return;
+            }
+        }
+    }
+
+    private void saveGameAs() {
+        fileChooser.setTitle("Datei speichern");
+        if (directory != null) fileChooser.setInitialDirectory(new File(directory));
+        File file = fileChooser.showSaveDialog(window);
+        if (file != null) {
+            directory = file.getParent();
+            filepath = file.toString();
+            board.saveGame();
+            try {
+                FileHandler.saveGame(filepath);
+            } catch (IOException e) {
+                setAlert("Datei konnte nicht gespeichert werden.");
+            }
+        }
+    }
+
+    private void setAlert(String text) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Dateiein-/ausgabe");
+        alert.setHeaderText(text);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) alert.close();
+    }
+
     private void handle(StatusEvent e) {
         status.setText(e.getMessage());
     }
 
     public void close() {
-//        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-//        alert.setTitle("Beenden?");
-//        alert.setHeaderText("Wirklich beenden?");
-//        Optional<ButtonType> result = alert.showAndWait();
-//        if (result.get() == ButtonType.OK)
         window.close();
         board.shutdownAutoSolve();
-//        else
-//            alert.close();
     }
 }

@@ -1,17 +1,17 @@
 package net.joedoe.entities;
 
+import java.util.Arrays;
+
 import net.joedoe.utils.Alignment;
 import net.joedoe.utils.Coordinate;
 
 public class Bridge {
-    private Isle startIsle, endIsle;
-    private Coordinate start, end;
+    private final Coordinate start, end;
+    private final Alignment alignment;
+    private final Isle[] isles = new Isle[2];
     private boolean doubleBridge;
-    private Alignment alignment;
 
-    public Bridge(Isle startIsle, Isle endIsle) {
-        this.startIsle = startIsle;
-        this.endIsle = endIsle;
+    public Bridge(Isle startIsle, Isle endIsle, boolean doubleBridge) {
         if (startIsle.compareTo(endIsle) > 0) {
             start = endIsle.getPos();
             end = startIsle.getPos();
@@ -19,20 +19,30 @@ public class Bridge {
             start = startIsle.getPos();
             end = endIsle.getPos();
         }
-        this.alignment = Alignment.getAlignment(startIsle.getY(), endIsle.getY());
-    }
-
-    public Bridge(Isle startIsle, Isle endIsle, boolean doubleBridge){
-        this(startIsle, endIsle);
+        alignment = Alignment.getAlignment(startIsle.getY(), endIsle.getY());
+        isles[0] = startIsle;
+        isles[1] = endIsle;
         this.doubleBridge = doubleBridge;
     }
 
     public Isle getStartIsle() {
-        return startIsle;
+        return isles[0];
     }
 
     public Isle getEndIsle() {
-        return endIsle;
+        return isles[1];
+    }
+    
+    public boolean contains(Isle startIsle, Isle endIsle) {
+        return Arrays.asList(isles).contains(startIsle) && Arrays.asList(isles).contains(endIsle);
+    }
+
+    public boolean isDoubleBridge() {
+        return doubleBridge;
+    }
+
+    public void setDoubleBridge(boolean doubleBridge) {
+        this.doubleBridge = doubleBridge;
     }
 
     public int getStartY() {
@@ -51,16 +61,12 @@ public class Bridge {
         return end.getX();
     }
 
-    public boolean isDoubleBridge() {
-        return doubleBridge;
-    }
-
     public Alignment getAlignment() {
         return alignment;
     }
 
     @Override
     public String toString() {
-        return "Bridge{" + "start=" + startIsle + ", end=" + endIsle + '}';
+        return "Bridge{" + "start=" + isles[0] + ",\nend=" + isles[1] + ", doubleBridge=" + doubleBridge + '}';
     }
 }

@@ -4,13 +4,12 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import net.joedoe.logics.Generator;
 
 import java.util.Optional;
 
-import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
+import static net.joedoe.utils.GameInfo.*;
 
 class NewGameFrame extends Stage {
     private Board board;
@@ -23,8 +22,9 @@ class NewGameFrame extends Stage {
     NewGameFrame(Board board) {
         this.board = board;
         generator = new Generator();
-        setTitle("Neues RÃ¤tsel");
-        Scene scene = new Scene(setLayout(), 400, 350);
+        setTitle("Neues Rätsel");
+        setResizable(false);
+        Scene scene = new Scene(setLayout(), 300, 280);
         setScene(scene);
     }
 
@@ -33,17 +33,18 @@ class NewGameFrame extends Stage {
         outerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
 
         StackPane innerPane = new StackPane();
-        innerPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        innerPane.setBorder(new Border(
+                new BorderStroke(STD_COLOR, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         innerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
 
         VBox vBox = new VBox();
         vBox.setSpacing(CONTAINER_OFFSET);
 
         ToggleGroup radios = new ToggleGroup();
-        autoBtn = new RadioButton("Automatische GrÃ¶ÃŸe und Inselanzahl");
+        autoBtn = new RadioButton("Automatische Größe und Inselanzahl");
         autoBtn.setSelected(true);
         autoBtn.setToggleGroup(radios);
-        RadioButton customBtn = new RadioButton("GrÃ¶ÃŸe und/oder Inselanzahl selbst festlegen");
+        RadioButton customBtn = new RadioButton("Größe und/oder Inselanzahl selbst festlegen");
         customBtn.setToggleGroup(radios);
         radios.selectedToggleProperty().addListener(e -> {
             if (autoBtn.isSelected()) {
@@ -61,10 +62,9 @@ class NewGameFrame extends Stage {
                 widthLabel.setDisable(false);
                 widthTxt.setDisable(false);
                 checkBox.setDisable(false);
-
             }
         });
-        heightLabel = new Label("HÃ¶he:");
+        heightLabel = new Label("Höhe:");
         heightLabel.setDisable(true);
         heightTxt = new TextField();
         heightTxt.setDisable(true);
@@ -91,8 +91,8 @@ class NewGameFrame extends Stage {
         islesTxt.setDisable(true);
 
         GridPane grid = new GridPane();
-//        grid.setGridLinesVisible(true);
-        grid.setPadding(new Insets(0, 0, 0, 50));
+        // grid.setGridLinesVisible(true);
+        grid.setPadding(new Insets(0, 0, 0, 30));
         grid.getColumnConstraints().add(new ColumnConstraints(50));
         grid.setVgap(10);
         grid.add(heightLabel, 0, 0);
@@ -105,7 +105,7 @@ class NewGameFrame extends Stage {
         grid.add(islesTxt, 1, 3);
 
         HBox buttons = new HBox();
-        buttons.setPadding(new Insets(0, 0, 0, CONTAINER_OFFSET * 3));
+        buttons.setPadding(new Insets(0, 0, 0, 20));
         buttons.setPrefWidth(100);
         Button cancelBtn = new Button("Abbrechen");
         cancelBtn.setMinWidth(buttons.getPrefWidth());
@@ -123,58 +123,63 @@ class NewGameFrame extends Stage {
     }
 
     private void handleInput() {
-        int width = 0;
-        int height = 0;
-        int isleCount = 0;
         if (autoBtn.isSelected()) {
-//            generator.setHeight();
-//            generator.setWidth();
-//            generator.setIsleCount();
-            generator.setHeight(25);
-            generator.setWidth(25);
-            generator.setIsleCount(125);
+            generator.setHeight();
+            generator.setWidth();
+            generator.setIslesCount();
+            // generator.setHeight(MAX_HEIGHT);
+            // generator.setWidth(MAX_WIDTH);
+            // generator.setIslesCount(MAX_ISLES_COUNT);
         } else {
-            try {
-                width = Integer.parseInt(widthTxt.getText());
-                height = Integer.parseInt(heightTxt.getText());
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-            if (width < 4 || width > 25 || height < 4 || height > 25) {
-                setAlert("Breite und HÃ¶he mÃ¼ssen grÃ¶ÃŸer 3 und kleiner 26 sein.");
-                return;
-            }
-            generator.setHeight(height);
-            generator.setWidth(width);
-            if (!checkBox.isSelected())
-                generator.setIsleCount();
-            else {
+            String width = widthTxt.getText();
+            if (width.isEmpty()) {
+                generator.setWidth();
+            } else {
                 try {
-                    isleCount = Integer.parseInt(islesTxt.getText());
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                }
-                if (isleCount < 2 || isleCount > 0.2 * width * height) {
-                    setAlert("Inselanzahl muss grÃ¶ÃŸer 1 und kleiner/gleich Breite * HÃ¶he * 0.2 sein.");
+                    generator.setWidth(Integer.parseInt(width));
+                } catch (IllegalArgumentException e) {
+                    setAlert("Breite und Höhe müssen größer/gleich " + MIN_WIDTH + " und kleiner/gleich " + MAX_WIDTH
+                            + " sein.");
                     return;
                 }
-                generator.setIsleCount(isleCount);
+            }
+            String height = heightTxt.getText();
+            if (height.isEmpty()) {
+                generator.setHeight();
+            } else {
+                try {
+                    generator.setHeight(Integer.parseInt(height));
+                } catch (IllegalArgumentException e) {
+                    setAlert("Breite und Höhe müssen größer/gleich " + MIN_HEIGHT + " und kleiner/gleich " + MAX_HEIGHT
+                            + " sein.");
+                    return;
+                }
+            }
+            String isles = islesTxt.getText();
+            if (!checkBox.isSelected() || isles.isEmpty()) {
+                generator.setIslesCount();
+            } else {
+                try {
+                    generator.setIslesCount(Integer.parseInt(isles));
+                } catch (IllegalArgumentException e) {
+                    setAlert("Inselanzahl muss größer/gleich " + MIN_ISLES_COUNT
+                            + " und kleiner/gleich Höhe * Breite * 0.2 sein.");
+                    return;
+                }
             }
         }
         generator.generateGame();
-        board.setGrid(generator.getHeight(), generator.getWidth(), generator.getFinalIsles(), generator.getFinalBridges());
+        board.setGrid(generator.getWidth(), generator.getHeight(), generator.getFinalIsles(), null);
+        // board.setGrid(generator.getWidth(), generator.getHeight(),
+        // generator.getFinalIsles(), generator.getFinalBridges());
         close();
     }
 
     private void setAlert(String text) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("UngÃ¼ltige Eingabe");
+        alert.setTitle("Ungültige Eingabe");
         alert.setHeaderText(text);
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK)
-            alert.close();
-        widthTxt.setText("");
-        heightTxt.setText("");
-        islesTxt.setText("");
+        if (result.isPresent() && result.get() == ButtonType.OK) alert.close();
     }
 }

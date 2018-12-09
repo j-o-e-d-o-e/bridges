@@ -1,8 +1,9 @@
-package tests.logics;
+package net.joedoe.logics;
 
 import net.joedoe.entities.Isle;
 import net.joedoe.logics.GridController;
 import net.joedoe.logics.StatusChecker;
+import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
 import net.joedoe.utils.Mocks;
 import org.junit.Before;
@@ -14,6 +15,7 @@ import static org.junit.Assert.assertTrue;
 public class StatusCheckerTest {
     private StatusChecker checker;
     private GridController controller;
+    private Coordinate start, end;
     private Isle startIsle, endIsle;
 
     @Before
@@ -22,43 +24,37 @@ public class StatusCheckerTest {
         checker = new StatusChecker(controller);
         controller.setIsles(Mocks.ISLES);
         controller.setBridges(Mocks.BRIDGES);
-        startIsle = controller.getIsle(0, 0);
-        endIsle = controller.getIsle(4, 6);
+        start = (Coordinate) Mocks.ISLES[0][0];
+        startIsle = controller.getIsle(start);
+        end = (Coordinate) Mocks.ISLES[9][0];
+        endIsle = controller.getIsle(end);
     }
 
     @Test
     public void unsolvable() {
-        //given
         controller.removeBridge(startIsle.getPos(), Direction.DOWN);
         controller.addBridge(startIsle.getPos(), Direction.RIGHT);
         controller.removeBridge(endIsle.getPos(), Direction.UP);
         controller.addBridge(endIsle.getPos(), Direction.RIGHT);
 
-        //when
         boolean status = checker.unsolvable();
 
-        //then
         assertTrue(status);
     }
 
     @Test
     public void solved() {
-        //when
         boolean status = checker.solved();
 
-        //then
         assertTrue(status);
     }
 
     @Test
     public void notSolved() {
-        //given
-        controller.removeBridge(startIsle.getPos(), Direction.RIGHT);
+        controller.removeBridge(start, Direction.RIGHT);
 
-        //when
         boolean status = checker.solved();
 
-        //then
         assertFalse(status);
     }
 }

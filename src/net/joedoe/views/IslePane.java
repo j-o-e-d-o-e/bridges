@@ -10,7 +10,7 @@ import static net.joedoe.utils.GameInfo.CIRCLE_RADIUS;
 import static net.joedoe.utils.GameInfo.STD_COLOR;
 
 public class IslePane extends StackPane {
-    private Coordinate pos;
+    private final Coordinate pos;
     private Circle circle;
     private Label label;
 

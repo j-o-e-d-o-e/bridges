@@ -1,90 +1,71 @@
-package tests.logics;
+package net.joedoe.logics;
 
 import net.joedoe.entities.Isle;
 import net.joedoe.logics.GridController;
 import net.joedoe.logics.Solver;
-import net.joedoe.logics.StatusChecker;
+import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
 import net.joedoe.utils.Mocks;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import static org.junit.Assert.assertEquals;
 
 public class SolverTest {
     private Solver solver;
     private GridController controller;
+    private Coordinate start;
     private Isle startIsle;
-    private Isle endIsle;
 
     @Before
     public void setUp() {
         controller = new GridController();
         controller.setIsles(Mocks.ISLES);
-        StatusChecker checker = new StatusChecker(controller);
-        solver = new Solver(controller, checker);
-        startIsle = controller.getIsle(0, 0);
-        endIsle = controller.getIsle(0, 3);
-//        LOGGER.setLevel(Level.OFF);
+        solver = new Solver(controller);
+        start = (Coordinate) Mocks.ISLES[0][0];
+        startIsle = controller.getIsle(start);
     }
 
     @Test
     public void getStartIsles() {
-        //given
         int islesSize = controller.getIslesSize();
-        startIsle.setBridgeCount(0);
+        while (startIsle.getMissingBridges() > 0)
+            startIsle.addBridge();
 
-        //when
         List<Isle> isles = solver.getStartIsles();
 
-        //then
         assertEquals(islesSize - 1, isles.size());
     }
 
     @Test
-    public void getNeighbours(){
-        //given
-//        controller.addBridge(startIsle.getX(), startIsle.getY(), Direction.DOWN);
-//        endIsle.setBridgeCount(0);
-        startIsle.setBridgeCount(2);
-        endIsle.setBridgeCount(2);
-        controller.addBridge(startIsle.getPos(), Direction.DOWN);
+    public void getNeighbours() {
+        controller.addBridge(start, Direction.DOWN);
+        controller.addBridge(start, Direction.DOWN);
 
-        //when
-        List<Isle> neighbours = solver.getNeighbours(startIsle);
+        List<Isle> neighbours = solver.getConnectables(startIsle);
 
-        //then
         assertEquals(1, neighbours.size());
     }
 
     @Test
-    public void getNeighboursOneBridge(){
-        //given
-        List<Isle> neighbours = solver.getNeighbours(startIsle);
-//        endIsle.setBridgeCount(1);
-        controller.addBridge(startIsle.getPos(), Direction.DOWN);
+    public void getNeighboursOneBridge() {
+        controller.addBridge(start, Direction.DOWN);
+        List<Isle> connectables = solver.getConnectables(startIsle);
 
-        //when
-        int count = solver.getNeighboursOneBridge(neighbours, startIsle);
+        int count = solver.getConnectablesOneBridge(startIsle, connectables);
 
-        //then
         assertEquals(1, count);
     }
 
     @Test
-    public void getEndIsle(){
-        //given
-        controller.addBridge(endIsle.getPos(), Direction.UP);
-        List<Isle> neighbours = solver.getNeighbours(startIsle);
-        Isle isle = controller.getIsle(4, 0);
+    public void getEndIsle() {
+        controller.addBridge(start, Direction.DOWN);
+        List<Isle> connectables = solver.getConnectables(startIsle);
 
-        //when
-        Isle endIsle = solver.getEndIsle(neighbours, startIsle);
+        Isle endIsle = solver.getEndIsle(startIsle, connectables);
 
-        //then
-        assertEquals(isle, endIsle);
+        assertEquals(Mocks.ISLES[8][0], endIsle.getPos());
     }
 }

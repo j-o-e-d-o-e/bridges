@@ -15,11 +15,12 @@ public class Coordinate implements Comparable<Coordinate> {
     public int getX() {
         return x;
     }
-
+    
     @Override
     public int compareTo(Coordinate other) {
-        if (x + y > other.x + other.y) return 1;
-        else return -1;
+        int comp = Integer.compare(x, other.x);
+        if (comp == 0) return Integer.compare(y, other.y);
+        return comp;
     }
 
     @Override

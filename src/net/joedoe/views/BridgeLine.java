@@ -8,8 +8,8 @@ import net.joedoe.utils.Coordinate;
 import static net.joedoe.utils.GameInfo.*;
 
 class BridgeLine {
-    private Coordinate start, end;
-    private Alignment alignment;
+    private final Coordinate start, end;
+    private final Alignment alignment;
     private Line line = new Line();
 
     BridgeLine(Coordinate start, Coordinate end, boolean offset) {
@@ -25,15 +25,13 @@ class BridgeLine {
         if (alignment == Alignment.HORIZONTAL) {
             int tiles = Math.abs(start.getX() - end.getX());
             line.setEndX(ONE_TILE * (tiles - 1) + BRIDGE_OVERLAP * 2);
-            if (start.getX() < end.getX())
-                line.setTranslateX(ONE_TILE - BRIDGE_OVERLAP);
+            if (start.getX() < end.getX()) line.setTranslateX(ONE_TILE - BRIDGE_OVERLAP);
             else
                 line.setTranslateX(-ONE_TILE * (tiles - 1) - BRIDGE_OVERLAP);
         } else {
             int tiles = Math.abs(start.getY() - end.getY());
             line.setEndY(ONE_TILE * (tiles - 1) + BRIDGE_OVERLAP * 2);
-            if (start.getY() < end.getY())
-                line.setTranslateY((ONE_TILE >> 1) * tiles);
+            if (start.getY() < end.getY()) line.setTranslateY((ONE_TILE >> 1) * tiles);
             else
                 line.setTranslateY(-(ONE_TILE >> 1) * tiles);
         }
@@ -43,21 +41,23 @@ class BridgeLine {
     void setOffset(boolean offset) {
         if (alignment == Alignment.HORIZONTAL) {
             if (offset) {
-                if (start.getX() < end.getX())
-                    line.setTranslateY(BRIDGE_OFFSET);
+                if (start.getX() < end.getX()) line.setTranslateY(BRIDGE_OFFSET);
                 else
                     line.setTranslateY(-BRIDGE_OFFSET);
             } else
                 line.setTranslateY(0);
         } else {
             if (offset) {
-                if (start.getY() < end.getY())
-                    line.setTranslateX((ONE_TILE >> 1) + BRIDGE_OFFSET);
+                if (start.getY() < end.getY()) line.setTranslateX((ONE_TILE >> 1) + BRIDGE_OFFSET);
                 else
                     line.setTranslateX((ONE_TILE >> 1) - BRIDGE_OFFSET);
             } else
                 line.setTranslateX(ONE_TILE >> 1);
         }
+    }
+
+    boolean contains(Coordinate start, Coordinate end) {
+        return (this.start == start && this.end == end) || (this.start == end && this.end == start);
     }
 
     int getStartX() {
@@ -68,19 +68,16 @@ class BridgeLine {
         return start.getY();
     }
 
-    Coordinate getStart() {
-        return start;
-    }
-
-    Coordinate getEnd() {
-        return end;
-    }
-
     void setStdColor() {
         line.setStroke(STD_COLOR);
     }
 
     Line getLine() {
         return line;
+    }
+
+    @Override
+    public String toString() {
+        return "BridgeLine{" + "start=" + start + ", end=" + end + '}';
     }
 }

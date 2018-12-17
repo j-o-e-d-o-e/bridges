@@ -33,11 +33,9 @@ public class BridgeController {
     /**
      * Fügt eine neue Brücke hinzu, falls möglich. Aufgerufen von
      * {@link net.joedoe.views.Grid}.
-     * 
-     * @param pos
-     *            Koordinate einer Insel
-     * @param direction
-     *            Richtung des Klicksektors
+     *
+     * @param pos       Koordinate einer Insel
+     * @param direction Richtung des Klicksektors
      * @return neue Brücke
      */
     public IBridge addBridge(Coordinate pos, Direction direction) {
@@ -57,11 +55,9 @@ public class BridgeController {
      * neue Brücke erstellt. Falls eine einfache Brücke bereits exisitert, wird
      * diese in eine doppelte Brücke umgewandelt. Falls eine doppelte Brück bereits
      * existiert, wird die Methode beendet.
-     * 
-     * @param startIsle
-     *            erste Insel, die mit der Brücke verbunden werden soll
-     * @param endIsle
-     *            zweite Insel, die mit der Brücke verbunden werden soll
+     *
+     * @param startIsle erste Insel, die mit der Brücke verbunden werden soll
+     * @param endIsle   zweite Insel, die mit der Brücke verbunden werden soll
      * @return neue Brücke
      */
     Bridge addBridge(Isle startIsle, Isle endIsle) {
@@ -91,11 +87,9 @@ public class BridgeController {
      * existiert, wird Methode beendet. Falls es sich um eine doppelte Brücke
      * handelt, wird diese in eine einfache Brücke umgewandelt. Falls es sich um
      * eine einfache Brücke handelt, wird diese entfernt.
-     * 
-     * @param pos
-     *            Koordinate einer Insel
-     * @param direction
-     *            Richtung des Klicksektors
+     *
+     * @param pos       Koordinate einer Insel
+     * @param direction Richtung des Klicksektors
      * @return zu entfernende Brücke
      */
     public IBridge removeBridge(Coordinate pos, Direction direction) {
@@ -125,11 +119,9 @@ public class BridgeController {
 
     /**
      * Gibt die nächstgelegene Insel zurück.
-     * 
-     * @param startIsle
-     *            Insel, für die die nächstgelegene Insel gesucht wird
-     * @param direction
-     *            Richtung, in der nach der nächstgelegenen Insel gesucht wird
+     *
+     * @param startIsle Insel, für die die nächstgelegene Insel gesucht wird
+     * @param direction Richtung, in der nach der nächstgelegenen Insel gesucht wird
      * @return nächstgelegene Insel
      */
     public Isle getEndIsle(Isle startIsle, Direction direction) {
@@ -151,9 +143,8 @@ public class BridgeController {
 
     /**
      * Identifiziert Insel und gibt diese zurück.
-     * 
-     * @param pos
-     *            Koordinate, wo die gesuchte Inseln positioniert ist
+     *
+     * @param pos Koordinate, wo die gesuchte Inseln positioniert ist
      * @return Insel, die an der Koordinate 'pos' positioniert ist
      */
     public Isle getIsle(Coordinate pos) {
@@ -162,11 +153,9 @@ public class BridgeController {
 
     /**
      * Identifiziert Brücke und gibt diese zurück.
-     * 
-     * @param startIsle
-     *            erste Insel, die mit der Brücke verbunden ist
-     * @param endIsle
-     *            zweite Insel, die mit der Brücke verbunden ist
+     *
+     * @param startIsle erste Insel, die mit der Brücke verbunden ist
+     * @param endIsle   zweite Insel, die mit der Brücke verbunden ist
      * @return Brücke, die 'startIsle' und 'endIsle' miteinander verbindet
      */
     Bridge getBridge(Coordinate start, Coordinate end) {
@@ -176,9 +165,8 @@ public class BridgeController {
     /**
      * Lädt Daten über Inseln - entweder aus einem geladenen oder einem generierten
      * Spiel.
-     * 
-     * @param isles
-     *            Liste mit zu ladenden Inseln
+     *
+     * @param isles Liste mit zu ladenden Inseln
      */
     public void setIsles(List<IIsle> isles) {
         for (IIsle isle : isles)
@@ -187,7 +175,7 @@ public class BridgeController {
 
     /**
      * Gibt alle Inseln zurück.
-     * 
+     *
      * @return Liste aller Inseln
      */
     public List<Isle> getIsles() {
@@ -196,9 +184,8 @@ public class BridgeController {
 
     /**
      * Lädt Daten über Brücken.
-     * 
-     * @param bridges
-     *            Liste mit zu ladenden Brücken
+     *
+     * @param bridges Liste mit zu ladenden Brücken
      */
     public void setBridges(List<IBridge> bridges) {
         for (IBridge bridge : bridges) {
@@ -218,7 +205,7 @@ public class BridgeController {
 
     /**
      * Gibt alle Brücken zurück.
-     * 
+     *
      * @return Liste aller aktuellen Brücken
      */
     public List<Bridge> getBridges() {
@@ -227,9 +214,8 @@ public class BridgeController {
 
     /**
      * Gibt die Anzahl der geforderten Brücken einer Insel zurück.
-     * 
-     * @param pos
-     *            Koordinate, anhand der die Insel identifiziert wird
+     *
+     * @param pos Koordinate, anhand der die Insel identifiziert wird
      * @return Anzahl der geforderten Brücken einer Insel
      */
     public int getBridges(Coordinate pos) {
@@ -240,9 +226,8 @@ public class BridgeController {
 
     /**
      * Gibt die Anzahl der fehlenden Brücken einer Insel zurück.
-     * 
-     * @param pos
-     *            Koordinate, anhand der die Insel identifiziert wird
+     *
+     * @param pos Koordinate, anhand der die Insel identifiziert wird
      * @return Anzahl der fehlenden Brücken einer Insel
      */
     public int getMissingBridges(Coordinate pos) {
@@ -253,7 +238,7 @@ public class BridgeController {
 
     /**
      * Gibt Anzahl aller Inseln zurück.
-     * 
+     *
      * @return Anzahl aller Inseln
      */
     public int getIslesSize() {

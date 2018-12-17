@@ -5,7 +5,6 @@ import net.joedoe.utils.Coordinate;
 
 /**
  * Repräsentiert eine Brücke im Modell.
- *
  */
 public class Bridge implements IBridge {
     private final Coordinate start, end;
@@ -17,13 +16,10 @@ public class Bridge implements IBridge {
      * übergeben und ein boolean, ob es sich um eine doppelte Brücke handelt.
      * Diejenige der beiden Koordinaten, die näher zum Koordinaten-Urspung liegt,
      * wird zur 'start'-Koordinate. Zudem wird die Ausrichtung der Brücke ermittelt.
-     * 
-     * @param start
-     *            erste Koordinate
-     * @param end
-     *            zweite Koordinate
-     * @param doubleBridge
-     *            true, falls doppelte Brücke
+     *
+     * @param start        erste Koordinate
+     * @param end          zweite Koordinate
+     * @param doubleBridge true, falls doppelte Brücke
      */
     public Bridge(Coordinate start, Coordinate end, boolean doubleBridge) {
         if (start.compareTo(end) > 0) {
@@ -40,13 +36,11 @@ public class Bridge implements IBridge {
     /**
      * Identifiziert, ob es sich um diejenige Brücke handelt, die die erste und
      * zweite Insel-Koordinate miteinander verbindet.
-     * 
-     * @param start
-     *            erste Koordinate
-     * @param endIsle
-     *            zweite Koordinate
+     *
+     * @param start   erste Koordinate
+     * @param endIsle zweite Koordinate
      * @return true, falls diese Brücke die beiden Inseln-Koordinaten miteinander
-     *         verbindet
+     * verbindet
      */
     public boolean contains(Coordinate start, Coordinate end) {
         if (start.compareTo(end) > 0) return this.start == end && this.end == start;
@@ -56,7 +50,7 @@ public class Bridge implements IBridge {
     /**
      * Gibt den x-Wert der beiden Insel-Koordinaten zurück, der näher am
      * Koordinaten-Ursprung liegt.
-     * 
+     *
      * @return x-Wert der ersten Insel
      */
     public int getStartX() {
@@ -66,7 +60,7 @@ public class Bridge implements IBridge {
     /**
      * Gibt den y-Wert der beiden Insel-Koordinaten zurück, der näher am
      * Koordinaten-Ursprung liegt.
-     * 
+     *
      * @return y-Wert der ersten Insel
      */
     public int getStartY() {
@@ -75,7 +69,7 @@ public class Bridge implements IBridge {
 
     /**
      * Gibt Koordinate zurück, die näher am Koordinaten-Ursprung liegt.
-     * 
+     *
      * @return erste Koordinate
      */
     public Coordinate getStart() {
@@ -85,7 +79,7 @@ public class Bridge implements IBridge {
     /**
      * Gibt den x-Wert der beiden Insel-Koordinaten zurück, der weiter vom
      * Koordinaten-Ursprung entfernt liegt.
-     * 
+     *
      * @return x-Wert der zweiten Insel
      */
     public int getEndX() {
@@ -95,7 +89,7 @@ public class Bridge implements IBridge {
     /**
      * Gibt den y-Wert der beiden Insel-Koordinaten zurück, der weiter vom
      * Koordinaten-Ursprung entfernt liegt.
-     * 
+     *
      * @return y-Wert der zweiten Insel
      */
     public int getEndY() {
@@ -104,7 +98,7 @@ public class Bridge implements IBridge {
 
     /**
      * Gibt Koordinate zurück, die weiter vom Koordinaten-Ursprung entfernt liegt.
-     * 
+     *
      * @return zweite Koordinate
      */
     public Coordinate getEnd() {
@@ -113,9 +107,8 @@ public class Bridge implements IBridge {
 
     /**
      * Legt fest, ob es eine einfache oder doppelte Brücke ist.
-     * 
-     * @param doubleBridge
-     *            true, falls diese zu einer doppelten Brücke werden soll
+     *
+     * @param doubleBridge true, falls diese zu einer doppelten Brücke werden soll
      */
     public void setDoubleBridge(boolean doubleBridge) {
         this.doubleBridge = doubleBridge;
@@ -123,7 +116,7 @@ public class Bridge implements IBridge {
 
     /**
      * Gibt zurück, ob es sich um eine doppelte Brücke handelt.
-     * 
+     *
      * @return true, falls doppelte Brücke
      */
     public boolean isDoubleBridge() {
@@ -132,7 +125,7 @@ public class Bridge implements IBridge {
 
     /**
      * Gibt Ausrichtung der Brücke zurück.
-     * 
+     *
      * @return Ausrichtung - entweder horizontal oder vertikal
      */
     public Alignment getAlignment() {

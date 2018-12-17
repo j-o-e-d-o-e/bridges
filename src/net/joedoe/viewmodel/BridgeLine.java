@@ -1,18 +1,14 @@
 package net.joedoe.viewmodel;
 
-import static net.joedoe.utils.GameInfo.BRIDGE_OFFSET;
-import static net.joedoe.utils.GameInfo.BRIDGE_OVERLAP;
-import static net.joedoe.utils.GameInfo.ONE_TILE;
-import static net.joedoe.utils.GameInfo.STD_COLOR;
-
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import net.joedoe.utils.Alignment;
 import net.joedoe.utils.Coordinate;
 
+import static net.joedoe.utils.GameInfo.*;
+
 /**
  * Repräsentiert eine Brücke im View-Modell.
- *
  */
 public class BridgeLine {
     private final Coordinate start, end;
@@ -22,13 +18,10 @@ public class BridgeLine {
     /**
      * Brücke werden zwei Koordinaten übergeben und ein boolean, ob sie versetzt
      * platziert werden soll.
-     * 
-     * @param start
-     *            erste Koordinate
-     * @param end
-     *            zweite Koordinate
-     * @param offset
-     *            falls true, Linie wird versetzt platziert
+     *
+     * @param start  erste Koordinate
+     * @param end    zweite Koordinate
+     * @param offset falls true, Linie wird versetzt platziert
      */
     public BridgeLine(Coordinate start, Coordinate end, boolean offset) {
         this.start = start;
@@ -41,9 +34,8 @@ public class BridgeLine {
 
     /**
      * Übersetzt Koordinaten in {@link javafx.scene.layout.GridPane}.
-     * 
-     * @param offset
-     *            true, falls Linie versetzt platziert werden soll
+     *
+     * @param offset true, falls Linie versetzt platziert werden soll
      */
     private void translateToLayout(boolean offset) {
         if (alignment == Alignment.HORIZONTAL) {
@@ -62,9 +54,8 @@ public class BridgeLine {
 
     /**
      * Platziert Linie, die die Brücke repräsentiert, zentriert oder versetzt.
-     * 
-     * @param offset
-     *            true, Linie wird versetzt platziert - andernfalls zentriert
+     *
+     * @param offset true, Linie wird versetzt platziert - andernfalls zentriert
      */
     void setOffset(boolean offset) {
         if (alignment == Alignment.HORIZONTAL) {
@@ -83,11 +74,9 @@ public class BridgeLine {
     /**
      * Identifiziert, ob es sich um eine Brücke handelt, die die erste und zweite
      * Koordinate miteinander verbindet.
-     * 
-     * @param start
-     *            erste Koordinate
-     * @param end
-     *            zweite Koordinate
+     *
+     * @param start erste Koordinate
+     * @param end   zweite Koordinate
      * @return true, falls diese Brücke die beiden Koordinaten miteinander verbindet
      */
     public boolean contains(Coordinate start, Coordinate end) {
@@ -96,7 +85,7 @@ public class BridgeLine {
 
     /**
      * Gibt den x-Wert der Koordinate zurück, wo die Linie beginnt.
-     * 
+     *
      * @return x-Wert der Koordinate
      */
     public int getStartX() {
@@ -105,7 +94,7 @@ public class BridgeLine {
 
     /**
      * Gibt den y-Wert der Koordinate zurück, wo die Linie beginnt.
-     * 
+     *
      * @return y-Wert der Koordinate
      */
     public int getStartY() {
@@ -114,7 +103,7 @@ public class BridgeLine {
 
     /**
      * Gibt erste Koordinate der Brücke zurück.
-     * 
+     *
      * @return erste Koordinate
      */
     public Coordinate getStart() {
@@ -123,7 +112,7 @@ public class BridgeLine {
 
     /**
      * Gibt zweite Koordinate der Brücke zurück.
-     * 
+     *
      * @return zweite Koordinate
      */
     public Coordinate getEnd() {
@@ -139,7 +128,7 @@ public class BridgeLine {
 
     /**
      * Gibt die Linie zurück.
-     * 
+     *
      * @return Linie, die die Brücke im View repräsentiert
      */
     public Line getLine() {

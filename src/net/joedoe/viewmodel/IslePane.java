@@ -11,7 +11,6 @@ import static net.joedoe.utils.GameInfo.STD_COLOR;
 
 /**
  * Repräsentiert eine Insel im View.
- *
  */
 public class IslePane extends StackPane {
     private final Coordinate pos;
@@ -20,11 +19,9 @@ public class IslePane extends StackPane {
 
     /**
      * Insel werden Koordinate und Brücken-Anzahl übergeben.
-     * 
-     * @param pos
-     *            Koordinate, wo die Insel auf dem Raster platziert wird
-     * @param bridgeCount
-     *            Anzahl an Brücken, die sie anzeigt
+     *
+     * @param pos         Koordinate, wo die Insel auf dem Raster platziert wird
+     * @param bridgeCount Anzahl an Brücken, die sie anzeigt
      */
     public IslePane(Coordinate pos, int bridgeCount) {
         this.pos = pos;
@@ -35,7 +32,7 @@ public class IslePane extends StackPane {
 
     /**
      * Gibt x-Wert der Insel-Koordinate zurück.
-     * 
+     *
      * @return x-Wert der Insel-Koordinate
      */
     public int getX() {
@@ -44,7 +41,7 @@ public class IslePane extends StackPane {
 
     /**
      * Gibt y-Wert der Insel-Koordinate zurück.
-     * 
+     *
      * @return y-Wert der Insel-Koordinate
      */
     public int getY() {
@@ -53,7 +50,7 @@ public class IslePane extends StackPane {
 
     /**
      * Gibt Insel-Koordinate zurück.
-     * 
+     *
      * @return Insel-Koordinate
      */
     public Coordinate getPos() {
@@ -62,9 +59,8 @@ public class IslePane extends StackPane {
 
     /**
      * Legt die Zahl fest, die in der Insel angezeigt wird.
-     * 
-     * @param text
-     *            Anzahl an (fehlenden) Brücken
+     *
+     * @param text Anzahl an (fehlenden) Brücken
      */
     public void setText(String text) {
         label.setText(text);
@@ -72,9 +68,8 @@ public class IslePane extends StackPane {
 
     /**
      * Legt die Farbe der Insel fest.
-     * 
-     * @param color
-     *            Farbe des Insel-Kreises
+     *
+     * @param color Farbe des Insel-Kreises
      */
     public void setColor(Color color) {
         circle.setFill(color);

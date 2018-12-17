@@ -1,12 +1,12 @@
 package net.joedoe.entities;
 
 import net.joedoe.utils.Coordinate;
+
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Repräsentiert eine Insel im Modell.
- *
  */
 public class Isle implements IIsle, Comparable<Isle> {
     private final Coordinate pos;
@@ -17,11 +17,9 @@ public class Isle implements IIsle, Comparable<Isle> {
     /**
      * Neuer Insel werden die Koordinate, an der sie platziert ist, und die Anzahl
      * an zu verbindenden Brücken übergeben.
-     * 
-     * @param pos
-     *            Koordinate, wo die Insel platziert wird
-     * @param bridges
-     *            Anzahl an Brücken, die zu bauen sind
+     *
+     * @param pos     Koordinate, wo die Insel platziert wird
+     * @param bridges Anzahl an Brücken, die zu bauen sind
      */
     public Isle(Coordinate pos, int bridges) {
         this.pos = pos;
@@ -31,9 +29,8 @@ public class Isle implements IIsle, Comparable<Isle> {
 
     /**
      * Vermindert die Anzahl der fehlenden Brücken um eins bzw. zwei.
-     * 
-     * @param doubleBridge
-     *            falls true, um zwei vermindern
+     *
+     * @param doubleBridge falls true, um zwei vermindern
      */
     public void addBridge(boolean doubleBridge) {
         if (doubleBridge) missingBridges -= 2;
@@ -51,9 +48,8 @@ public class Isle implements IIsle, Comparable<Isle> {
      * Erhöht die Anzahl der zu bauenden Brücken um eins (einfache Brücke) oder zwei
      * (doppelte Brücke). Während der Generierung eines neuen Spiels in
      * {@link net.joedoe.logics.Generator} verwendet.
-     * 
-     * @param doubleBridge
-     *            falls true, dann um zwei erhöhen
+     *
+     * @param doubleBridge falls true, dann um zwei erhöhen
      */
     public void increaseBridges(boolean doubleBridge) {
         if (doubleBridge) bridges += 2;
@@ -64,9 +60,8 @@ public class Isle implements IIsle, Comparable<Isle> {
     /**
      * Fügt eine Nachbar-Inseln hinzu, die mit dieser Insel über eine Brücke
      * verbunden ist.
-     * 
-     * @param neighbour
-     *            benachbarte Insel, die mit dieser Insel verbunden ist
+     *
+     * @param neighbour benachbarte Insel, die mit dieser Insel verbunden ist
      */
     public void addNeighbour(Isle neighbour) {
         neighbours.add(neighbour);
@@ -75,9 +70,8 @@ public class Isle implements IIsle, Comparable<Isle> {
     /**
      * Entfernt eine Nachbar-Insel, die mit dieser Insel über eine Brücke verbunden
      * war.
-     * 
-     * @param neighbour
-     *            benachbarte Insel, die entfernt werden soll
+     *
+     * @param neighbour benachbarte Insel, die entfernt werden soll
      */
     public void removeNeighbour(Isle neighbour) {
         neighbours.remove(neighbour);
@@ -92,7 +86,7 @@ public class Isle implements IIsle, Comparable<Isle> {
 
     /**
      * Gibt Anzahl von insgesamt zu bauenden Brücken zurück.
-     * 
+     *
      * @return Anzahl an Brücken
      */
     public int getBridges() {
@@ -101,7 +95,7 @@ public class Isle implements IIsle, Comparable<Isle> {
 
     /**
      * Gibt Anzahl an fehlenden Brücken zurück.
-     * 
+     *
      * @return Anzahl an noch zu bauenden Brücken
      */
     public int getMissingBridges() {
@@ -110,7 +104,7 @@ public class Isle implements IIsle, Comparable<Isle> {
 
     /**
      * Gibt y-Wert der Insel-Koordinate zurück.
-     * 
+     *
      * @return y-Wert der Insel-Koordinate
      */
     public int getY() {
@@ -119,7 +113,7 @@ public class Isle implements IIsle, Comparable<Isle> {
 
     /**
      * Gibt x-Wert der Insel-Koordinate zurück.
-     * 
+     *
      * @return x-Wert der Insel-Koordinate
      */
     public int getX() {
@@ -128,7 +122,7 @@ public class Isle implements IIsle, Comparable<Isle> {
 
     /**
      * Gibt Koordinate dieser Insel zurück.
-     * 
+     *
      * @return Koordinate, an der diese Insel platziert ist
      */
     public Coordinate getPos() {

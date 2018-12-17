@@ -6,7 +6,7 @@ import net.joedoe.utils.Coordinate;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class IsleTest {
     private Isle startIsle, endIsle;

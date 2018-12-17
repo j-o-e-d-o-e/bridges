@@ -2,18 +2,15 @@ package net.joedoe.utils;
 
 /**
  * Koordinate auf dem Spielfeld.
- *
  */
 public class Coordinate implements Comparable<Coordinate> {
     private int y, x;
 
     /**
      * Koordinate wird ihr x- und y-Wert übergeben.
-     * 
-     * @param x
-     *            x-Wert der Koordinate
-     * @param y
-     *            y-Wert der Koordinate
+     *
+     * @param x x-Wert der Koordinate
+     * @param y y-Wert der Koordinate
      */
     public Coordinate(int x, int y) {
         this.y = y;
@@ -22,7 +19,7 @@ public class Coordinate implements Comparable<Coordinate> {
 
     /**
      * Gibt y-Wert der Koordinate zurück.
-     * 
+     *
      * @return y-Wert
      */
     public int getY() {
@@ -31,7 +28,7 @@ public class Coordinate implements Comparable<Coordinate> {
 
     /**
      * Gibt x-Wert der Koordinate zurück.
-     * 
+     *
      * @return x-Wert
      */
     public int getX() {

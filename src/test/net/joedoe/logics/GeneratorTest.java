@@ -1,21 +1,18 @@
 package test.net.joedoe.logics;
 
-import static net.joedoe.utils.GameInfo.MAX_HEIGHT;
-import static net.joedoe.utils.GameInfo.MAX_ISLES_COUNT;
-import static net.joedoe.utils.GameInfo.MAX_WIDTH;
-import static org.junit.Assert.assertEquals;
+import net.joedoe.entities.Isle;
+import net.joedoe.logics.Generator;
+import net.joedoe.utils.Coordinate;
+import net.joedoe.utils.Direction;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import net.joedoe.logics.Generator;
-import org.junit.Before;
-import org.junit.Test;
-
-import net.joedoe.entities.Isle;
-import net.joedoe.utils.Coordinate;
-import net.joedoe.utils.Direction;
+import static net.joedoe.utils.GameInfo.*;
+import static org.junit.Assert.assertEquals;
 
 public class GeneratorTest {
     private Generator generator;

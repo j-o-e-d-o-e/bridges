@@ -66,9 +66,9 @@ public class SolverTest {
     public void getEndIsle() {
         controller.addBridge(start, Direction.DOWN);
         List<Isle> connectables = solver.getConnectables(startIsle);
-    
+
         Isle endIsle = solver.getEndIsle(startIsle, connectables);
-    
+
         assertEquals(isles.get(8).getPos(), endIsle.getPos());
     }
 }

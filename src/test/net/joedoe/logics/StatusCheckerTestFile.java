@@ -1,11 +1,10 @@
 package test.net.joedoe.logics;
 
 import net.joedoe.logics.StatusChecker;
-
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 public class StatusCheckerTestFile extends FileHandlerTesting {
     private StatusChecker checker;
@@ -30,7 +29,7 @@ public class StatusCheckerTestFile extends FileHandlerTesting {
 
         assertTrue(checker.unsolvable());
     }
-    
+
     @Test
     public void puzzleDisconnected() {
         String file = "disconnected.bgs";

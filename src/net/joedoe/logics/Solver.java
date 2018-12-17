@@ -1,5 +1,10 @@
 package net.joedoe.logics;
 
+import net.joedoe.entities.Bridge;
+import net.joedoe.entities.IBridge;
+import net.joedoe.entities.Isle;
+import net.joedoe.utils.Direction;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,14 +13,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import net.joedoe.entities.Bridge;
-import net.joedoe.entities.IBridge;
-import net.joedoe.entities.Isle;
-import net.joedoe.utils.Direction;
-
 /**
  * Berechnet einen neuen Spielzug.
- *
  */
 public class Solver {
     private BridgeController controller;
@@ -26,9 +25,8 @@ public class Solver {
     /**
      * Wird {@link net.joedoe.logics.BridgeController} übergeben, um auf die
      * aktuellen Brücken zugreifen zu können.
-     * 
-     * @param controller
-     *            enthält Liste mit aktuellen Brücken
+     *
+     * @param controller enthält Liste mit aktuellen Brücken
      */
     public Solver(BridgeController controller) {
         this.controller = controller;
@@ -38,7 +36,7 @@ public class Solver {
 
     /**
      * Berechnet eine neue Brücke, die sicher hinzugefügt werden kann.
-     * 
+     *
      * @return neue Brücke
      */
     public IBridge getNextBridge() {
@@ -106,7 +104,7 @@ public class Solver {
     /**
      * Liste aller Inseln, denen mindestens eine Brücke fehlt, absteigend geordnet
      * nach Anzahl ihrer fehlenden Brücken.
-     * 
+     *
      * @return Liste von Inseln
      */
     public List<Isle> getStartIsles() {
@@ -118,9 +116,8 @@ public class Solver {
     /**
      * Gibt Liste von Nachbar-Inseln zurück, mit denen die 'startIsle' über eine
      * Brücke verbunden werden könnte.
-     * 
-     * @param startIsle
-     *            Insel, für die mögliche Nachbar-Inseln gesucht werden
+     *
+     * @param startIsle Insel, für die mögliche Nachbar-Inseln gesucht werden
      * @return Liste aller möglichen Nachbar-Inseln
      */
     public List<Isle> getConnectables(Isle startIsle) {
@@ -138,15 +135,13 @@ public class Solver {
      * Unzulässigkeit: Brückenkollision, doppelte Brücke bereits vorhanden, mögliche
      * Nachbar-Insel hat keine fehlenden Brücken mehr, die beiden Inseln dürfen
      * aufgrund von Isolationsverbot nicht miteinander verbunden werden.
-     * 
-     * @param startIsle
-     *            Insel, für die mögliche Nachbar-Insel zum Brückenbau gesucht
-     *            werden
-     * @param connectable
-     *            mögliche Nachbar-Insel, die mit 'startIsle' verbunden werden
-     *            könnte
+     *
+     * @param startIsle   Insel, für die mögliche Nachbar-Insel zum Brückenbau gesucht
+     *                    werden
+     * @param connectable mögliche Nachbar-Insel, die mit 'startIsle' verbunden werden
+     *                    könnte
      * @return true, falls die mögliche Nachbar-Insel eines der oben genannten
-     *         Kriterien erfüllt
+     * Kriterien erfüllt
      */
     private boolean invalidConnectable(Isle startIsle, Isle connectable) {
         Bridge bridge = controller.getBridge(startIsle.getPos(), connectable.getPos());
@@ -160,12 +155,10 @@ public class Solver {
     /**
      * Gibt Anzahl an benachbarten Inseln von 'startIsle' zurück, zu denen nur noch
      * eine Brücke gebaut werden kann.
-     * 
-     * @param startIsle
-     *            Insel, von der eine Brücke gebaut werden soll
-     * @param connectables
-     *            benachbarte Inseln von 'startIsle, zu denen eine Brücke gebaut
-     *            werden könnte
+     *
+     * @param startIsle    Insel, von der eine Brücke gebaut werden soll
+     * @param connectables benachbarte Inseln von 'startIsle, zu denen eine Brücke gebaut
+     *                     werden könnte
      * @return Anzahl an Inseln, zu denen maximal eine Brücke gebaut werden könnte
      */
     public int getConnectablesOneBridge(Isle startIsle, List<Isle> connectables) {
@@ -177,12 +170,10 @@ public class Solver {
     /**
      * Gibt die zweite Insel zurück, die über eine Brücke mit 'startIsle' verbunden
      * werden kann
-     * 
-     * @param startIsle
-     *            erste Insel einer neuen Brücke
-     * @param connectables
-     *            Liste mit möglichen Nachbar-Inseln, um eine neue Brücke ausgehend
-     *            von 'startIsle' zu bauen
+     *
+     * @param startIsle    erste Insel einer neuen Brücke
+     * @param connectables Liste mit möglichen Nachbar-Inseln, um eine neue Brücke ausgehend
+     *                     von 'startIsle' zu bauen
      * @return zweite Insel einer neuen Brücke ausgehend von 'startIsle'
      */
     public Isle getEndIsle(Isle startIsle, List<Isle> connectables) {

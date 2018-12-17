@@ -1,17 +1,16 @@
 package net.joedoe.viewmodel;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.views.IsleListener;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Verwaltet die aktuellen Brücken-Linien und Inseln im View.
- *
  */
 public class GridController {
     private List<IslePane> panes = new ArrayList<>();
@@ -21,9 +20,8 @@ public class GridController {
     /**
      * Wird Listener übergeben, um {@link net.joedoe.views.Grid} über angeklickte
      * Insel zu benachrichtigen.
-     * 
-     * @param listener
-     *            beobachtet Inseln auf Klicks
+     *
+     * @param listener beobachtet Inseln auf Klicks
      */
     public GridController(IsleListener listener) {
         this.listener = listener;
@@ -35,9 +33,8 @@ public class GridController {
      * Brücke existiert, wird eine zweite hinzugefügt und beide versetzt platziert.
      * Falls keine Brücke existiert, die die beiden Koordinaten miteinander
      * verbindet, wird eine neue, zentrierte Brücke hinzugefügt.
-     * 
-     * @param bridge
-     *            hinzuzufügende Brücke (Modell)
+     *
+     * @param bridge hinzuzufügende Brücke (Modell)
      */
     public BridgeLine addLine(IBridge bridge) {
         updateLines();
@@ -67,9 +64,8 @@ public class GridController {
      * dargestellt. Falls eine Brücke existiert, wird diese entfernt. Falls keine
      * Brücke existiert, die die beiden Koordinaten miteinander verbindet, wird die
      * Methode beendet.
-     * 
-     * @param bridge
-     *            zu entferndende Brücke (Modell)
+     *
+     * @param bridge zu entferndende Brücke (Modell)
      */
     public BridgeLine removeLine(IBridge bridge) {
         updateLines();
@@ -97,13 +93,11 @@ public class GridController {
 
     /**
      * Gibt alle Brücken-Linien zurück, die die beiden Koordinaten enthalten.
-     * 
-     * @param start
-     *            erste Koordinate
-     * @param end
-     *            zweite Koordinate
+     *
+     * @param start erste Koordinate
+     * @param end   zweite Koordinate
      * @return Liste mit Brücken-Linien (View), die die beiden Koordinaten
-     *         miteinander verbinden
+     * miteinander verbinden
      */
     private List<BridgeLine> getLines(Coordinate start, Coordinate end) {
         return lines.stream().filter(bridge -> bridge.contains(start, end)).collect(Collectors.toList());
@@ -119,9 +113,8 @@ public class GridController {
 
     /**
      * Lädt Brücken-Linien.
-     * 
-     * @param bridges
-     *            Liste mit zu ladenen Brücken
+     *
+     * @param bridges Liste mit zu ladenen Brücken
      */
     public void setLines(List<IBridge> bridges) {
         for (IBridge bridge : bridges) {
@@ -139,7 +132,7 @@ public class GridController {
 
     /**
      * Gibt aktuelle Brücken-Linien zurück.
-     * 
+     *
      * @return Liste mit aktuellen Brücken-Linien.
      */
     public List<BridgeLine> getLines() {
@@ -148,9 +141,8 @@ public class GridController {
 
     /**
      * Lädt Inseln im View.
-     * 
-     * @param isles
-     *            Liste mit zu ladenen Inseln
+     *
+     * @param isles Liste mit zu ladenen Inseln
      */
     public void setPanes(List<IIsle> isles) {
         for (IIsle i : isles) {
@@ -162,7 +154,7 @@ public class GridController {
 
     /**
      * Gibt Inseln zurück.
-     * 
+     *
      * @return Liste mit aktuellen Inseln
      */
     public List<IslePane> getPanes() {

@@ -13,7 +13,6 @@ import static net.joedoe.utils.GameInfo.ONE_TILE;
 
 /**
  * Implementierung der Klick-Sektoren.
- *
  */
 public class IsleListener implements EventHandler<MouseEvent> {
     private Grid grid;
@@ -23,9 +22,8 @@ public class IsleListener implements EventHandler<MouseEvent> {
     /**
      * Wird {@link net.joedoe.views.Grid} übergeben, die aufgerufen wird,
      * nachdem die Insel und ihr angeglickter Klick-Sektor ermittelt wurde.
-     * 
-     * @param grid
-     *            wird nach Ermittlung des Klick-Sektors aufgerufen
+     *
+     * @param grid wird nach Ermittlung des Klick-Sektors aufgerufen
      */
     IsleListener(Grid grid) {
         this.grid = grid;

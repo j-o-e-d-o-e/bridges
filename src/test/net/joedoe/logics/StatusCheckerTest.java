@@ -1,19 +1,18 @@
 package test.net.joedoe.logics;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-
+import net.joedoe.entities.IIsle;
 import net.joedoe.logics.BridgeController;
 import net.joedoe.logics.StatusChecker;
-import org.junit.Before;
-import org.junit.Test;
-
-import net.joedoe.entities.IIsle;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
 import net.joedoe.utils.Mocks;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class StatusCheckerTest {
     private StatusChecker checker;

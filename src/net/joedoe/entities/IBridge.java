@@ -4,7 +4,6 @@ import net.joedoe.utils.Coordinate;
 
 /**
  * Interface zur Speicherung und Injektion von Brücken.
- *
  */
 public interface IBridge {
 

@@ -1,27 +1,11 @@
 package net.joedoe.views;
 
-import static net.joedoe.utils.GameInfo.ALERT_COLOR;
-import static net.joedoe.utils.GameInfo.ONE_TILE;
-import static net.joedoe.utils.GameInfo.SOLVED_COLOR;
-import static net.joedoe.utils.GameInfo.STD_COLOR;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.IntStream;
-
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
 import net.joedoe.logics.AutoSolver;
@@ -33,9 +17,14 @@ import net.joedoe.viewmodel.BridgeLine;
 import net.joedoe.viewmodel.GridController;
 import net.joedoe.viewmodel.IslePane;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.IntStream;
+
+import static net.joedoe.utils.GameInfo.*;
+
 /**
  * Das Raster, auf dem Inseln und Brücken platziert werden.
- *
  */
 class Grid extends GridPane {
     private GridController gridController;
@@ -51,17 +40,12 @@ class Grid extends GridPane {
      * {@link net.joedoe.views.MainFrame} benachrichtigt, übergeben sowie die Breite
      * und Höhe des Spielfelds und die Listen mit den zu platzierenden Inseln und
      * Brücken.
-     * 
-     * @param statusListener
-     *            Listener, der die Status-Zeile benachrichtigt
-     * @param width
-     *            Breite des Spielfelds
-     * @param height
-     *            Höhe des Spielfelds
-     * @param isles
-     *            Liste mit den zu platzierenden Inseln
-     * @param bridges
-     *            Liste mit den zu platzierenden Brücken
+     *
+     * @param statusListener Listener, der die Status-Zeile benachrichtigt
+     * @param width          Breite des Spielfelds
+     * @param height         Höhe des Spielfelds
+     * @param isles          Liste mit den zu platzierenden Inseln
+     * @param bridges        Liste mit den zu platzierenden Brücken
      */
     Grid(EventHandler<StatusEvent> statusListener, int width, int height, List<IIsle> isles, List<IBridge> bridges) {
         // setGridLinesVisible(true);
@@ -89,11 +73,9 @@ class Grid extends GridPane {
     /**
      * Fügt eine neue Brücken-Linie hinzu, falls möglich. Aufgerufen von
      * {@link net.joedoe.views.IsleListener}.
-     * 
-     * @param isle
-     *            Insel (View), die vom Nutzer angeklickt wurde
-     * @param direction
-     *            Richtung, in die der Nutzer mittels Klick-Sektor geklickt hat
+     *
+     * @param isle      Insel (View), die vom Nutzer angeklickt wurde
+     * @param direction Richtung, in die der Nutzer mittels Klick-Sektor geklickt hat
      */
     void addBridge(IslePane isle, Direction direction) {
         IBridge bridge = controller.addBridge(isle.getPos(), direction);
@@ -103,9 +85,8 @@ class Grid extends GridPane {
 
     /**
      * Fügt eine neue Brücken-Linie hinzu, falls möglich.
-     * 
-     * @param bridge
-     *            hinzuzufügende Brücke (Modell)
+     *
+     * @param bridge hinzuzufügende Brücke (Modell)
      */
     private void addBridge(IBridge bridge) {
         BridgeLine line = gridController.addLine(bridge);
@@ -118,11 +99,9 @@ class Grid extends GridPane {
     /**
      * Entfernt Brücken-Linie, falls möglich. Aufgerufen von
      * {@link net.joedoe.views.IsleListener}.
-     * 
-     * @param isle
-     *            Insel (View), die vom Nutzer angeklickt wurde
-     * @param direction
-     *            Richtung, in die der Nutzer mittels Klick-Sektor geklickt hat
+     *
+     * @param isle      Insel (View), die vom Nutzer angeklickt wurde
+     * @param direction Richtung, in die der Nutzer mittels Klick-Sektor geklickt hat
      */
     void removeBridge(IslePane isle, Direction direction) {
         IBridge bridge = controller.removeBridge(isle.getPos(), direction);
@@ -132,9 +111,8 @@ class Grid extends GridPane {
 
     /**
      * Entfernt Brücken-Linie, falls möglich.
-     * 
-     * @param bridge
-     *            zu entferndende Brücke (Modell)
+     *
+     * @param bridge zu entferndende Brücke (Modell)
      */
     private void removeBridge(IBridge bridge) {
         BridgeLine line = gridController.removeLine(bridge);
@@ -180,9 +158,8 @@ class Grid extends GridPane {
 
     /**
      * Lädt Inseln.
-     * 
-     * @param isles
-     *            Liste mit zu ladenen Inseln
+     *
+     * @param isles Liste mit zu ladenen Inseln
      */
     private void setIsles(List<IIsle> isles) {
         controller.setIsles(isles);
@@ -193,9 +170,8 @@ class Grid extends GridPane {
 
     /**
      * Lädt Brücken.
-     * 
-     * @param bridges
-     *            Liste mit zu ladenen Brücken
+     *
+     * @param bridges Liste mit zu ladenen Brücken
      */
     private void setBridges(List<IBridge> bridges) {
         controller.setBridges(bridges);
@@ -208,9 +184,8 @@ class Grid extends GridPane {
     /**
      * Legt fest, ob die Anzahl der Brücken insgesamt oder nur der fehlenden Brücken
      * angezeigt werden soll.
-     * 
-     * @param showMissingBridges
-     *            falls true, werden die fehlenden Brücken angezeigt
+     *
+     * @param showMissingBridges falls true, werden die fehlenden Brücken angezeigt
      */
     void setShowMissingBridges(boolean showMissingBridges) {
         this.showMissingBridges = showMissingBridges;
@@ -262,7 +237,7 @@ class Grid extends GridPane {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) alert.close();
     }
-    
+
 
     /**
      * Startet Simulation zur Berechnung neuer Brücken, die sicher hinzugefügt
@@ -290,7 +265,7 @@ class Grid extends GridPane {
 
     /**
      * Gibt zurück, ob {@link net.joedoe.logics.AutoSolver} aktuell läuft.
-     * 
+     *
      * @return true, falls {@link net.joedoe.logics.AutoSolver} aktuell läuft
      */
     boolean autoSolverIsRunning() {

@@ -7,7 +7,6 @@ import net.joedoe.views.MainFrame;
 
 /**
  * Start-Klasse der Applikation.
- *
  */
 public class Main extends Application {
 

@@ -13,7 +13,6 @@ import static net.joedoe.utils.GameInfo.*;
 
 /**
  * Dialog zur Generierung eines neuen Spiels.
- *
  */
 class NewGameFrame extends Stage {
     private Board board;
@@ -27,10 +26,9 @@ class NewGameFrame extends Stage {
      * Erzeugt einen Dialog, in dem der Nutzer Angaben bzgl. Breite und Höhe des
      * Spielfelds sowie Anzahl der zu platzierenden Inseln tätigt, um ein neues
      * Spiel zu erzeugen.
-     * 
-     * @param board
-     *            Spielfeld, an das die Daten des generierten Spiels zurückgegeben
-     *            werden
+     *
+     * @param board Spielfeld, an das die Daten des generierten Spiels zurückgegeben
+     *              werden
      */
     NewGameFrame(Board board) {
         this.board = board;

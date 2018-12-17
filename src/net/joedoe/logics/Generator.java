@@ -1,5 +1,13 @@
 package net.joedoe.logics;
 
+import net.joedoe.entities.Bridge;
+import net.joedoe.entities.IBridge;
+import net.joedoe.entities.IIsle;
+import net.joedoe.entities.Isle;
+import net.joedoe.utils.Alignment;
+import net.joedoe.utils.Coordinate;
+import net.joedoe.utils.Direction;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,18 +17,10 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import net.joedoe.entities.Bridge;
-import net.joedoe.entities.IBridge;
-import net.joedoe.entities.IIsle;
-import net.joedoe.entities.Isle;
-import net.joedoe.utils.Alignment;
-import net.joedoe.utils.Coordinate;
-import net.joedoe.utils.Direction;
 import static net.joedoe.utils.GameInfo.*;
 
 /**
  * Generiert ein neues Spiel.
- *
  */
 public class Generator {
     private BridgeDetector detector;
@@ -76,11 +76,10 @@ public class Generator {
 
     /**
      * Gibt Insel zurück, zu der eine Brücke gebaut werden kann.
-     * 
-     * @param startIsle
-     *            Insel, von der ausgehend eine Brücke gebaut werden soll
+     *
+     * @param startIsle Insel, von der ausgehend eine Brücke gebaut werden soll
      * @return zweite Insel, die eine neue Brücke mit der ersten Insel 'startIsle'
-     *         verbindet
+     * verbindet
      */
     private Isle getEndIsle(Isle startIsle) {
         for (Direction direction : getDirections(startIsle))
@@ -119,9 +118,8 @@ public class Generator {
 
     /**
      * Gibt mögliche Richtungen ausgehend von einer Insel zurück.
-     * 
-     * @param startIsle
-     *            Insel, von der ausgehend die möglichen Richtungen gesucht werden
+     *
+     * @param startIsle Insel, von der ausgehend die möglichen Richtungen gesucht werden
      * @return Liste mit möglichen Richtungen
      */
     public List<Direction> getDirections(Isle startIsle) {
@@ -137,10 +135,8 @@ public class Generator {
     /**
      * Gibt mögliche Distanzen ausgehend von einer Insel und einer Richtung zurück.
      *
-     * @param startIsle
-     *            Insel, von der ausgehend die möglichen Distanzen gesucht werden
-     * @param direction
-     *            Richtung, in der die möglichen Distanzen gesucht werden
+     * @param startIsle Insel, von der ausgehend die möglichen Distanzen gesucht werden
+     * @param direction Richtung, in der die möglichen Distanzen gesucht werden
      * @return Liste mit möglichen Distanzen
      */
     public List<Integer> getDistances(Isle startIsle, Direction direction) {
@@ -157,11 +153,9 @@ public class Generator {
     /**
      * Checkt, ob eine neue Brücke mit einer bereits existierenden Insel oder Brücke
      * kollidiert.
-     * 
-     * @param start
-     *            erste Koordinate einer neuen Brücke
-     * @param end
-     *            zweite Koordinate einer neuen Brücke
+     *
+     * @param start erste Koordinate einer neuen Brücke
+     * @param end   zweite Koordinate einer neuen Brücke
      * @return true, falls neue Brücke kollidiert
      */
     private boolean collides(Coordinate start, Coordinate end) {
@@ -174,11 +168,9 @@ public class Generator {
 
     /**
      * Checkt, ob neue Brücke mit einer existierenden Insel kollidiert.
-     * 
-     * @param start
-     *            erste Koordinate einer neuen Brücke
-     * @param end
-     *            zweite Koordinate einer neuen Brücke
+     *
+     * @param start erste Koordinate einer neuen Brücke
+     * @param end   zweite Koordinate einer neuen Brücke
      * @return true, falls neue Brücke kollidiert
      */
     private boolean collidesIsles(Coordinate start, Coordinate end) {
@@ -188,9 +180,8 @@ public class Generator {
 
     /**
      * Erstellt neue Insel.
-     * 
-     * @param pos
-     *            Koordinate, an der die neue Insel platziert wird
+     *
+     * @param pos Koordinate, an der die neue Insel platziert wird
      * @return neue Insel
      */
     private Isle createIsle(Coordinate pos) {
@@ -208,13 +199,10 @@ public class Generator {
 
     /**
      * Erstellt neue Brücke.
-     * 
-     * @param startIsle
-     *            erste Insel der neuen Brücke
-     * @param endIsle
-     *            zweite Insel der neuen BRücke
-     * @param doubleBridge
-     *            true, falls doppelte Brücke - ansonsten false
+     *
+     * @param startIsle    erste Insel der neuen Brücke
+     * @param endIsle      zweite Insel der neuen BRücke
+     * @param doubleBridge true, falls doppelte Brücke - ansonsten false
      * @return neue Brücke
      */
     private Bridge createBridge(Isle startIsle, Isle endIsle, boolean doubleBridge) {
@@ -278,7 +266,7 @@ public class Generator {
 
     /**
      * Gibt die Breite des Spielfelds zurück.
-     * 
+     *
      * @return Breite des Spielfelds
      */
     public int getWidth() {
@@ -287,7 +275,7 @@ public class Generator {
 
     /**
      * Gibt die Höhe des Spielfelds zurück.
-     * 
+     *
      * @return Höhe des Spielfelds
      */
     public int getHeight() {
@@ -296,7 +284,7 @@ public class Generator {
 
     /**
      * Gibt die Anzahl der zu platzierenden Inseln zurück.
-     * 
+     *
      * @return Insel-Anzahl
      */
     public int getIsleCount() {
@@ -305,7 +293,7 @@ public class Generator {
 
     /**
      * Gibt generierte Inseln zurück.
-     * 
+     *
      * @return Liste von Inseln
      */
     public List<IIsle> getIsles() {
@@ -315,20 +303,19 @@ public class Generator {
 
     /**
      * Gibt generierte Brücken zurück (als Musterlösung).
-     * 
+     *
      * @return Liste von Brücken
      */
     public List<IBridge> getBridges() {
-         return new ArrayList<>(bridges);
+        return new ArrayList<>(bridges);
     }
 
     /**
      * Legt die Liste mit (noch) verfügbaren Koordinaten als Ganzzahlen fest, wo
      * neue Inseln und Brücken platziert werden können. Zum Testen einzelner
      * Methoden.
-     * 
-     * @param indices
-     *            Liste mit Ganzzahlen, die die Koordinaten repräsentieren
+     *
+     * @param indices Liste mit Ganzzahlen, die die Koordinaten repräsentieren
      */
     public void setIndices(List<Integer> indices) {
         this.indices = indices;

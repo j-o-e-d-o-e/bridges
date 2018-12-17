@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 
 /**
  * Prüft den Spielstatus.
- *
  */
 public class StatusChecker {
     private BridgeController controller;
@@ -24,9 +23,8 @@ public class StatusChecker {
     /**
      * Wird {@link net.joedoe.logics.BridgeController} übergeben, um auf die aktuellen
      * Brücken zugreifen zu können.
-     * 
-     * @param controller
-     *            enthält Liste mit aktuellen Brücken
+     *
+     * @param controller enthält Liste mit aktuellen Brücken
      */
     public StatusChecker(BridgeController controller) {
         this.controller = controller;
@@ -37,7 +35,7 @@ public class StatusChecker {
     /**
      * Prüft, ob der aktuelle Spielstatus Fehler enthält. Spiel enthält einen
      * Fehler, falls eine Brücke mehr Brücken aufweist als gefordert.
-     * 
+     *
      * @return true, falls eine Insel mehr Brücken als gefordert hat
      */
     public boolean error() {
@@ -51,9 +49,9 @@ public class StatusChecker {
      * Nachbarn insgesamt noch haben können ('isolated') oder falls eine
      * Insel-Gruppe ihre geforderte Anzahl an Brücken hat, aber vom Rest-Graphen
      * abgekopppelt ist ('disconnected')
-     * 
+     *
      * @return true, falls eine Insel isoliert ist oder nicht alle Inseln indirekt
-     *         miteinander verbunden sind
+     * miteinander verbunden sind
      */
     public boolean unsolvable() {
         List<Isle> isles = controller.getIsles();
@@ -64,9 +62,8 @@ public class StatusChecker {
     /**
      * Prüft, ob eine einzelne Insel mehr fehlende Brücken hat als ihre Nachbarn
      * insgesamt noch haben können.
-     * 
-     * @param startIsle
-     *            die betrachtete Insel
+     *
+     * @param startIsle die betrachtete Insel
      * @return true, falls betrachtete Insel isoliert ist
      */
     private boolean isolated(Isle startIsle) {
@@ -87,9 +84,8 @@ public class StatusChecker {
     /**
      * Prüft, ob eine Insel-Gruppe, in der alle Inseln keine fehlenden Brücken mehr
      * aufweisen, vom Rest-Graphen abgekoppelt ist.
-     * 
-     * @param isles
-     *            Liste aller aktuellen Inseln
+     *
+     * @param isles Liste aller aktuellen Inseln
      * @return true, falls eine Insel-Gruppe isoliert ist
      */
     private boolean disconnected(List<Isle> isles) {
@@ -115,9 +111,9 @@ public class StatusChecker {
      * Prüft, ob das Spiel im aktuellen Zustand gelöst ist. Spiel ist gelöst, falls
      * alle Inseln so viele Brücken wie gefordert haben und direkt oder indirekt
      * miteinander verbunden sind
-     * 
+     *
      * @return true, falls alle Inseln so viele Brücken wie gefordert haben und
-     *         direkt oder indirekt miteinander verbunden sind
+     * direkt oder indirekt miteinander verbunden sind
      */
     public boolean solved() {
         List<Isle> isles = controller.getIsles();
@@ -135,12 +131,10 @@ public class StatusChecker {
     /**
      * Prüft, ob alle Inseln indirekt miteinander verbunden sind. Iteriert rekursiv
      * über die Insel-Nachbarn und deren Nachbarn.
-     * 
-     * @param isle
-     *            Start-Insel, deren Nachbarn gesucht werden
-     * @param connected
-     *            Liste von Inseln, mit denen die Start-Insel direkt oder indirekt
-     *            verbunden ist
+     *
+     * @param isle      Start-Insel, deren Nachbarn gesucht werden
+     * @param connected Liste von Inseln, mit denen die Start-Insel direkt oder indirekt
+     *                  verbunden ist
      */
     private void connected(Isle isle, Set<Isle> connected) {
         for (Isle neighbour : isle.getNeighbours()) {

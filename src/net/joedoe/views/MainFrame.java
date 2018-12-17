@@ -1,22 +1,9 @@
- package net.joedoe.views;
-
-import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Optional;
+package net.joedoe.views;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -24,9 +11,14 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.joedoe.utils.FileHandler;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
+
+import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
+
 /**
  * Das Hauptfenster, das das Spielfeld und die Steuerung enthält.
- *
  */
 public class MainFrame extends BorderPane {
     private Stage window;
@@ -39,9 +31,8 @@ public class MainFrame extends BorderPane {
     /**
      * Erzeugt das Hauptfenster und die darin enthaltene Menüleiste, Spielsteuerung
      * sowie das Spielfeld.
-     * 
-     * @param window
-     *            schließt die Appplikation und erzeugt neue Dialoge
+     *
+     * @param window schließt die Appplikation und erzeugt neue Dialoge
      */
     public MainFrame(Stage window) {
         this.window = window;

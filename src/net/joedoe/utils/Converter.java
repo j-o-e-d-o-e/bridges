@@ -1,25 +1,23 @@
 package net.joedoe.utils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
 import net.joedoe.logics.BridgeController;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Konvertiert Spiel-Daten in Daten zum Speichern im .bgs-Format.
- *
  */
 public class Converter {
     private static GameData gameData = GameData.getInstance();
 
     /**
      * Legt Insel-Anzahl und Inseln zum Speichern fest.
-     * 
-     * @param isles
-     *            Liste mit den aktuellen Inseln
+     *
+     * @param isles Liste mit den aktuellen Inseln
      */
     public static void convertIslesToData(List<IIsle> isles) {
         gameData.setIslesCount(isles.size());
@@ -29,9 +27,8 @@ public class Converter {
     /**
      * Konvertiert Brücken zu Objects, die jeweils aus den Indizes der beiden Inseln
      * bestehen und einem boolean, ob es sich um eine doppelte Brücke handelt.
-     * 
-     * @param controller
-     *            enthält Listen der aktuellen Brücken und Inseln
+     *
+     * @param controller enthält Listen der aktuellen Brücken und Inseln
      */
     public static void convertBridgesToData(BridgeController controller) {
         List<IBridge> bridges = new ArrayList<>(controller.getBridges());

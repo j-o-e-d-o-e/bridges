@@ -8,14 +8,13 @@ import net.joedoe.entities.IIsle;
 import net.joedoe.utils.GameData;
 import net.joedoe.utils.Mocks;
 
-import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
-
 import java.util.List;
+
+import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 
 /**
  * Spielfeld, das das Raster enthält, auf dem Inseln und Brücken platziert
  * werden, und dessen Erstellung und Größe verwaltet.
- *
  */
 class Board extends StackPane {
     private Grid grid;
@@ -28,9 +27,8 @@ class Board extends StackPane {
      * Board wird Listener übergeben, um die Statuszeile im
      * {@link net.joedoe.views.MainFrame} über Änderungen zu benachrichtigen. Es
      * erzeugt das Raster, auf dem die Inseln und Brücken platziert werden.
-     * 
-     * @param statusListener
-     *            Listener, über den die Statuszeile über Änderungen informiert wird
+     *
+     * @param statusListener Listener, über den die Statuszeile über Änderungen informiert wird
      */
     Board(EventHandler<StatusEvent> statusListener) {
         this.width = Mocks.WIDTH;
@@ -46,15 +44,11 @@ class Board extends StackPane {
 
     /**
      * Erzeugt neues Raster mit generierten Spiel-Daten.
-     * 
-     * @param width
-     *            Breite des Spielfelds
-     * @param height
-     *            Höhe des Spielfelds
-     * @param isles
-     *            Inseln, die auf dem Spielfeld platziert werden
-     * @param bridges
-     *            Brücken, die auf dem Spielfeld platziert werden
+     *
+     * @param width   Breite des Spielfelds
+     * @param height  Höhe des Spielfelds
+     * @param isles   Inseln, die auf dem Spielfeld platziert werden
+     * @param bridges Brücken, die auf dem Spielfeld platziert werden
      */
     void setGrid(int width, int height, List<IIsle> isles, List<IBridge> bridges) {
         this.width = width;
@@ -75,9 +69,8 @@ class Board extends StackPane {
 
     /**
      * Leitet Nutzer-Eingabe an {@link net.joedoe.views.Grid} weiter.
-     * 
-     * @param selected
-     *            true, falls fehlende Brücken angezeigt werden sollen
+     *
+     * @param selected true, falls fehlende Brücken angezeigt werden sollen
      */
     void setShowMissingBridges(boolean selected) {
         showMissingBridges = selected;
@@ -119,7 +112,7 @@ class Board extends StackPane {
 
     /**
      * Gibt zurück, ob {@link net.joedoe.logics.AutoSolver} aktuell läuft.
-     * 
+     *
      * @return true, falls {@link net.joedoe.logics.AutoSolver} aktuell läuft
      */
     boolean autoSolverIsRunning() {

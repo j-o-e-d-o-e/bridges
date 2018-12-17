@@ -1,17 +1,16 @@
 package net.joedoe.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.joedoe.entities.Bridge;
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
 import net.joedoe.entities.Isle;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Enthält Beispiel-Spieldaten, die beim Start der Applikation geladen werden
  * und u.a. für Tests genutzt werden.
- *
  */
 public class Mocks {
     public static final int WIDTH = 7;

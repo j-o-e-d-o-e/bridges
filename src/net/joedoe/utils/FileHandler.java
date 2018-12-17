@@ -1,34 +1,30 @@
 package net.joedoe.utils;
 
+import net.joedoe.entities.Bridge;
+import net.joedoe.entities.IBridge;
+import net.joedoe.entities.IIsle;
+import net.joedoe.entities.Isle;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.joedoe.entities.Bridge;
-import net.joedoe.entities.IBridge;
-import net.joedoe.entities.IIsle;
-import net.joedoe.entities.Isle;
-
 import static net.joedoe.utils.GameInfo.*;
 
 /**
  * Lädt bzw. speichert Daten in bzw. aus dem .bgs-Format.
- *
  */
 public class FileHandler {
     private static GameData gameData = GameData.getInstance();
 
     /**
      * Lädt Spiel-Daten aus Datei.
-     * 
-     * @param filepath
-     *            Dateipfad der Lade-Datei
-     * @throws IOException
-     *             falls Ausnahme beim Auslesen auftritt
-     * @throws IllegalArgumentException
-     *             falls Datei semantische oder syntaktische Fehler aufweist
+     *
+     * @param filepath Dateipfad der Lade-Datei
+     * @throws IOException              falls Ausnahme beim Auslesen auftritt
+     * @throws IllegalArgumentException falls Datei semantische oder syntaktische Fehler aufweist
      */
     public static void loadGame(String filepath) throws IOException, IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
@@ -55,9 +51,8 @@ public class FileHandler {
 
     /**
      * Syntaktische Fehlerüberprüfung.
-     * 
-     * @param line
-     *            zu überprüfender, eingelesene Zeile
+     *
+     * @param line zu überprüfender, eingelesene Zeile
      * @return true, falls keine syntaktischen Fehler enthalten sind
      */
     private static boolean valid(String line) {
@@ -68,11 +63,9 @@ public class FileHandler {
 
     /**
      * Semantische Fehlerüberprüfung und Laden der Spieldaten.
-     * 
-     * @param input
-     *            ausgelesener String
-     * @throws IllegalArgumentException
-     *             falls semantische Fehler vorhanden sind
+     *
+     * @param input ausgelesener String
+     * @throws IllegalArgumentException falls semantische Fehler vorhanden sind
      */
     private static void loadData(String input) throws IllegalArgumentException {
         // 'FIELD'-Sektion
@@ -129,11 +122,9 @@ public class FileHandler {
 
     /**
      * Speichert Spiel-Daten in Datei.
-     * 
-     * @param filepath
-     *            Dateipfad zu der Speicher-Datei.
-     * @throws IOException
-     *             falls Ausnahme beim Einlesen auftritt
+     *
+     * @param filepath Dateipfad zu der Speicher-Datei.
+     * @throws IOException falls Ausnahme beim Einlesen auftritt
      */
     public static void saveGame(String filepath) throws IOException {
         BufferedWriter out = new BufferedWriter(new FileWriter(filepath));
@@ -143,7 +134,7 @@ public class FileHandler {
 
     /**
      * Erzeugt Inhalt mit den zu speichernden Daten.
-     * 
+     *
      * @return Inhalt der zu speichernden Daten
      */
     private static String saveData() {

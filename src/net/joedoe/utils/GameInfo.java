@@ -4,7 +4,6 @@ import javafx.scene.paint.Color;
 
 /**
  * Enthält Konstanten zur Darstellung und zur Spiellogik.
- *
  */
 public class GameInfo {
     // Darstellung

@@ -14,7 +14,7 @@ public class SolverTestFile extends FileHandlerTesting {
     public void setUp() {
         solver = new Solver(controller);
     }
-    
+
     private void solve() {
         IBridge next = solver.getNextBridge();
         while (next != null)
@@ -34,7 +34,7 @@ public class SolverTestFile extends FileHandlerTesting {
         String res = convertResultToString(file);
         assertEquals(exp, res);
     }
-    
+
     @Test
     public void puzzle25x25() {
         String file = "25x25.bgs";
@@ -47,7 +47,7 @@ public class SolverTestFile extends FileHandlerTesting {
         String res = convertResultToString(file);
         assertEquals(exp, res);
     }
-    
+
     @Test
     public void puzzle4ones() {
         String file = "4ones.bgs";

@@ -1,19 +1,21 @@
-package net.joedoe.logics;
+package test.net.joedoe.logics;
 
-import net.joedoe.logics.Generator;
-import net.joedoe.entities.Isle;
-import net.joedoe.utils.Coordinate;
-import net.joedoe.utils.Direction;
-import org.junit.Before;
-import org.junit.Test;
+import static net.joedoe.utils.GameInfo.MAX_HEIGHT;
+import static net.joedoe.utils.GameInfo.MAX_ISLES_COUNT;
+import static net.joedoe.utils.GameInfo.MAX_WIDTH;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static net.joedoe.utils.GameInfo.*;
+import net.joedoe.logics.Generator;
+import org.junit.Before;
+import org.junit.Test;
+
+import net.joedoe.entities.Isle;
+import net.joedoe.utils.Coordinate;
+import net.joedoe.utils.Direction;
 
 public class GeneratorTest {
     private Generator generator;
@@ -21,19 +23,15 @@ public class GeneratorTest {
     @Before
     public void setUp() {
         generator = new Generator();
-        generator.setHeight(MAX_HEIGHT);
-        generator.setWidth(MAX_WIDTH);
-        generator.setIslesCount(MAX_ISLES_COUNT);
+        generator.setData(MAX_WIDTH, MAX_HEIGHT, MAX_ISLES_COUNT);
         generator.setIndices(IntStream.range(0, MAX_WIDTH * MAX_HEIGHT).boxed().collect(Collectors.toList()));
     }
 
     @Test
     public void generateGame() {
-        int initialIsleCount = generator.getIsleCount();
-
         generator.generateGame();
 
-        assertEquals(initialIsleCount, generator.getIsles().size());
+        assertEquals(generator.getIsleCount(), generator.getIsles().size());
     }
 
     @Test
@@ -71,15 +69,5 @@ public class GeneratorTest {
         List<Integer> distances = generator.getDistances(startIsle, direction);
 
         assertEquals(8, distances.size());
-    }
-
-    @Test
-    public void collidesIsles() {
-        Isle isle = generator.createIsle(new Coordinate(3, 3));
-        generator.getIsles().add(isle);
-
-        boolean collides = generator.collidesIsles(new Coordinate(0,3), new Coordinate(6,3));
-
-        assertTrue(collides);
     }
 }

@@ -1,7 +1,8 @@
-package net.joedoe.logics;
+package test.net.joedoe.logics;
 
+import net.joedoe.entities.IIsle;
 import net.joedoe.entities.Isle;
-import net.joedoe.logics.GridController;
+import net.joedoe.logics.BridgeController;
 import net.joedoe.logics.Solver;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
@@ -15,24 +16,26 @@ import static org.junit.Assert.assertEquals;
 
 public class SolverTest {
     private Solver solver;
-    private GridController controller;
-    private Coordinate start;
+    private BridgeController controller;
+    private List<IIsle> isles;
     private Isle startIsle;
+    private Coordinate start;
 
     @Before
     public void setUp() {
-        controller = new GridController();
-        controller.setIsles(Mocks.ISLES);
+        controller = new BridgeController();
+        isles = Mocks.getIsles();
+        controller.setIsles(isles);
         solver = new Solver(controller);
-        start = (Coordinate) Mocks.ISLES[0][0];
-        startIsle = controller.getIsle(start);
+        startIsle = (Isle) isles.get(0);
+        start = startIsle.getPos();
     }
 
     @Test
     public void getStartIsles() {
         int islesSize = controller.getIslesSize();
         while (startIsle.getMissingBridges() > 0)
-            startIsle.addBridge();
+            startIsle.addBridge(false);
 
         List<Isle> isles = solver.getStartIsles();
 
@@ -63,9 +66,9 @@ public class SolverTest {
     public void getEndIsle() {
         controller.addBridge(start, Direction.DOWN);
         List<Isle> connectables = solver.getConnectables(startIsle);
-
+    
         Isle endIsle = solver.getEndIsle(startIsle, connectables);
-
-        assertEquals(Mocks.ISLES[8][0], endIsle.getPos());
+    
+        assertEquals(isles.get(8).getPos(), endIsle.getPos());
     }
 }

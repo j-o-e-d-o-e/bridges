@@ -1,5 +1,5 @@
 
-package net.joedoe.entities;
+package test.net.joedoe.entities;
 
 import net.joedoe.entities.Isle;
 import net.joedoe.utils.Coordinate;
@@ -19,7 +19,7 @@ public class IsleTest {
 
     @Test
     public void addBridge() {
-        startIsle.addBridge();
+        startIsle.addBridge(false);
         startIsle.addNeighbour(endIsle);
 
         // then
@@ -29,7 +29,7 @@ public class IsleTest {
 
     @Test
     public void removeBridge() {
-        startIsle.addBridge();
+        startIsle.addBridge(false);
         startIsle.addNeighbour(endIsle);
 
         startIsle.removeBridge();

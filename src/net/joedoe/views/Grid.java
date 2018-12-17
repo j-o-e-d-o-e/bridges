@@ -1,165 +1,220 @@
 package net.joedoe.views;
 
+import static net.joedoe.utils.GameInfo.ALERT_COLOR;
+import static net.joedoe.utils.GameInfo.ONE_TILE;
+import static net.joedoe.utils.GameInfo.SOLVED_COLOR;
+import static net.joedoe.utils.GameInfo.STD_COLOR;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.IntStream;
+
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import net.joedoe.entities.IBridge;
+import net.joedoe.entities.IIsle;
 import net.joedoe.logics.AutoSolver;
-import net.joedoe.logics.GridController;
+import net.joedoe.logics.BridgeController;
 import net.joedoe.logics.Solver;
 import net.joedoe.logics.StatusChecker;
-import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
+import net.joedoe.viewmodel.BridgeLine;
+import net.joedoe.viewmodel.GridController;
+import net.joedoe.viewmodel.IslePane;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import static net.joedoe.utils.GameInfo.*;
-
+/**
+ * Das Raster, auf dem Inseln und Brücken platziert werden.
+ *
+ */
 class Grid extends GridPane {
-    private GridController controller;
-    private List<IslePane> isles = new ArrayList<>();
-    private List<BridgeLine> bridges = new ArrayList<>();
-    private EventHandler<StatusEvent> statusListener;
-    private IsleListener isleListener;
-    private boolean showMissingBridges = true;
+    private GridController gridController;
+    private BridgeController controller;
     private StatusChecker checker;
     private Solver solver;
     private AutoSolver autoSolver;
+    private EventHandler<StatusEvent> statusListener;
+    private boolean showMissingBridges;
 
-    Grid(EventHandler<StatusEvent> statusListener, int width, int height, Object[][] islesData,
-            Object[][] bridgesData) {
+    /**
+     * Grid wird der StatusListener, der die Status-Zeile im
+     * {@link net.joedoe.views.MainFrame} benachrichtigt, übergeben sowie die Breite
+     * und Höhe des Spielfelds und die Listen mit den zu platzierenden Inseln und
+     * Brücken.
+     * 
+     * @param statusListener
+     *            Listener, der die Status-Zeile benachrichtigt
+     * @param width
+     *            Breite des Spielfelds
+     * @param height
+     *            Höhe des Spielfelds
+     * @param isles
+     *            Liste mit den zu platzierenden Inseln
+     * @param bridges
+     *            Liste mit den zu platzierenden Brücken
+     */
+    Grid(EventHandler<StatusEvent> statusListener, int width, int height, List<IIsle> isles, List<IBridge> bridges) {
         // setGridLinesVisible(true);
         setAlignment(Pos.CENTER);
         setBorder(new Border(
                 new BorderStroke(STD_COLOR, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        // Größe des Rasters festlegen
         IntStream.range(0, height).mapToObj(i -> new RowConstraints(ONE_TILE))
                 .forEach(row -> getRowConstraints().add(row));
         IntStream.range(0, width).mapToObj(i -> new ColumnConstraints(ONE_TILE))
                 .forEachOrdered(column -> getColumnConstraints().add(column));
-        this.statusListener = statusListener;
-        isleListener = new IsleListener(this);
-        controller = new GridController();
+
+        gridController = new GridController(new IsleListener(this));
+        controller = new BridgeController();
         checker = new StatusChecker(controller);
         solver = new Solver(controller);
         autoSolver = new AutoSolver(solver);
-        autoSolver.addListener(() -> Platform.runLater(this::getNextBridgeAuto));
-        setIsles(islesData);
-        if (bridgesData != null) setBridges(bridgesData);
+        autoSolver.setListener(() -> Platform.runLater(this::getNextBridgeAuto));
+        this.statusListener = statusListener;
+        setIsles(isles);
+        if (bridges != null) setBridges(bridges);
+        checkStatus();
     }
 
+    /**
+     * Fügt eine neue Brücken-Linie hinzu, falls möglich. Aufgerufen von
+     * {@link net.joedoe.views.IsleListener}.
+     * 
+     * @param isle
+     *            Insel (View), die vom Nutzer angeklickt wurde
+     * @param direction
+     *            Richtung, in die der Nutzer mittels Klick-Sektor geklickt hat
+     */
     void addBridge(IslePane isle, Direction direction) {
-        Coordinate[] coordinates = controller.addBridge(isle.getPos(), direction);
-        addBridge(coordinates);
+        IBridge bridge = controller.addBridge(isle.getPos(), direction);
+        if (bridge == null) return;
+        addBridge(bridge);
     }
 
-    private void addBridge(Coordinate[] pos) {
-        if (pos != null) {
-            updateBridges();
-            List<BridgeLine> bridges = getBridges(pos[0], pos[1]);
-            if (bridges.size() == 0) {
-                BridgeLine bridge = new BridgeLine(pos[0], pos[1], false);
-                this.bridges.add(bridge);
-                add(bridge.getLine(), bridge.getStartX(), bridge.getStartY());
-            } else if (bridges.size() == 1) {
-                BridgeLine bridge = bridges.get(0);
-                bridge.setOffset(true);
-                bridge = new BridgeLine(pos[1], pos[0], true);
-                this.bridges.add(bridge);
-                add(bridge.getLine(), bridge.getStartX(), bridge.getStartY());
-            } else {
-                return;
-            }
-            updateIsles();
-            checkStatus();
-        }
+    /**
+     * Fügt eine neue Brücken-Linie hinzu, falls möglich.
+     * 
+     * @param bridge
+     *            hinzuzufügende Brücke (Modell)
+     */
+    private void addBridge(IBridge bridge) {
+        BridgeLine line = gridController.addLine(bridge);
+        if (line == null) return;
+        add(line.getLine(), line.getStartX(), line.getStartY());
+        updateIsles();
+        checkStatus();
     }
 
+    /**
+     * Entfernt Brücken-Linie, falls möglich. Aufgerufen von
+     * {@link net.joedoe.views.IsleListener}.
+     * 
+     * @param isle
+     *            Insel (View), die vom Nutzer angeklickt wurde
+     * @param direction
+     *            Richtung, in die der Nutzer mittels Klick-Sektor geklickt hat
+     */
     void removeBridge(IslePane isle, Direction direction) {
-        Coordinate[] pos = controller.removeBridge(isle.getPos(), direction);
-        removeBridge(pos);
+        IBridge bridge = controller.removeBridge(isle.getPos(), direction);
+        if (bridge == null) return;
+        removeBridge(bridge);
     }
 
-    private void removeBridge(Coordinate[] pos) {
-        if (pos != null) {
-            updateBridges();
-            List<BridgeLine> bridges = getBridges(pos[0], pos[1]);
-            if (bridges.size() == 0) {
-                return;
-            } else if (bridges.size() == 1) {
-                BridgeLine bridge = bridges.get(0);
-                this.bridges.remove(bridge);
-                getChildren().remove(bridge.getLine());
-            } else {
-                BridgeLine bridge = bridges.get(0);
-                bridge.setOffset(false);
-                bridge = bridges.get(1);
-                this.bridges.remove(bridge);
-                getChildren().remove(bridge.getLine());
-            }
-            updateIsles();
-            checkStatus();
-        }
+    /**
+     * Entfernt Brücken-Linie, falls möglich.
+     * 
+     * @param bridge
+     *            zu entferndende Brücke (Modell)
+     */
+    private void removeBridge(IBridge bridge) {
+        BridgeLine line = gridController.removeLine(bridge);
+        if (line == null) return;
+        getChildren().remove(line.getLine());
+        updateIsles();
+        checkStatus();
     }
 
-    private List<BridgeLine> getBridges(Coordinate start, Coordinate end) {
-        return bridges.stream().filter(bridge -> bridge.contains(start, end)).collect(Collectors.toList());
-    }
-
-    private void updateBridges() {
-        if (bridges.size() > 0) bridges.get(bridges.size() - 1).setStdColor();
-    }
-
+    /**
+     * Legt die Farbe der Inseln entsprechend ihrer aktuellen Anzahl an fehlenden
+     * Brücken fest und aktualisiert die Angabe an (fehlenden) Brücken.
+     */
     private void updateIsles() {
-        for (IslePane isle : isles) {
+        for (IslePane isle : gridController.getPanes()) {
+            // Farbe aktualisieren
             int bridges = controller.getMissingBridges(isle.getPos());
             if (bridges == 0) isle.setColor(SOLVED_COLOR);
             else if (bridges < 0) isle.setColor(ALERT_COLOR);
             else isle.setColor(STD_COLOR);
+            // Brücken-Anzahl aktualisieren
             if (!showMissingBridges) bridges = controller.getBridges(isle.getPos());
             isle.setText(Integer.toString(bridges));
         }
     }
 
-    private void setIsles(Object[][] islesData) {
-        controller.setIsles(islesData);
-        for (Object[] data : islesData) {
-            IslePane isle = new IslePane((Coordinate) data[0], (int) data[1]);
-            isle.setOnMouseClicked(e -> isleListener.handle(e));
-            isles.add(isle);
+    /**
+     * Checkt den Spielstatus und gibt Status an Status-Zeile in
+     * {@link net.joedoe.views.MainFrame} zurück.
+     */
+    private void checkStatus() {
+        if (checker.error()) {
+            statusListener.handle(new StatusEvent("Enthält Fehler."));
+        } else if (checker.unsolvable()) {
+            statusListener.handle(new StatusEvent("Nicht mehr lösbar."));
+        } else if (checker.solved()) {
+            gridController.updateLines();
+            statusListener.handle(new StatusEvent("Gelöst!"));
+        } else {
+            statusListener.handle(new StatusEvent("Noch nicht gelöst."));
+        }
+    }
+
+    /**
+     * Lädt Inseln.
+     * 
+     * @param isles
+     *            Liste mit zu ladenen Inseln
+     */
+    private void setIsles(List<IIsle> isles) {
+        controller.setIsles(isles);
+        gridController.setPanes(isles);
+        for (IslePane isle : gridController.getPanes())
             add(isle, isle.getX(), isle.getY());
-        }
     }
 
-    private void setBridges(Object[][] bridgesData) {
-        controller.setBridges(bridgesData);
-        for (Object[] data : bridgesData) {
-            Coordinate start = (Coordinate) data[0];
-            Coordinate end = (Coordinate) data[1];
-            BridgeLine bridge = new BridgeLine(start, end, false);
-            bridge.setStdColor();
-            bridges.add(bridge);
-            add(bridge.getLine(), bridge.getStartX(), bridge.getStartY());
-            if ((boolean) data[2]) {
-                bridge.setOffset(true);
-                bridge = new BridgeLine(end, start, true);
-                bridge.setStdColor();
-                bridges.add(bridge);
-                add(bridge.getLine(), bridge.getStartX(), bridge.getStartY());
-            }
-        }
+    /**
+     * Lädt Brücken.
+     * 
+     * @param bridges
+     *            Liste mit zu ladenen Brücken
+     */
+    private void setBridges(List<IBridge> bridges) {
+        controller.setBridges(bridges);
+        gridController.setLines(bridges);
+        for (BridgeLine line : gridController.getLines())
+            add(line.getLine(), line.getStartX(), line.getStartY());
         updateIsles();
-        checkStatus();
     }
 
+    /**
+     * Legt fest, ob die Anzahl der Brücken insgesamt oder nur der fehlenden Brücken
+     * angezeigt werden soll.
+     * 
+     * @param showMissingBridges
+     *            falls true, werden die fehlenden Brücken angezeigt
+     */
     void setShowMissingBridges(boolean showMissingBridges) {
         this.showMissingBridges = showMissingBridges;
-        for (IslePane isle : isles) {
+        for (IslePane isle : gridController.getPanes()) {
             int bridges;
             if (showMissingBridges) bridges = controller.getMissingBridges(isle.getPos());
             else bridges = controller.getBridges(isle.getPos());
@@ -167,78 +222,102 @@ class Grid extends GridPane {
         }
     }
 
-    void reset() {
-        controller.reset();
-        bridges.forEach(bridge -> getChildren().remove(bridge.getLine()));
-        bridges.clear();
-        isles.forEach(isle -> {
-            isle.setColor(STD_COLOR);
-            isle.setText(Integer.toString(controller.getBridges(isle.getPos())));
-        });
-        autoSolver.stop();
-    }
-
+    /**
+     * Berechnet eine neue Brücke, die sicher hinzugefügt werden kann. Möglich,
+     * sofern der aktuelle Spiel-Status keinen Fehler enthält, nicht unlösbar oder
+     * bereits gelöst ist.
+     */
     void getNextBridge() {
-        if (checker.error() || checker.unsolvable() || checker.solved()) return;
-        Coordinate[] next = solver.getNextBridge();
-        if (next != null) addBridge(next);
-        else if (!checker.solved()) setAlert();
+        if (checker.error() || checker.unsolvable() || checker.solved()) {
+            if (!checker.solved()) setAlert();
+            return;
+        }
+        IBridge next = solver.getNextBridge();
+        if (next == null && !checker.solved()) setAlert();
+        else addBridge(next);
     }
 
+    /**
+     * Ergänzt zeitverzögert neue Brücken, die sicher hinzugefügt werden können.
+     */
     private void getNextBridgeAuto() {
         if (checker.error() || checker.unsolvable() || checker.solved()) {
             autoSolver.stop();
+            if (!checker.solved()) setAlert();
             return;
         }
-        Coordinate[] next = autoSolver.getNextBridge();
-        if (next != null) {
+        IBridge next = autoSolver.getNextBridge();
+        if (next == null) {
+            autoSolver.stop();
+            if (!checker.solved()) setAlert();
+        } else {
             addBridge(next);
-        } else if (checker.solved()) {
-            autoSolver.stop();
-        } else {
-            autoSolver.stop();
-            setAlert();
-        }
-    }
-
-    void startAutoSolve() {
-        if (!autoSolver.isRunning()) autoSolver.start();
-    }
-
-    void stopAutoSolve() {
-        if (autoSolver.isRunning()) autoSolver.stop();
-    }
-
-    void shutdownAutoSolve() {
-        autoSolver.shutdown();
-    }
-    
-    boolean autoSolverIsRunning() {
-        return autoSolver.isRunning();
-    }
-
-    private void checkStatus() {
-        if (checker.error()) {
-            statusListener.handle(new StatusEvent("Enthält Fehler."));
-        } else if (checker.unsolvable()) {
-            statusListener.handle(new StatusEvent("Nicht mehr lösbar."));
-        } else if (checker.solved()) {
-            bridges.get(bridges.size() - 1).setStdColor();
-            statusListener.handle(new StatusEvent("Gelöst!"));
-        } else {
-            statusListener.handle(new StatusEvent("Noch nicht gelöst."));
         }
     }
 
     private void setAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Nächste Brücke");
-        alert.setHeaderText("Keine Brücke gefunden, " + "die sicher ergänzt werden kann.");
+        alert.setHeaderText("Keine Brücke gefunden, die sicher ergänzt werden kann.");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) alert.close();
     }
+    
 
-    public void saveGame() {
+    /**
+     * Startet Simulation zur Berechnung neuer Brücken, die sicher hinzugefügt
+     * werden können.
+     */
+    void startAutoSolve() {
+        if (!autoSolver.isRunning()) autoSolver.start();
+    }
+
+    /**
+     * Stoppt Simulation zur Berechnung neuer Brücken, die sicher hinzugefügt werden
+     * können.
+     */
+    void stopAutoSolve() {
+        if (autoSolver.isRunning()) autoSolver.stop();
+    }
+
+    /**
+     * Terminiert Simulation zur Berechnung neuer Brücken, die sicher hinzugefügt
+     * werden können.
+     */
+    void shutdownAutoSolve() {
+        autoSolver.shutdown();
+    }
+
+    /**
+     * Gibt zurück, ob {@link net.joedoe.logics.AutoSolver} aktuell läuft.
+     * 
+     * @return true, falls {@link net.joedoe.logics.AutoSolver} aktuell läuft
+     */
+    boolean autoSolverIsRunning() {
+        return autoSolver.isRunning();
+    }
+
+    /**
+     * Setzt den Spielstatus zurück. Brücken werden gelöscht und Inseln in ihren
+     * Ausgangszustand zurück versetzt.
+     */
+    void reset() {
+        controller.reset();
+        gridController.getLines().forEach(line -> getChildren().remove(line.getLine()));
+        gridController.reset();
+        gridController.getPanes().forEach(isle -> {
+            isle.setColor(STD_COLOR);
+            isle.setText(Integer.toString(controller.getBridges(isle.getPos())));
+        });
+        autoSolver.stop();
+        statusListener.handle(new StatusEvent("Noch nicht gelöst."));
+    }
+
+    /**
+     * Leitet die Nutzer-Anfrage, den aktuellen Spielstand zu speichern, an
+     * {@link net.joedoe.logics.GridController} weiter.
+     */
+    void saveGame() {
         controller.saveGame();
     }
 }

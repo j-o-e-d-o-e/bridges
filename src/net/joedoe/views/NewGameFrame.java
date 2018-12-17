@@ -11,6 +11,10 @@ import java.util.Optional;
 
 import static net.joedoe.utils.GameInfo.*;
 
+/**
+ * Dialog zur Generierung eines neuen Spiels.
+ *
+ */
 class NewGameFrame extends Stage {
     private Board board;
     private Generator generator;
@@ -19,6 +23,15 @@ class NewGameFrame extends Stage {
     private TextField heightTxt, widthTxt, islesTxt;
     private CheckBox checkBox;
 
+    /**
+     * Erzeugt einen Dialog, in dem der Nutzer Angaben bzgl. Breite und Höhe des
+     * Spielfelds sowie Anzahl der zu platzierenden Inseln tätigt, um ein neues
+     * Spiel zu erzeugen.
+     * 
+     * @param board
+     *            Spielfeld, an das die Daten des generierten Spiels zurückgegeben
+     *            werden
+     */
     NewGameFrame(Board board) {
         this.board = board;
         generator = new Generator();
@@ -95,10 +108,10 @@ class NewGameFrame extends Stage {
         grid.setPadding(new Insets(0, 0, 0, 30));
         grid.getColumnConstraints().add(new ColumnConstraints(50));
         grid.setVgap(10);
-        grid.add(heightLabel, 0, 0);
-        grid.add(heightTxt, 1, 0);
-        grid.add(widthLabel, 0, 1);
-        grid.add(widthTxt, 1, 1);
+        grid.add(widthLabel, 0, 0);
+        grid.add(widthTxt, 1, 0);
+        grid.add(heightLabel, 0, 1);
+        grid.add(heightTxt, 1, 1);
         grid.add(checkBox, 0, 2);
         GridPane.setColumnSpan(checkBox, 3);
         grid.add(islesLabel, 0, 3);
@@ -122,56 +135,40 @@ class NewGameFrame extends Stage {
         return outerPane;
     }
 
+    /**
+     * Validiert grundlegend Nutzer-Eingaben und leitet diese an
+     * {@link net.joedoe.logics.Generator} weiter.
+     */
     private void handleInput() {
-        if (autoBtn.isSelected()) {
-            generator.setHeight();
-            generator.setWidth();
-            generator.setIslesCount();
-            // generator.setHeight(MAX_HEIGHT);
-            // generator.setWidth(MAX_WIDTH);
-            // generator.setIslesCount(MAX_ISLES_COUNT);
-        } else {
-            String width = widthTxt.getText();
-            if (width.isEmpty()) {
-                generator.setWidth();
-            } else {
+        if (autoBtn.isSelected()) generator.setData();
+        else {
+            if (!checkBox.isSelected()) {
                 try {
-                    generator.setWidth(Integer.parseInt(width));
+                    int width = Integer.parseInt(widthTxt.getText().trim());
+                    int height = Integer.parseInt(heightTxt.getText().trim());
+                    generator.setData(width, height);
                 } catch (IllegalArgumentException e) {
-                    setAlert("Breite und Höhe müssen größer/gleich " + MIN_WIDTH + " und kleiner/gleich " + MAX_WIDTH
-                            + " sein.");
+                    setAlert("Breite und Höhe müssen \u2265 " + MIN_WIDTH + " und \u2264 " + MAX_WIDTH + " sein.");
                     return;
                 }
-            }
-            String height = heightTxt.getText();
-            if (height.isEmpty()) {
-                generator.setHeight();
             } else {
                 try {
-                    generator.setHeight(Integer.parseInt(height));
+                    int width = Integer.parseInt(widthTxt.getText().trim());
+                    int height = Integer.parseInt(heightTxt.getText().trim());
+                    int islesCount = Integer.parseInt(islesTxt.getText().trim());
+                    generator.setData(width, height, islesCount);
                 } catch (IllegalArgumentException e) {
-                    setAlert("Breite und Höhe müssen größer/gleich " + MIN_HEIGHT + " und kleiner/gleich " + MAX_HEIGHT
-                            + " sein.");
-                    return;
-                }
-            }
-            String isles = islesTxt.getText();
-            if (!checkBox.isSelected() || isles.isEmpty()) {
-                generator.setIslesCount();
-            } else {
-                try {
-                    generator.setIslesCount(Integer.parseInt(isles));
-                } catch (IllegalArgumentException e) {
-                    setAlert("Inselanzahl muss größer/gleich " + MIN_ISLES_COUNT
-                            + " und kleiner/gleich Höhe * Breite * 0.2 sein.");
+                    setAlert("Breite und Höhe müssen \u2265 " + MIN_WIDTH + " und \u2264 " + MAX_WIDTH
+                            + " sein.\nInselanzahl muss \u2265 " + MIN_ISLES_COUNT
+                            + " und \u2264 Breite * Höhe * 0.2 sein.");
                     return;
                 }
             }
         }
         generator.generateGame();
-        board.setGrid(generator.getWidth(), generator.getHeight(), generator.getFinalIsles(), null);
+        board.setGrid(generator.getWidth(), generator.getHeight(), generator.getIsles(), null);
         // board.setGrid(generator.getWidth(), generator.getHeight(),
-        // generator.getFinalIsles(), generator.getFinalBridges());
+        // generator.getIsles(), generator.getBridges());
         close();
     }
 

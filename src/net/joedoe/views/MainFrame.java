@@ -1,4 +1,4 @@
-package net.joedoe.views;
+ package net.joedoe.views;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 
@@ -17,9 +17,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -27,14 +24,25 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.joedoe.utils.FileHandler;
 
+/**
+ * Das Hauptfenster, das das Spielfeld und die Steuerung enth‰lt.
+ *
+ */
 public class MainFrame extends BorderPane {
     private Stage window;
     private Board board;
-    private FileChooser fileChooser;
     private Label status;
+    private FileChooser fileChooser;
     private String directory;
     private String filepath;
 
+    /**
+     * Erzeugt das Hauptfenster und die darin enthaltene Men¸leiste, Spielsteuerung
+     * sowie das Spielfeld.
+     * 
+     * @param window
+     *            schlieﬂt die Appplikation und erzeugt neue Dialoge
+     */
     public MainFrame(Stage window) {
         this.window = window;
         status = new Label();
@@ -60,7 +68,6 @@ public class MainFrame extends BorderPane {
         MenuItem saveGameAs = new MenuItem("R‰tsel speichern unter");
         saveGameAs.setOnAction(e -> saveGameAs());
         MenuItem exit = new MenuItem("Beenden");
-        exit.setAccelerator(new KeyCodeCombination(KeyCode.X, KeyCombination.ALT_ANY));
         exit.setOnAction(e -> close());
         menu.getItems().addAll(newGame, reset, loadGame, saveGame, saveGameAs, exit);
         menuBar.getMenus().add(menu);
@@ -83,13 +90,15 @@ public class MainFrame extends BorderPane {
         hBox.setAlignment(Pos.CENTER);
         hBox.setSpacing(CONTAINER_OFFSET);
         hBox.setPrefWidth(100);
-        Button solveBtn = new Button("Automatisch lˆsen");
+        Button solveBtn = new Button("_Automatisch lˆsen");
+        solveBtn.setMnemonicParsing(true);
         solveBtn.setMinWidth(hBox.getPrefWidth());
         solveBtn.setOnAction(e -> {
             if (board.autoSolverIsRunning()) board.stopAutoSolve();
             else board.startAutoSolve();
         });
-        Button nextBtn = new Button("N‰chste Br¸cke");
+        Button nextBtn = new Button("_N‰chste Br¸cke");
+        nextBtn.setMnemonicParsing(true);
         nextBtn.setMinWidth(hBox.getPrefWidth());
         nextBtn.setOnAction(e -> board.getNextBridge());
         hBox.getChildren().addAll(solveBtn, nextBtn);
@@ -97,6 +106,9 @@ public class MainFrame extends BorderPane {
         return vBox;
     }
 
+    /**
+     * Erzeugt Dialog-Fenster, um ein neues Spiel zu generieren.
+     */
     private void createNewGame() {
         board.stopAutoSolve();
         NewGameFrame newGameFrame = new NewGameFrame(board);
@@ -114,7 +126,7 @@ public class MainFrame extends BorderPane {
             try {
                 FileHandler.loadGame(filepath);
             } catch (IOException | IllegalArgumentException e) {
-                setAlert("Datei konnte nicht gelesen werden.");
+                setAlert("Datei konnte nicht geladen werden.");
                 return;
             }
             board.setLoadedGrid();
@@ -130,7 +142,6 @@ public class MainFrame extends BorderPane {
                 FileHandler.saveGame(filepath);
             } catch (IOException e) {
                 setAlert("Datei konnte nicht gespeichert werden.");
-                return;
             }
         }
     }
@@ -160,9 +171,12 @@ public class MainFrame extends BorderPane {
     }
 
     private void handle(StatusEvent e) {
-        status.setText(e.getMessage());
+        status.setText(e.getStatus());
     }
 
+    /**
+     * Schlieﬂt die Applikation.
+     */
     public void close() {
         window.close();
         board.shutdownAutoSolve();

@@ -1,12 +1,14 @@
 package net.joedoe;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import net.joedoe.views.MainFrame;
 
+/**
+ * Start-Klasse der Applikation.
+ *
+ */
 public class Main extends Application {
 
     @Override

@@ -46,7 +46,7 @@
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <interface id="6" language="java" name="net.joedoe.views.AutoSolverListener" project="Bridges_Doerwald_Joerg" 
+  <interface id="6" language="java" name="net.joedoe.logics.AutoSolverListener" project="Bridges_Doerwald_Joerg"
     file="/Bridges_Doerwald_Joerg/src/net/joedoe/views/AutoSolverListener.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="812" y="739"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="false" 

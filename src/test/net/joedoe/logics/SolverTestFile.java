@@ -60,4 +60,17 @@ public class SolverTestFile extends FileHandlerTesting {
         String res = convertResultToString(file);
         assertEquals(exp, res);
     }
+
+    @Test
+    public void puzzle4with3Ones() {
+        String file = "4with3Ones.bgs";
+        loadData(file);
+
+        solve();
+
+        saveData(file);
+        String exp = convertSolutionToString(file);
+        String res = convertResultToString(file);
+        assertEquals(exp, res);
+    }
 }

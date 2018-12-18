@@ -1,7 +1,6 @@
 package net.joedoe.logics;
 
 import net.joedoe.entities.IBridge;
-import net.joedoe.views.AutoSolverListener;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

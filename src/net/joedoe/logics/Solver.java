@@ -98,7 +98,7 @@ public class Solver {
     }
 
     private boolean fifthRule(int missingBridges, int neighboursSize, int neighboursOneBridge) {
-        return missingBridges == 4 && missingBridges + 4 == neighboursSize * 2 && neighboursOneBridge == 4;
+        return missingBridges == 4 && missingBridges + 4 == neighboursSize * 2 && neighboursOneBridge >= 3;
     }
 
     /**
@@ -177,11 +177,9 @@ public class Solver {
      * @return zweite Insel einer neuen Brücke ausgehend von 'startIsle'
      */
     public Isle getEndIsle(Isle startIsle, List<Isle> connectables) {
-        // wähle Insel, die nur noch einen möglichen Nachbarn hat oder der noch mehr als
-        // eine Brücke fehlt und zu der noch keine Brücke besteht
+        // wähle Insel, der noch mehr als eine Brücke fehlt und zu der noch keine Brücke besteht
         Isle endIsle = connectables.stream()
-                .filter(c -> getConnectables(c).size() == 1
-                        || (c.getMissingBridges() > 1 && controller.getBridge(startIsle.getPos(), c.getPos()) == null))
+                .filter(c -> c.getMissingBridges() > 1 && controller.getBridge(startIsle.getPos(), c.getPos()) == null)
                 .findFirst().orElse(null);
         // ansonsten wähle erste Insel in der Liste
         if (endIsle == null) return connectables.get(0);

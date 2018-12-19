@@ -58,7 +58,7 @@ class Grid extends GridPane {
         IntStream.range(0, width).mapToObj(i -> new ColumnConstraints(ONE_TILE))
                 .forEachOrdered(column -> getColumnConstraints().add(column));
 
-        gridController = new GridController(new IsleListener(this));
+        gridController = new GridController();
         controller = new BridgeController();
         checker = new StatusChecker(controller);
         solver = new Solver(controller);
@@ -163,7 +163,7 @@ class Grid extends GridPane {
      */
     private void setIsles(List<IIsle> isles) {
         controller.setIsles(isles);
-        gridController.setPanes(isles);
+        gridController.setPanes(isles, new IsleListener(this));
         for (IslePane isle : gridController.getPanes())
             add(isle, isle.getX(), isle.getY());
     }

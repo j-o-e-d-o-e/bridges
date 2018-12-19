@@ -15,17 +15,6 @@ import java.util.stream.Collectors;
 public class GridController {
     private List<IslePane> panes = new ArrayList<>();
     private List<BridgeLine> lines = new ArrayList<>();
-    private IsleListener listener;
-
-    /**
-     * Wird Listener übergeben, um {@link net.joedoe.views.Grid} über angeklickte
-     * Insel zu benachrichtigen.
-     *
-     * @param listener beobachtet Inseln auf Klicks
-     */
-    public GridController(IsleListener listener) {
-        this.listener = listener;
-    }
 
     /**
      * Fügt eine neue Brücken-Linie hinzu, falls möglich. Falls bereits zwei Brücken
@@ -144,10 +133,10 @@ public class GridController {
      *
      * @param isles Liste mit zu ladenen Inseln
      */
-    public void setPanes(List<IIsle> isles) {
+    public void setPanes(List<IIsle> isles, IsleListener listener) {
         for (IIsle i : isles) {
             IslePane isle = new IslePane(i.getPos(), i.getBridges());
-            isle.setOnMouseClicked(e -> listener.handle(e));
+            isle.setOnMouseClicked(listener);
             this.panes.add(isle);
         }
     }

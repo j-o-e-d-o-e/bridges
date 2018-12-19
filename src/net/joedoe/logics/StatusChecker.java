@@ -21,8 +21,8 @@ public class StatusChecker {
     private final static Logger LOGGER = Logger.getLogger(StatusChecker.class.getName());
 
     /**
-     * Wird {@link net.joedoe.logics.BridgeController} übergeben, um auf die aktuellen
-     * Brücken zugreifen zu können.
+     * Wird {@link net.joedoe.logics.BridgeController} übergeben, um auf die
+     * aktuellen Brücken zugreifen zu können.
      *
      * @param controller enthält Liste mit aktuellen Brücken
      */
@@ -66,6 +66,7 @@ public class StatusChecker {
      * @param startIsle die betrachtete Insel
      * @return true, falls betrachtete Insel isoliert ist
      */
+
     private boolean isolated(Isle startIsle) {
         // ermittelt die Brücken-Anzahl aller möglichen Nachbarn von 'startIsle'
         int bridges = 0;
@@ -74,12 +75,14 @@ public class StatusChecker {
             // ungültige Nachbar aussortieren
             if (endIsle == null || endIsle.getMissingBridges() == 0 || detector.collides(startIsle, endIsle)) continue;
             Bridge bridge = controller.getBridge(startIsle.getPos(), endIsle.getPos());
-            // Brücke existiert, ist aber keine doppelte
-            if (bridge != null && !bridge.isDoubleBridge()) bridges++;
+            if (bridge == null) {
                 // Brücke exisitert nicht, möglicher Nachbar fehlt aber nur eine Brücke
-            else if (bridge == null && endIsle.getMissingBridges() == 1) bridges ++;
-            else bridges =+ 2;
+                if (endIsle.getMissingBridges() == 1) bridges++;
+                else bridges += 2;
+            } // Brücke existiert, ist aber keine doppelte
+            else if (!bridge.isDoubleBridge()) bridges++;
         }
+        LOGGER.info(startIsle + " with " + bridges + " possible bridges");
         // Prüft, ob fehlende Brücken mehr sind als hinzufügbare Brücken
         return startIsle.getMissingBridges() > bridges;
     }
@@ -122,13 +125,14 @@ public class StatusChecker {
         List<Isle> isles = controller.getIsles();
         // Prüft, ob alle Inseln keine fehlenden Brücken mehr haben
         boolean noBridges = isles.stream().allMatch(i -> i.getMissingBridges() == 0);
-        if (noBridges) {
-            // Prüft, ob die Anzahl der verbundenen Inseln gleich der Gesamt-Anzahl ist
-            Set<Isle> connectedIsles = new HashSet<>();
-            connected(isles.get(0), connectedIsles);
-            return connectedIsles.size() == isles.size();
-        }
-        return false;
+        return noBridges;
+        // if (noBridges) {
+        // // Prüft, ob die Anzahl der verbundenen Inseln gleich der Gesamt-Anzahl ist
+        // Set<Isle> connectedIsles = new HashSet<>();
+        // connected(isles.get(0), connectedIsles);
+        // return connectedIsles.size() == isles.size();
+        // }
+        // return false;
     }
 
     /**

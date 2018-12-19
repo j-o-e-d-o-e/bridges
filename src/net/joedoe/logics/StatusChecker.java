@@ -71,11 +71,14 @@ public class StatusChecker {
         int bridges = 0;
         for (Direction direction : Direction.values()) {
             Isle endIsle = controller.getEndIsle(startIsle, direction);
-            if (endIsle == null || endIsle.getMissingBridges() == 0) continue;
+            // ungültige Nachbar aussortieren
+            if (endIsle == null || endIsle.getMissingBridges() == 0 || detector.collides(startIsle, endIsle)) continue;
             Bridge bridge = controller.getBridge(startIsle.getPos(), endIsle.getPos());
+            // Brücke existiert, ist aber keine doppelte
             if (bridge != null && !bridge.isDoubleBridge()) bridges++;
-            if (bridge == null && !detector.collides(startIsle, endIsle))
-                bridges += 2;
+                // Brücke exisitert nicht, möglicher Nachbar fehlt aber nur eine Brücke
+            else if (bridge == null && endIsle.getMissingBridges() == 1) bridges ++;
+            else bridges =+ 2;
         }
         // Prüft, ob fehlende Brücken mehr sind als hinzufügbare Brücken
         return startIsle.getMissingBridges() > bridges;

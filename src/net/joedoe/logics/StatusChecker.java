@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  * Prüft den Spielstatus.
@@ -44,74 +43,79 @@ public class StatusChecker {
     }
 
     /**
-     * Prüft, ob das Spiel im aktuellen Zustand noch lösbar ist. Spiel ist nicht
-     * mehr lösbar, falls eine einzelne Insel mehr fehlende Brücken hat als ihre
-     * Nachbarn insgesamt noch haben können ('isolated') oder falls eine
-     * Insel-Gruppe ihre geforderte Anzahl an Brücken hat, aber vom Rest-Graphen
-     * abgekopppelt ist ('disconnected')
+     * Prüft, ob das Spiel im aktuellen Zustand nicht mehr lösbar ist, d.h. falls
+     * jede weitere Brücke garantiert zu einem Regelverstoß führt.
      *
-     * @return true, falls eine Insel isoliert ist oder nicht alle Inseln indirekt
-     * miteinander verbunden sind
+     * @return true, falls unlösbar
      */
     public boolean unsolvable() {
-        List<Isle> isles = controller.getIsles();
-        // Prüft, ob einzelne Insel oder Insel-Gruppe isoliert ist
-        return isles.stream().filter(i -> i.getMissingBridges() > 0).anyMatch(this::isolated) || disconnected(isles);
+        return controller.getIsles().stream().filter(i -> i.getMissingBridges() > 0).anyMatch(this::isolated);
     }
 
     /**
-     * Prüft, ob eine einzelne Insel mehr fehlende Brücken hat als ihre Nachbarn
-     * insgesamt noch haben können.
+     * Prüft, ob von einer Insel keine Brücken mehr zu ihren Nachbarn gebaut werden
+     * können.
      *
      * @param startIsle die betrachtete Insel
      * @return true, falls betrachtete Insel isoliert ist
      */
-
     private boolean isolated(Isle startIsle) {
-        // ermittelt die Brücken-Anzahl aller möglichen Nachbarn von 'startIsle'
-        int bridges = 0;
         for (Direction direction : Direction.values()) {
             Isle endIsle = controller.getEndIsle(startIsle, direction);
-            // ungültige Nachbar aussortieren
-            if (endIsle == null || endIsle.getMissingBridges() == 0 || detector.collides(startIsle, endIsle)) continue;
+            if (endIsle == null || endIsle.getMissingBridges() <= 0 || detector.collides(startIsle, endIsle)) continue;
             Bridge bridge = controller.getBridge(startIsle.getPos(), endIsle.getPos());
-            if (bridge == null) {
-                // Brücke exisitert nicht, möglicher Nachbar fehlt aber nur eine Brücke
-                if (endIsle.getMissingBridges() == 1) bridges++;
-                else bridges += 2;
-            } // Brücke existiert, ist aber keine doppelte
-            else if (!bridge.isDoubleBridge()) bridges++;
+            if (bridge == null || (bridge != null && !bridge.isDoubleBridge())) return false;
         }
-        LOGGER.info(startIsle + " with " + bridges + " possible bridges");
-        // Prüft, ob fehlende Brücken mehr sind als hinzufügbare Brücken
-        return startIsle.getMissingBridges() > bridges;
+        return true;
     }
 
-    /**
-     * Prüft, ob eine Insel-Gruppe, in der alle Inseln keine fehlenden Brücken mehr
-     * aufweisen, vom Rest-Graphen abgekoppelt ist.
-     *
-     * @param isles Liste aller aktuellen Inseln
-     * @return true, falls eine Insel-Gruppe isoliert ist
-     */
-    private boolean disconnected(List<Isle> isles) {
-        // Liste aller Inseln ohne fehlende Brücken
-        List<Isle> islesZeroBridges = isles.stream().filter(i -> i.getMissingBridges() == 0)
-                .collect(Collectors.toList());
-        // Speichert Inseln, die bereits überprüft wurden
-        Set<Isle> cached = new HashSet<>();
-        // Prüft, ob Insel-Gruppen isoliert sind
-        for (Isle isle : islesZeroBridges) {
-            if (cached.contains(isle)) continue;
-            Set<Isle> connectedIsles = new HashSet<>();
-            connected(isle, connectedIsles);
-            cached.addAll(connectedIsles);
-            boolean disconnected = connectedIsles.stream().allMatch(i -> i.getMissingBridges() == 0)
-                    && connectedIsles.size() < isles.size();
-            if (disconnected) return true;
-        }
-        return false;
-    }
+    // Alternative unsolvable()
+    // public boolean unsolvable() {
+    // List<Isle> isles = controller.getIsles();
+    // // Prüft, ob einzelne Insel oder Insel-Gruppe isoliert ist
+    // return isles.stream().filter(i -> i.getMissingBridges() >
+    // 0).anyMatch(this::isolated) || disconnected(isles);
+    // }
+    // private boolean isolated(Isle startIsle) {
+    // // ermittelt die Brücken-Anzahl aller möglichen Nachbarn von 'startIsle'
+    // int bridges = 0;
+    // for (Direction direction : Direction.values()) {
+    // Isle endIsle = controller.getEndIsle(startIsle, direction);
+    // // ungültige Nachbar aussortieren
+    // if (endIsle == null || endIsle.getMissingBridges() == 0 ||
+    // detector.collides(startIsle, endIsle)) continue;
+    // Bridge bridge = controller.getBridge(startIsle.getPos(), endIsle.getPos());
+    // if (bridge == null) {
+    // // Brücke exisitert nicht, möglicher Nachbar fehlt aber nur eine Brücke
+    // if (endIsle.getMissingBridges() == 1) bridges++;
+    // else bridges += 2;
+    // } // Brücke existiert, ist aber keine doppelte
+    // else if (!bridge.isDoubleBridge()) bridges++;
+    // }
+    // LOGGER.info(startIsle + " with " + bridges + " possible bridges");
+    // // Prüft, ob fehlende Brücken mehr sind als hinzufügbare Brücken
+    // return startIsle.getMissingBridges() > bridges;
+    // }
+    // private boolean disconnected(List<Isle> isles) {
+    // // Liste aller Inseln ohne fehlende Brücken
+    // List<Isle> islesZeroBridges = isles.stream().filter(i ->
+    // i.getMissingBridges() == 0)
+    // .collect(Collectors.toList());
+    // // Speichert Inseln, die bereits überprüft wurden
+    // Set<Isle> cached = new HashSet<>();
+    // // Prüft, ob Insel-Gruppen isoliert sind
+    // for (Isle isle : islesZeroBridges) {
+    // if (cached.contains(isle)) continue;
+    // Set<Isle> connectedIsles = new HashSet<>();
+    // connected(isle, connectedIsles);
+    // cached.addAll(connectedIsles);
+    // boolean disconnected = connectedIsles.stream().allMatch(i ->
+    // i.getMissingBridges() == 0)
+    // && connectedIsles.size() < isles.size();
+    // if (disconnected) return true;
+    // }
+    // return false;
+    // }
 
     /**
      * Prüft, ob das Spiel im aktuellen Zustand gelöst ist. Spiel ist gelöst, falls
@@ -125,14 +129,13 @@ public class StatusChecker {
         List<Isle> isles = controller.getIsles();
         // Prüft, ob alle Inseln keine fehlenden Brücken mehr haben
         boolean noBridges = isles.stream().allMatch(i -> i.getMissingBridges() == 0);
-        return noBridges;
-        // if (noBridges) {
-        // // Prüft, ob die Anzahl der verbundenen Inseln gleich der Gesamt-Anzahl ist
-        // Set<Isle> connectedIsles = new HashSet<>();
-        // connected(isles.get(0), connectedIsles);
-        // return connectedIsles.size() == isles.size();
-        // }
-        // return false;
+        if (noBridges) {
+            // Prüft, ob die Anzahl der verbundenen Inseln gleich der Gesamt-Anzahl ist
+            Set<Isle> connectedIsles = new HashSet<>();
+            connected(isles.get(0), connectedIsles);
+            return connectedIsles.size() == isles.size();
+        }
+        return false;
     }
 
     /**

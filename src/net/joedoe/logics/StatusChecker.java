@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Prüft den Spielstatus.
@@ -49,7 +50,10 @@ public class StatusChecker {
      * @return true, falls unlösbar
      */
     public boolean unsolvable() {
-        return controller.getIsles().stream().filter(i -> i.getMissingBridges() > 0).anyMatch(this::isolated);
+        List<Isle> isles = controller.getIsles().stream().filter(i -> i.getMissingBridges() > 0)
+                .collect(Collectors.toList());
+        if (isles.size() == 0) return false;
+        return isles.stream().allMatch(this::isolated);
     }
 
     /**

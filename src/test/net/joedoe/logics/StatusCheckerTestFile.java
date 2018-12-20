@@ -23,24 +23,16 @@ public class StatusCheckerTestFile extends FileHandlerTesting {
     }
 
     @Test
-    public void puzzleIsolated() {
-        String file = "isolated2.bgs";
-        loadData(file);
-
-        assertTrue(checker.unsolvable());
-    }
-
-    @Test
     public void puzzleIsolated1() {
-        String file = "isolated3.bgs";
+        String file = "isolated1.bgs";
         loadData(file);
 
         assertTrue(checker.unsolvable());
     }
 
     @Test
-    public void puzzleDisconnected() {
-        String file = "disconnected.bgs";
+    public void puzzleIsolated2() {
+        String file = "isolated2.bgs";
         loadData(file);
 
         assertTrue(checker.unsolvable());

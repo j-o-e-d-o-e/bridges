@@ -24,7 +24,7 @@ public class StatusCheckerTestFile extends FileHandlerTesting {
 
     @Test
     public void puzzleIsolated() {
-        String file = "isolated.bgs";
+        String file = "isolated2.bgs";
         loadData(file);
 
         assertTrue(checker.unsolvable());
@@ -32,7 +32,7 @@ public class StatusCheckerTestFile extends FileHandlerTesting {
 
     @Test
     public void puzzleIsolated1() {
-        String file = "isolated1.bgs";
+        String file = "isolated3.bgs";
         loadData(file);
 
         assertTrue(checker.unsolvable());

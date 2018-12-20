@@ -64,7 +64,7 @@ public class StatusChecker {
             Isle endIsle = controller.getEndIsle(startIsle, direction);
             if (endIsle == null || endIsle.getMissingBridges() <= 0 || detector.collides(startIsle, endIsle)) continue;
             Bridge bridge = controller.getBridge(startIsle.getPos(), endIsle.getPos());
-            if (bridge == null || (bridge != null && !bridge.isDoubleBridge())) return false;
+            if (bridge == null || !bridge.isDoubleBridge()) return false;
         }
         return true;
     }

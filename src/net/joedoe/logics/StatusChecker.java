@@ -50,10 +50,18 @@ public class StatusChecker {
      * @return true, falls unlösbar
      */
     public boolean unsolvable() {
-        List<Isle> isles = controller.getIsles().stream().filter(i -> i.getMissingBridges() > 0)
+        List<Isle> isles = controller.getIsles();
+        // Inseln mit fehlenden Brücken
+        List<Isle> islesWithBridges = isles.stream().filter(i -> i.getMissingBridges() > 0)
                 .collect(Collectors.toList());
-        if (isles.size() == 0) return false;
-        return isles.stream().allMatch(this::isolated);
+        // falls alle Inseln die geforderte Anzahl an Brücken haben
+        if (islesWithBridges.size() == 0) {
+            // Prüft, ob die Anzahl der verbundenen Inseln gleich der Gesamt-Anzahl ist
+            Set<Isle> connectedIsles = new HashSet<>();
+            connected(isles.get(0), connectedIsles);
+            return connectedIsles.size() < isles.size();
+        }
+        return islesWithBridges.stream().allMatch(this::isolated);
     }
 
     /**
@@ -73,7 +81,7 @@ public class StatusChecker {
         return true;
     }
 
-    // Alternative unsolvable()
+    // Alternative Implementierung von unsolvable()
     // public boolean unsolvable() {
     // List<Isle> isles = controller.getIsles();
     // // Prüft, ob einzelne Insel oder Insel-Gruppe isoliert ist
@@ -100,26 +108,24 @@ public class StatusChecker {
     // // Prüft, ob fehlende Brücken mehr sind als hinzufügbare Brücken
     // return startIsle.getMissingBridges() > bridges;
     // }
-    // private boolean disconnected(List<Isle> isles) {
-    // // Liste aller Inseln ohne fehlende Brücken
-    // List<Isle> islesZeroBridges = isles.stream().filter(i ->
-    // i.getMissingBridges() == 0)
-    // .collect(Collectors.toList());
-    // // Speichert Inseln, die bereits überprüft wurden
-    // Set<Isle> cached = new HashSet<>();
-    // // Prüft, ob Insel-Gruppen isoliert sind
-    // for (Isle isle : islesZeroBridges) {
-    // if (cached.contains(isle)) continue;
-    // Set<Isle> connectedIsles = new HashSet<>();
-    // connected(isle, connectedIsles);
-    // cached.addAll(connectedIsles);
-    // boolean disconnected = connectedIsles.stream().allMatch(i ->
-    // i.getMissingBridges() == 0)
-    // && connectedIsles.size() < isles.size();
-    // if (disconnected) return true;
-    // }
-    // return false;
-    // }
+//    private boolean disconnected(List<Isle> isles) {
+//        // Liste aller Inseln ohne fehlende Brücken
+//        List<Isle> islesZeroBridges = isles.stream().filter(i -> i.getMissingBridges() == 0)
+//                .collect(Collectors.toList());
+//        // Speichert Inseln, die bereits überprüft wurden
+//        Set<Isle> cached = new HashSet<>();
+//        // Prüft, ob Insel-Gruppen isoliert sind
+//        for (Isle isle : islesZeroBridges) {
+//            if (cached.contains(isle)) continue;
+//            Set<Isle> connectedIsles = new HashSet<>();
+//            connected(isle, connectedIsles);
+//            cached.addAll(connectedIsles);
+//            boolean disconnected = connectedIsles.stream().allMatch(i -> i.getMissingBridges() == 0)
+//                    && connectedIsles.size() < isles.size();
+//            if (disconnected) return true;
+//        }
+//        return false;
+//    }
 
     /**
      * Prüft, ob das Spiel im aktuellen Zustand gelöst ist. Spiel ist gelöst, falls

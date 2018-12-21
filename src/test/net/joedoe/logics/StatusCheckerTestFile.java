@@ -37,4 +37,12 @@ public class StatusCheckerTestFile extends FileHandlerTesting {
 
         assertTrue(checker.unsolvable());
     }
+
+    @Test
+    public void puzzleDisconnected() {
+        String file = "disconnected.bgs";
+        loadData(file);
+
+        assertTrue(checker.unsolvable());
+    }
 }

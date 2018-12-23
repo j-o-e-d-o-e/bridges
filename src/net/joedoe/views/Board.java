@@ -44,18 +44,6 @@ class Board extends StackPane {
         // Mocks.getBridges());
         getChildren().add(grid);
         setShowMissingBridges(showMissingBridges);
-
-//        ImageView imageView = new ImageView();
-//        Image image = new Image("file:assets" + File.separator + "images" + File.separator + "water.gif");
-//        imageView.setImage(image);
-//        getChildren().add(imageView);
-
-
-        String file = "assets" + File.separator + "sounds" + File.separator + "waves.wav";
-        Media sound = new Media(new File(file).toURI().toString());
-        MediaPlayer player =new MediaPlayer(sound);
-        player.setOnEndOfMedia(() -> player.seek(Duration.ZERO));
-        player.play();
     }
 
     /**

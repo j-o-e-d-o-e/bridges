@@ -28,7 +28,6 @@ public class IslePane extends StackPane {
         setId("isle");
         circle = new Circle(CIRCLE_RADIUS, STD_COLOR);
         label = new Label(Integer.toString(bridgeCount));
-//        label.getStyleClass().add("isle");
         getChildren().addAll(circle, label);
     }
 

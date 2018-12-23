@@ -3,11 +3,15 @@ package net.joedoe.views;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
 import net.joedoe.utils.GameData;
 import net.joedoe.utils.Mocks;
 
+import java.io.File;
 import java.util.List;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
@@ -40,6 +44,18 @@ class Board extends StackPane {
         // Mocks.getBridges());
         getChildren().add(grid);
         setShowMissingBridges(showMissingBridges);
+
+//        ImageView imageView = new ImageView();
+//        Image image = new Image("file:assets" + File.separator + "images" + File.separator + "water.gif");
+//        imageView.setImage(image);
+//        getChildren().add(imageView);
+
+
+        String file = "assets" + File.separator + "sounds" + File.separator + "waves.wav";
+        Media sound = new Media(new File(file).toURI().toString());
+        MediaPlayer player =new MediaPlayer(sound);
+        player.setOnEndOfMedia(() -> player.seek(Duration.ZERO));
+        player.play();
     }
 
     /**

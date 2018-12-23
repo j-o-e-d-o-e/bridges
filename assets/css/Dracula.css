@@ -1,0 +1,24 @@
+.root {
+    -fx-background-color: #282828;
+    /*-fx-font-size: 11pt;*/
+}
+
+/*controls*/
+.label, .check-box {
+    -fx-text-fill: #e8e8e8;
+}
+
+/*menu-bar*/
+.menu-item > .label, .menu > .label {
+    -fx-text-fill: #282828;
+}
+
+/*isle panes*/
+#isle > .label {
+    -fx-text-fill: #282828;
+}
+
+/*for testing custom-classes, applied to isle panes*/
+.isle {
+    -fx-text-fill: purple;
+}

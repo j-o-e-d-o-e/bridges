@@ -1,6 +1,5 @@
-.root {
+.root, .dialog {
     -fx-background-color: #282828;
-    /*-fx-font-size: 11pt;*/
 }
 
 /*controls*/
@@ -13,12 +12,17 @@
     -fx-text-fill: #282828;
 }
 
+/*board*/
+#pane{
+    -fx-border-color: grey;
+    -fx-background-color: #4BA6E0;
+}
+
 /*isle panes*/
 #isle > .label {
     -fx-text-fill: #282828;
 }
 
-/*for testing custom-classes, applied to isle panes*/
-.isle {
-    -fx-text-fill: purple;
+#points {
+    -fx-font-size: 12pt;
 }

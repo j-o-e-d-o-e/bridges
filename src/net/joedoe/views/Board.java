@@ -2,10 +2,12 @@ package net.joedoe.views;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.util.Duration;
+import javafx.scene.layout.TilePane;
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
 import net.joedoe.utils.GameData;
@@ -15,6 +17,7 @@ import java.io.File;
 import java.util.List;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
+import static net.joedoe.utils.GameInfo.ONE_TILE;
 
 /**
  * Spielfeld, das das Raster enthält, auf dem Inseln und Brücken platziert
@@ -42,8 +45,42 @@ class Board extends StackPane {
         grid = new Grid(statusListener, width, height, Mocks.getIsles(), null);
         // grid = new Grid(statusListener, width, height, Mocks.getIsles(),
         // Mocks.getBridges());
+        getChildren().add(setWaves());
         getChildren().add(grid);
         setShowMissingBridges(showMissingBridges);
+    }
+
+    private Node setWaves() {
+//        TilePane tile = new TilePane();
+        FlowPane tile = new FlowPane();
+        tile.setPadding(new Insets(5, 0, 5, 0));
+        tile.setVgap(4);
+        tile.setHgap(4);
+//        tile.setPrefColumns(50);
+//        tile.setPrefRows(4);
+        tile.setId("pane");
+        Image waves = new Image("file:assets" + File.separator + "images" + File.separator + "waves.gif");
+        Image water = new Image("file:assets" + File.separator + "images" + File.separator + "water.png");
+        Image waterBG = new Image("file:assets" + File.separator + "images" + File.separator + "waterBG.gif");
+//        ImageView view = new ImageView(waterBG);
+//        tile.getChildren().add(view);
+        for (int i = 0; i < 1000; i++) {
+            ImageView view;
+            if (i % 8 == 0) {
+                view = new ImageView(waves);
+                tile.getChildren().add(view);
+                view.setFitHeight(ONE_TILE >> 1);
+                view.setPreserveRatio(true);
+                view = new ImageView(waves);
+                tile.getChildren().add(view);
+            } else {
+                view = new ImageView(water);
+                tile.getChildren().add(view);
+            }
+            view.setFitHeight(ONE_TILE >> 1);
+            view.setPreserveRatio(true);
+        }
+        return tile;
     }
 
     /**

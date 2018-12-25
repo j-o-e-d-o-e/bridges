@@ -131,9 +131,9 @@ class Grid extends GridPane {
         for (IslePane isle : gridController.getPanes()) {
             // Farbe aktualisieren
             int bridges = controller.getMissingBridges(isle.getPos());
-            if (bridges == 0) isle.setColor(SOLVED_COLOR);
-            else if (bridges < 0) isle.setColor(ALERT_COLOR);
-            else isle.setColor(STD_COLOR);
+            if (bridges == 0) isle.setColor(ISLES_SOLVED_COLOR);
+            else if (bridges < 0) isle.setColor(ISLES_ALERT_COLOR);
+            else isle.setColor(ISLES_STD_COLOR);
             // Brücken-Anzahl aktualisieren
             if (!showMissingBridges) bridges = controller.getBridges(isle.getPos());
             isle.setText(Integer.toString(bridges));
@@ -282,7 +282,7 @@ class Grid extends GridPane {
         gridController.getLines().forEach(line -> getChildren().remove(line.getLine()));
         gridController.reset();
         gridController.getPanes().forEach(isle -> {
-            isle.setColor(STD_COLOR);
+            isle.setColor(ISLES_STD_COLOR);
             isle.setText(Integer.toString(controller.getBridges(isle.getPos())));
         });
         autoSolver.stop();

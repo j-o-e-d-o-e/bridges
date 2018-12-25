@@ -3,18 +3,13 @@ package net.joedoe.viewmodel;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import net.joedoe.utils.Coordinate;
-
-import static net.joedoe.utils.GameInfo.CIRCLE_RADIUS;
-import static net.joedoe.utils.GameInfo.STD_COLOR;
 
 /**
  * Repräsentiert eine Insel im View.
  */
 public class IslePane extends StackPane {
     private final Coordinate pos;
-    private Circle circle;
     private Label label;
 
     /**
@@ -26,10 +21,8 @@ public class IslePane extends StackPane {
     public IslePane(Coordinate pos, int bridgeCount) {
         this.pos = pos;
         setId("isle");
-        circle = new Circle(CIRCLE_RADIUS, STD_COLOR);
         label = new Label(Integer.toString(bridgeCount));
-//        getChildren().addAll(circle, label);
-        getChildren().addAll(label);
+        getChildren().add(label);
     }
 
     /**
@@ -69,12 +62,12 @@ public class IslePane extends StackPane {
     }
 
     /**
-     * Legt die Farbe der Insel fest.
+     * Legt die Farbe des Textes fest.
      *
-     * @param color Farbe des Insel-Kreises
+     * @param color Farbe des Insel-Textes
      */
     public void setColor(Color color) {
-        circle.setFill(color);
+        label.setTextFill(color);
     }
 
     @Override

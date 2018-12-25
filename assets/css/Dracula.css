@@ -12,13 +12,15 @@
     -fx-text-fill: #282828;
 }
 
-#grid{
+#grid {
+    -fx-background-color: #49A5E0;
     -fx-background-image: url("../images/waterBG.gif");
-    -fx-background-size: 1000 1000;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 750 850;
 }
 
-/*isle panes*/
-#isle{
+/*isles*/
+#isle {
     -fx-background-image: url("../images/isle.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 40 40;
@@ -26,7 +28,9 @@
 }
 
 #isle > .label {
-    -fx-text-fill: white;
+    -fx-text-fill: #f8f8ff; /*GhostWhite*/
+    -fx-font-weight: bold;
+    -fx-font-size: 11pt;
 }
 
 #points {

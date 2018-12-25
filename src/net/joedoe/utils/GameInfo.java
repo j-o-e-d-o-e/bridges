@@ -13,8 +13,10 @@ public class GameInfo {
     public static final int BRIDGE_OFFSET = 3;
     public static final int BRIDGE_OVERLAP = ONE_TILE / 2 - CIRCLE_RADIUS;
     public static final Color STD_COLOR = Color.GREY;
-    public static final Color SOLVED_COLOR = Color.LIGHTGREEN;
-    public static final Color ALERT_COLOR = Color.CORAL;
+
+    public static final Color ISLES_STD_COLOR = Color.GHOSTWHITE;
+    public static final Color ISLES_SOLVED_COLOR = Color.web("#009900");
+    public static final Color ISLES_ALERT_COLOR = Color.web("#ff4500");
     // Logik
     public static final int MIN_WIDTH = 4;
     public static final int MAX_WIDTH = 25;

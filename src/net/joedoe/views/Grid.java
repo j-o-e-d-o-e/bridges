@@ -50,6 +50,7 @@ class Grid extends GridPane {
     Grid(EventHandler<StatusEvent> statusListener, int width, int height, List<IIsle> isles, List<IBridge> bridges) {
         // setGridLinesVisible(true);
         setAlignment(Pos.CENTER);
+        setId("grid");
         setBorder(new Border(
                 new BorderStroke(STD_COLOR, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         // Größe des Rasters festlegen

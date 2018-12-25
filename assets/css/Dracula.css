@@ -1,4 +1,4 @@
-.root, .dialog {
+.root {
     -fx-background-color: #282828;
 }
 
@@ -12,15 +12,21 @@
     -fx-text-fill: #282828;
 }
 
-/*board*/
-#pane{
-    -fx-border-color: grey;
-    -fx-background-color: #4BA6E0;
+#grid{
+    -fx-background-image: url("../images/waterBG.gif");
+    -fx-background-size: 1000 1000;
 }
 
 /*isle panes*/
+#isle{
+    -fx-background-image: url("../images/isle.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 40 40;
+    -fx-background-position: center, center;
+}
+
 #isle > .label {
-    -fx-text-fill: #282828;
+    -fx-text-fill: white;
 }
 
 #points {

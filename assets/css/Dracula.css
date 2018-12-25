@@ -19,7 +19,6 @@
     -fx-background-size: 750 850;
 }
 
-/*isles*/
 #isle {
     -fx-background-image: url("../images/isle.png");
     -fx-background-repeat: no-repeat;

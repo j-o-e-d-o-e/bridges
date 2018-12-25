@@ -1,7 +1,9 @@
 package net.joedoe.viewmodel;
 
+import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.StrokeType;
 import net.joedoe.utils.Alignment;
 import net.joedoe.utils.Coordinate;
 
@@ -27,8 +29,8 @@ public class BridgeLine {
         this.start = start;
         this.end = end;
         alignment = Alignment.getAlignment(start.getY(), end.getY());
+        line.setStroke(Color.web("#ff4500"));
         line.setStrokeWidth(1.5);
-        line.setStroke(Color.CORAL);
         translateToLayout(offset);
     }
 
@@ -123,7 +125,7 @@ public class BridgeLine {
      * Färbt die Linie in der Standard-Farbe.
      */
     void setStdColor() {
-        line.setStroke(STD_COLOR);
+        line.setStroke(BRIDGES_STD_COLOR);
     }
 
     /**

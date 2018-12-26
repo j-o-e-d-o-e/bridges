@@ -1,7 +1,5 @@
 package net.joedoe.utils;
 
-import javafx.scene.paint.Color;
-
 /**
  * Enthält Konstanten zur Darstellung und zur Spiellogik.
  */
@@ -12,7 +10,6 @@ public class GameInfo {
     private static final int CIRCLE_RADIUS = 12;
     public static final int BRIDGE_OFFSET = 3;
     public static final int BRIDGE_OVERLAP = ONE_TILE / 2 - CIRCLE_RADIUS;
-    public static final Color STD_COLOR = Color.GREY;
 
     // Logik
     public static final int MIN_WIDTH = 4;

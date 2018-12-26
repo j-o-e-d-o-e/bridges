@@ -2,10 +2,11 @@ package net.joedoe.views;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.layout.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
 import net.joedoe.logics.AutoSolver;
@@ -22,7 +23,6 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static net.joedoe.utils.GameInfo.ONE_TILE;
-import static net.joedoe.utils.GameInfo.STD_COLOR;
 
 /**
  * Das Raster, auf dem Inseln und Brücken platziert werden.
@@ -49,11 +49,7 @@ class Grid extends GridPane {
      * @param bridges        Liste mit den zu platzierenden Brücken
      */
     Grid(EventHandler<StatusEvent> statusListener, int width, int height, List<IIsle> isles, List<IBridge> bridges) {
-        // setGridLinesVisible(true);
-        setAlignment(Pos.CENTER);
         setId("grid");
-        setBorder(new Border(
-                new BorderStroke(STD_COLOR, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         // Größe des Rasters festlegen
         IntStream.range(0, height).mapToObj(i -> new RowConstraints(ONE_TILE))
                 .forEach(row -> getRowConstraints().add(row));

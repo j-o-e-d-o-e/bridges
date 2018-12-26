@@ -21,7 +21,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-import static net.joedoe.utils.GameInfo.*;
+import static net.joedoe.utils.GameInfo.ONE_TILE;
+import static net.joedoe.utils.GameInfo.STD_COLOR;
 
 /**
  * Das Raster, auf dem Inseln und Brücken platziert werden.
@@ -130,10 +131,12 @@ class Grid extends GridPane {
     private void updateIsles() {
         for (IslePane isle : gridController.getPanes()) {
             // Farbe aktualisieren
+            isle.getStyleClass().removeAll("isle-alert", "isle-solved");
             int bridges = controller.getMissingBridges(isle.getPos());
-            if (bridges == 0) isle.setColor(ISLES_SOLVED_COLOR);
-            else if (bridges < 0) isle.setColor(ISLES_ALERT_COLOR);
-            else isle.setColor(ISLES_STD_COLOR);
+            if (bridges == 0)
+                isle.getStyleClass().add("isle-solved");
+            else if (bridges < 0)
+                isle.getStyleClass().add("isle-alert");
             // Brücken-Anzahl aktualisieren
             if (!showMissingBridges) bridges = controller.getBridges(isle.getPos());
             isle.setText(Integer.toString(bridges));
@@ -282,7 +285,7 @@ class Grid extends GridPane {
         gridController.getLines().forEach(line -> getChildren().remove(line.getLine()));
         gridController.reset();
         gridController.getPanes().forEach(isle -> {
-            isle.setColor(ISLES_STD_COLOR);
+            isle.getStyleClass().removeAll("isle-alert", "isle-solved");
             isle.setText(Integer.toString(controller.getBridges(isle.getPos())));
         });
         autoSolver.stop();

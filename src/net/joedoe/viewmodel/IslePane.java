@@ -1,6 +1,7 @@
 package net.joedoe.viewmodel;
 
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import net.joedoe.utils.Coordinate;
@@ -20,9 +21,9 @@ public class IslePane extends StackPane {
      */
     public IslePane(Coordinate pos, int bridgeCount) {
         this.pos = pos;
-        setId("isle");
         label = new Label(Integer.toString(bridgeCount));
         getChildren().add(label);
+        setId("isle");
     }
 
     /**
@@ -59,15 +60,6 @@ public class IslePane extends StackPane {
      */
     public void setText(String text) {
         label.setText(text);
-    }
-
-    /**
-     * Legt die Farbe des Textes fest.
-     *
-     * @param color Farbe des Insel-Textes
-     */
-    public void setColor(Color color) {
-        label.setTextFill(color);
     }
 
     @Override

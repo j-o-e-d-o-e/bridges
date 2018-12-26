@@ -4,7 +4,7 @@
 
 /*controls*/
 .label, .check-box {
-    -fx-text-fill: #e8e8e8;
+    -fx-text-fill: #F8F8F8;
 }
 
 /*menu-bar*/
@@ -12,13 +12,19 @@
     -fx-text-fill: #282828;
 }
 
+/*points display*/
+#points {
+    -fx-font-size: 12pt;
+}
+
+/*grid*/
 #grid {
     -fx-background-color: #49A5E0;
     -fx-background-image: url("../images/waterBG.gif");
-    -fx-background-repeat: no-repeat;
     -fx-background-size: 750 850;
 }
 
+/*isles*/
 #isle {
     -fx-background-image: url("../images/isle.png");
     -fx-background-repeat: no-repeat;
@@ -27,11 +33,29 @@
 }
 
 #isle > .label {
-    -fx-text-fill: #f8f8ff; /*GhostWhite*/
+    -fx-text-fill: #F8F8F8; /*GhostWhite*/
+    -fx-font: 12 Tahoma;
     -fx-font-weight: bold;
-    -fx-font-size: 11pt;
 }
 
-#points {
-    -fx-font-size: 12pt;
+.isle-alert {
+    -fx-effect: dropshadow(three-pass-box, red, 10, 0, 0, 0);
 }
+
+.isle-solved {
+    -fx-effect: dropshadow(three-pass-box, palegreen, 10, 0, 0, 0);
+}
+
+/*bridges*/
+#bridge {
+    -fx-stroke-width: 1.8;
+}
+
+.bridge-first{
+    -fx-stroke: #cc6697;
+}
+
+.bridge-last{
+    -fx-stroke: purple;
+}
+

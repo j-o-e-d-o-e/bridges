@@ -7,7 +7,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -53,9 +52,9 @@ public class MainFrame extends BorderPane {
         return box;
     }
 
-    private Node createMenuBar(){
+    private Node createMenuBar() {
         MenuBar menuBar = new MenuBar();
-        Menu menu = new Menu("Datei");
+        Menu menu = new Menu("\u2630");
         MenuItem newGame = new MenuItem("Neues Rätsel");
         newGame.setOnAction(e -> createNewGame());
         MenuItem reset = new MenuItem("Rätsel neu starten");
@@ -75,27 +74,54 @@ public class MainFrame extends BorderPane {
         return menuBar;
     }
 
-    private Node createTopBar(){
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER);
-        hBox.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, 0, CONTAINER_OFFSET));
-        hBox.setSpacing(CONTAINER_OFFSET);
+    private Node createTopBar() {
+        HBox hBox1 = new HBox();
+        hBox1.setAlignment(Pos.CENTER);
+        hBox1.setSpacing(CONTAINER_OFFSET);
         ImageView imageView = new ImageView();
         Image image = new Image("file:assets" + File.separator + "images" + File.separator + "coin.png");
         imageView.setImage(image);
         imageView.setPreserveRatio(true);
         imageView.setFitHeight(15);
         Label points = new Label("0");
-        points.setId("points-label");
-        hBox.getChildren().addAll(imageView, points);
-        return hBox;
+        points.setFont(new Font(15));
+        hBox1.getChildren().addAll(imageView, points);
+
+        HBox hBox2 = new HBox();
+        hBox2.setMinWidth(100);
+        hBox2.setAlignment(Pos.CENTER_RIGHT);
+        hBox2.setSpacing(CONTAINER_OFFSET);
+        Button zoomIn = new Button("\uD83D\uDD0D+");
+        zoomIn.setOnAction(e -> board.zoomIn());
+        Button zoomOut = new Button("\uD83D\uDD0D-");
+        zoomOut.setOnAction(e -> board.zoomOut());
+        Button sound = new Button("\uD83D\uDD0A");
+        sound.setMinWidth(30);
+        sound.setOnAction(e -> {
+            String txt = sound.getText();
+            if (txt.equals("\uD83D\uDD07")) sound.setText("\uD83D\uDD0A");
+            else sound.setText("\uD83D\uDD07");
+            board.setSound();
+        });
+        hBox2.getChildren().addAll(zoomIn, zoomOut, sound);
+
+        Region region1 = new Region();
+        HBox.setHgrow(region1, Priority.ALWAYS);
+        Region region2 = new Region();
+        HBox.setHgrow(region2, Priority.ALWAYS);
+
+        HBox box = new HBox();
+        box.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, 0, CONTAINER_OFFSET));
+        box.getChildren().addAll(region1, hBox1, region2, hBox2);
+        return box;
     }
 
     private void showTutorial() {
         board.stopAutoSolve();
         Tutorial tutorial = new Tutorial();
         tutorial.initOwner(window);
-        tutorial.show();    }
+        tutorial.show();
+    }
 
     private Node createBoard() {
         board = new Board(this::handle);

@@ -18,6 +18,7 @@ import net.joedoe.viewmodel.BridgeLine;
 import net.joedoe.viewmodel.GridController;
 import net.joedoe.viewmodel.IslePane;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -294,5 +295,13 @@ class Grid extends GridPane {
      */
     void saveGame() {
         controller.saveGame();
+    }
+
+    public List<IIsle> getIsles() {
+        return new ArrayList<>(controller.getIsles());
+    }
+
+    public List<IBridge> getBridges() {
+        return new ArrayList<>(controller.getBridges());
     }
 }

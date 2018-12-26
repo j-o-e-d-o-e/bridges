@@ -4,11 +4,16 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
 import net.joedoe.utils.GameData;
+import net.joedoe.utils.GameInfo;
 import net.joedoe.utils.Mocks;
 
+import java.io.File;
 import java.util.List;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
@@ -19,10 +24,12 @@ import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
  */
 class Board extends StackPane {
     private Grid grid;
+    private ScrollPane scroll;
     private int width, height;
     private boolean showMissingBridges = true;
     private EventHandler<StatusEvent> statusListener;
     private GameData gameData = GameData.getInstance();
+    private MediaPlayer player;
 
     /**
      * Board wird Listener übergeben, um die Statuszeile im
@@ -39,12 +46,18 @@ class Board extends StackPane {
         grid = new Grid(statusListener, width, height, Mocks.getIsles(), null);
         // grid = new Grid(statusListener, width, height, Mocks.getIsles(),
         // Mocks.getBridges());
-        ScrollPane scroll = new ScrollPane();
+        scroll = new ScrollPane();
         scroll.setContent(grid);
         scroll.setFitToHeight(true);
         scroll.setFitToWidth(true);
         getChildren().add(scroll);
         setShowMissingBridges(showMissingBridges);
+
+        String file = "assets" + File.separator + "sounds" + File.separator + "waves.wav";
+        Media sound = new Media(new File(file).toURI().toString());
+        player = new MediaPlayer(sound);
+        player.setOnEndOfMedia(() -> player.seek(Duration.ZERO));
+        player.play();
     }
 
     /**
@@ -61,7 +74,7 @@ class Board extends StackPane {
         getChildren().remove(grid);
         grid.shutdownAutoSolve();
         grid = new Grid(statusListener, width, height, isles, bridges);
-        ScrollPane scroll = new ScrollPane();
+        scroll = new ScrollPane();
         scroll.setContent(grid);
         scroll.setFitToHeight(true);
         scroll.setFitToWidth(true);
@@ -74,6 +87,27 @@ class Board extends StackPane {
      */
     void setLoadedGrid() {
         setGrid(gameData.getWidth(), gameData.getHeight(), gameData.getIsles(), gameData.getBridges());
+    }
+
+    /**
+     * Inseln vergrößern.
+     */
+    void zoomIn() {
+        GameInfo.zoomIn();
+        setGrid(width, height, grid.getIsles(), grid.getBridges());
+    }
+
+    /**
+     * Inseln verkleinern.
+     */
+    void zoomOut() {
+        GameInfo.zoomOut();
+        setGrid(width, height, grid.getIsles(), grid.getBridges());
+    }
+
+    void setSound() {
+        if (player.getStatus() == MediaPlayer.Status.PLAYING) player.pause();
+        else player.play();
     }
 
     /**

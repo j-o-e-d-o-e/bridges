@@ -25,7 +25,7 @@ public class IslePane extends StackPane {
     public IslePane(Coordinate pos, int bridgeCount) {
         this.pos = pos;
         label = new Label(Integer.toString(bridgeCount));
-        int fontSize = ISLE_SIZE / 3;
+        int fontSize = ISLE_SIZE / 2 + 5;
         label.setStyle("-fx-text-fill: #F8F8F8; -fx-font:" + fontSize + " Tahoma; -fx-font-weight: bold;");
         getChildren().add(label);
         setImage();

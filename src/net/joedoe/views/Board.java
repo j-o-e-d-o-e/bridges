@@ -2,6 +2,7 @@ package net.joedoe.views;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
@@ -38,7 +39,11 @@ class Board extends StackPane {
         grid = new Grid(statusListener, width, height, Mocks.getIsles(), null);
         // grid = new Grid(statusListener, width, height, Mocks.getIsles(),
         // Mocks.getBridges());
-        getChildren().add(grid);
+        ScrollPane scroll = new ScrollPane();
+        scroll.setContent(grid);
+        scroll.setFitToHeight(true);
+        scroll.setFitToWidth(true);
+        getChildren().add(scroll);
         setShowMissingBridges(showMissingBridges);
     }
 
@@ -56,7 +61,11 @@ class Board extends StackPane {
         getChildren().remove(grid);
         grid.shutdownAutoSolve();
         grid = new Grid(statusListener, width, height, isles, bridges);
-        getChildren().add(grid);
+        ScrollPane scroll = new ScrollPane();
+        scroll.setContent(grid);
+        scroll.setFitToHeight(true);
+        scroll.setFitToWidth(true);
+        getChildren().add(scroll);
         setShowMissingBridges(showMissingBridges);
     }
 

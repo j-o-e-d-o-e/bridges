@@ -68,7 +68,11 @@ public class MainFrame extends BorderPane {
         exit.setOnAction(e -> close());
         menu.getItems().addAll(newGame, reset, loadGame, saveGame, saveGameAs, tutorial, exit);
         menuBar.getMenus().add(menu);
+        box.getChildren().addAll(menuBar, createPoints());
+        return box;
+    }
 
+    private Node createPoints(){
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
         hBox.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, 0, CONTAINER_OFFSET));
@@ -77,13 +81,11 @@ public class MainFrame extends BorderPane {
         Image image = new Image("file:assets" + File.separator + "images" + File.separator + "coin.png");
         imageView.setImage(image);
         imageView.setPreserveRatio(true);
-        imageView.setFitHeight(ONE_TILE >> 1);
+        imageView.setFitHeight(15);
         Label points = new Label("0");
-        points.setId("points");
+        points.setId("points-label");
         hBox.getChildren().addAll(imageView, points);
-        box.getChildren().addAll(menuBar, hBox);
-
-        return box;
+        return hBox;
     }
 
     private void showTutorial() {

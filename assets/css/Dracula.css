@@ -13,7 +13,7 @@
 }
 
 /*points display*/
-#points {
+#points-label {
     -fx-font-size: 12pt;
 }
 
@@ -23,24 +23,11 @@
     -fx-background-color: #49A5E0;
     -fx-background-image: url("../images/waterBG.gif");
     -fx-background-size: 750 850;
-    -fx-border-color: green;
-    /*-fx-grid-lines-visible: true;*/
+    -fx-border-color: grey;
+    -fx-grid-lines-visible: true;
 }
 
 /*isles*/
-#isle {
-    -fx-background-image: url("../images/isle.png");
-    -fx-background-repeat: no-repeat;
-    -fx-background-size: 40 40;
-    -fx-background-position: center, center;
-}
-
-#isle > .label {
-    -fx-text-fill: #F8F8F8; /*GhostWhite*/
-    -fx-font: 12 Tahoma;
-    -fx-font-weight: bold;
-}
-
 .isle-alert {
     -fx-effect: dropshadow(three-pass-box, red, 10, 0, 0, 0);
 }
@@ -50,15 +37,15 @@
 }
 
 /*bridges*/
-#bridge {
-    -fx-stroke-width: 1.8;
-}
-
 .bridge-first{
-    -fx-stroke: #cc6697;
+    -fx-stroke: linear-gradient(to bottom right, #ff3333, #ff9999);
+    -fx-stroke-width: 1.5;
+    -fx-effect: dropshadow(gaussian, #ff3333, 0, 1, 0, 0);
 }
 
 .bridge-last{
-    -fx-stroke: purple;
+    -fx-stroke: linear-gradient(to bottom right, #4d4d4d, #808080);
+    -fx-stroke-width: 1.5;
+    -fx-effect: dropshadow(gaussian, #4d4d4d, 0, 1, 0, 0);
 }
 

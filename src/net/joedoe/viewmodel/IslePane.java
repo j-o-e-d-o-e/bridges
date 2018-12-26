@@ -1,10 +1,13 @@
 package net.joedoe.viewmodel;
 
 import javafx.scene.control.Label;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import net.joedoe.utils.Coordinate;
+
+import java.io.File;
+
+import static net.joedoe.utils.GameInfo.ISLE_SIZE;
 
 /**
  * Repräsentiert eine Insel im View.
@@ -22,8 +25,18 @@ public class IslePane extends StackPane {
     public IslePane(Coordinate pos, int bridgeCount) {
         this.pos = pos;
         label = new Label(Integer.toString(bridgeCount));
+        int fontSize = ISLE_SIZE / 3;
+        label.setStyle("-fx-text-fill: #F8F8F8; -fx-font:" + fontSize + " Tahoma; -fx-font-weight: bold;");
         getChildren().add(label);
-        setId("isle");
+        setImage();
+    }
+
+    private void setImage() {
+        String url = "file:assets" + File.separator + "images" + File.separator + "isle.png";
+        Image image = new Image(url, ISLE_SIZE, ISLE_SIZE, true, true);
+        BackgroundImage bg = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+                BackgroundSize.DEFAULT);
+        setBackground(new Background(bg));
     }
 
     /**

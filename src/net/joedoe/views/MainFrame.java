@@ -6,9 +6,9 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.joedoe.utils.FileHandler;
@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
-import static net.joedoe.utils.GameInfo.ONE_TILE;
 
 /**
  * Das Hauptfenster, das das Spielfeld und die Steuerung enthält.
@@ -50,6 +49,11 @@ public class MainFrame extends BorderPane {
 
     private Node createTop() {
         VBox box = new VBox();
+        box.getChildren().addAll(createMenuBar(), createTopBar());
+        return box;
+    }
+
+    private Node createMenuBar(){
         MenuBar menuBar = new MenuBar();
         Menu menu = new Menu("Datei");
         MenuItem newGame = new MenuItem("Neues Rätsel");
@@ -68,11 +72,10 @@ public class MainFrame extends BorderPane {
         exit.setOnAction(e -> close());
         menu.getItems().addAll(newGame, reset, loadGame, saveGame, saveGameAs, tutorial, exit);
         menuBar.getMenus().add(menu);
-        box.getChildren().addAll(menuBar, createPoints());
-        return box;
+        return menuBar;
     }
 
-    private Node createPoints(){
+    private Node createTopBar(){
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
         hBox.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, 0, CONTAINER_OFFSET));

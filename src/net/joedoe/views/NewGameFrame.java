@@ -42,9 +42,11 @@ class NewGameFrame extends Stage {
 
     private StackPane setLayout() {
         StackPane outerPane = new StackPane();
+        outerPane.setStyle("-fx-background-color: #282828;");
         outerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
 
         StackPane innerPane = new StackPane();
+//        innerPane.setStyle("-fx-background-color: #282828;");
         innerPane.setBorder(new Border(
                 new BorderStroke(Color.GREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         innerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
@@ -52,11 +54,13 @@ class NewGameFrame extends Stage {
         VBox vBox = new VBox();
         vBox.setSpacing(CONTAINER_OFFSET);
 
-        ToggleGroup radios = new ToggleGroup();
+        ToggleGroup radios = new ToggleGroup(); //-fx-text-fill: #F8F8F8;
         autoBtn = new RadioButton("Automatische Größe und Inselanzahl");
+        autoBtn.setStyle("-fx-text-fill: #F8F8F8;");
         autoBtn.setSelected(true);
         autoBtn.setToggleGroup(radios);
         RadioButton customBtn = new RadioButton("Größe und/oder Inselanzahl selbst festlegen");
+        customBtn.setStyle("-fx-text-fill: #F8F8F8;");
         customBtn.setToggleGroup(radios);
         radios.selectedToggleProperty().addListener(e -> {
             if (autoBtn.isSelected()) {
@@ -77,16 +81,19 @@ class NewGameFrame extends Stage {
             }
         });
         heightLabel = new Label("Höhe:");
+        heightLabel.setStyle("-fx-text-fill: #F8F8F8;");
         heightLabel.setDisable(true);
         heightTxt = new TextField();
         heightTxt.setDisable(true);
 
         widthLabel = new Label("Breite:");
+        widthLabel.setStyle("-fx-text-fill: #F8F8F8;");
         widthTxt = new TextField();
         widthTxt.setDisable(true);
         widthLabel.setDisable(true);
 
         checkBox = new CheckBox("Inselanzahl festlegen");
+        checkBox.setStyle("-fx-text-fill: #F8F8F8;");
         checkBox.setDisable(true);
         checkBox.setOnAction(e -> {
             if (islesTxt.isDisabled()) {
@@ -98,6 +105,7 @@ class NewGameFrame extends Stage {
             }
         });
         islesLabel = new Label("Inseln:");
+        islesLabel.setStyle("-fx-text-fill: #F8F8F8;");
         islesLabel.setDisable(true);
         islesTxt = new TextField();
         islesTxt.setDisable(true);

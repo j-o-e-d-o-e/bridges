@@ -24,7 +24,7 @@ import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 public class MainFrame extends BorderPane {
     private Stage window;
     private Board board;
-    private Label status;
+    private Label status, points;
     private FileChooser fileChooser;
     private String directory;
     private String filepath;
@@ -83,9 +83,11 @@ public class MainFrame extends BorderPane {
         imageView.setImage(image);
         imageView.setPreserveRatio(true);
         imageView.setFitHeight(15);
-        Label points = new Label("0");
+        points = new Label("0");
+        points.setMinWidth(50);
         points.setFont(new Font(15));
-        hBox1.getChildren().addAll(imageView, points);
+        Label spacer = new Label("                               ");
+        hBox1.getChildren().addAll(spacer, imageView, points);
 
         HBox hBox2 = new HBox();
         hBox2.setMinWidth(100);
@@ -125,6 +127,7 @@ public class MainFrame extends BorderPane {
 
     private Node createBoard() {
         board = new Board(this::handle);
+        board.setPointListener(this::handlePoints);
         return board;
     }
 
@@ -221,6 +224,10 @@ public class MainFrame extends BorderPane {
 
     private void handle(StatusEvent e) {
         status.setText(e.getStatus());
+    }
+
+    private void handlePoints(PointEvent e) {
+        points.setText(e.getPoints());
     }
 
     /**

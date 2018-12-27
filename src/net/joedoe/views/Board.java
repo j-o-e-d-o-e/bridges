@@ -180,4 +180,8 @@ class Board extends StackPane {
         gameData.setHeight(height);
         grid.saveGame();
     }
+
+    void setPointListener(EventHandler<PointEvent> listener){
+        grid.setPointListener(listener);
+    }
 }

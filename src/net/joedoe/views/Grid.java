@@ -14,6 +14,7 @@ import net.joedoe.logics.BridgeController;
 import net.joedoe.logics.Solver;
 import net.joedoe.logics.StatusChecker;
 import net.joedoe.utils.Direction;
+import net.joedoe.utils.GameManager;
 import net.joedoe.viewmodel.BridgeLine;
 import net.joedoe.viewmodel.GridController;
 import net.joedoe.viewmodel.IslePane;
@@ -35,6 +36,8 @@ class Grid extends GridPane {
     private Solver solver;
     private AutoSolver autoSolver;
     private EventHandler<StatusEvent> statusListener;
+    private EventHandler<PointEvent> pointListener;
+    private GameManager gameManager = GameManager.getInstance();
     private boolean showMissingBridges;
 
     /**
@@ -84,10 +87,23 @@ class Grid extends GridPane {
         IBridge bridge = controller.addBridge(isle.getPos(), direction);
         if (bridge == null) return;
         addBridge(bridge);
+        gameManager.addPoints(10);
+        pointListener.handle(new PointEvent(gameManager.getPoints()));
     }
 
     /**
-     * Fügt eine neue Brücken-Linie hinzu, falls möglich.
+     * Fügt eine neue Brücken-Linie hinzu, falls möglich. Aufgerufen von Programm.
+     *
+     * @param bridge hinzuzufügende Brücke (Modell)
+     */
+    private void addBridgeAuto(IBridge bridge) {
+        addBridge(bridge);
+        gameManager.removePoints(5);
+        pointListener.handle(new PointEvent(gameManager.getPoints()));
+    }
+
+    /**
+     * Fügt eine neue Brücken-Linie hinzu, falls möglich. Aufgerufen entweder von Nutzer oder von Programm.
      *
      * @param bridge hinzuzufügende Brücke (Modell)
      */
@@ -110,10 +126,12 @@ class Grid extends GridPane {
         IBridge bridge = controller.removeBridge(isle.getPos(), direction);
         if (bridge == null) return;
         removeBridge(bridge);
+        gameManager.removePoints(10);
+        pointListener.handle(new PointEvent(gameManager.getPoints()));
     }
 
     /**
-     * Entfernt Brücken-Linie, falls möglich.
+     * Entfernt Brücken-Linie, falls möglich. Aufgerufen entweder von Nutzer.
      *
      * @param bridge zu entferndende Brücke (Modell)
      */
@@ -156,6 +174,8 @@ class Grid extends GridPane {
         } else if (checker.solved()) {
             gridController.updateLines();
             statusListener.handle(new StatusEvent("Gelöst!"));
+            gameManager.addPoints(50);
+            pointListener.handle(new PointEvent(gameManager.getPoints()));
         } else {
             statusListener.handle(new StatusEvent("Noch nicht gelöst."));
         }
@@ -232,7 +252,7 @@ class Grid extends GridPane {
         }
         IBridge next = solver.getNextBridge();
         if (next == null && !checker.solved()) setAlert();
-        else addBridge(next);
+        else addBridgeAuto(next);
     }
 
     /**
@@ -249,7 +269,7 @@ class Grid extends GridPane {
             autoSolver.stop();
             if (!checker.solved()) setAlert();
         } else {
-            addBridge(next);
+            addBridgeAuto(next);
         }
     }
 
@@ -325,5 +345,9 @@ class Grid extends GridPane {
 
     public List<IBridge> getBridges() {
         return new ArrayList<>(controller.getBridges());
+    }
+
+    void setPointListener(EventHandler<PointEvent> listener) {
+        pointListener = listener;
     }
 }

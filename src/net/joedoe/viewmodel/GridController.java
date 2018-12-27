@@ -117,6 +117,9 @@ public class GridController {
                 lines.add(line);
             }
         }
+        BridgeLine line = lines.get(lines.size()-1);
+        line.getLine().getStyleClass().clear();
+        line.getLine().getStyleClass().add("bridge-first");
     }
 
     /**
@@ -155,5 +158,10 @@ public class GridController {
      */
     public void reset() {
         lines.clear();
+    }
+
+    public void clear() {
+        lines.clear();
+        panes.clear();
     }
 }

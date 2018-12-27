@@ -64,8 +64,12 @@ class Grid extends GridPane {
         autoSolver = new AutoSolver(solver);
         autoSolver.setListener(() -> Platform.runLater(this::getNextBridgeAuto));
         this.statusListener = statusListener;
+        controller.setIsles(isles);
         setIsles(isles);
-        if (bridges != null) setBridges(bridges);
+        if (bridges != null) {
+            controller.setBridges(bridges);
+            setBridges(bridges);
+        }
         checkStatus();
     }
 
@@ -163,7 +167,6 @@ class Grid extends GridPane {
      * @param isles Liste mit zu ladenen Inseln
      */
     private void setIsles(List<IIsle> isles) {
-        controller.setIsles(isles);
         gridController.setPanes(isles, new IsleListener(this));
         for (IslePane isle : gridController.getPanes())
             add(isle, isle.getX(), isle.getY());
@@ -175,11 +178,30 @@ class Grid extends GridPane {
      * @param bridges Liste mit zu ladenen Brücken
      */
     private void setBridges(List<IBridge> bridges) {
-        controller.setBridges(bridges);
         gridController.setLines(bridges);
-        for (BridgeLine line : gridController.getLines())
+        List<BridgeLine> lines = gridController.getLines();
+        for (BridgeLine line : lines)
             add(line.getLine(), line.getStartX(), line.getStartY());
         updateIsles();
+    }
+
+    void zoomInOut(int width, int height, boolean showMissingBridges) {
+//        setStyle("-fx-grid-lines-visible: false;");
+        getRowConstraints().clear();
+        IntStream.range(0, height).mapToObj(i -> new RowConstraints(ONE_TILE))
+                .forEach(row -> getRowConstraints().add(row));
+        getColumnConstraints().clear();
+        IntStream.range(0, width).mapToObj(i -> new ColumnConstraints(ONE_TILE))
+                .forEachOrdered(column -> getColumnConstraints().add(column));
+
+        getChildren().clear();
+        gridController.clear();
+        List<IIsle> isles = new ArrayList<>(controller.getIsles());
+        setIsles(isles);
+        setShowMissingBridges(showMissingBridges);
+        List<IBridge> bridges = new ArrayList<>(controller.getBridges());
+        setBridges(bridges);
+//        setStyle("-fx-grid-lines-visible: true;");
     }
 
     /**

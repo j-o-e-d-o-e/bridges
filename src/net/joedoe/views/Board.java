@@ -94,7 +94,7 @@ class Board extends StackPane {
      */
     void zoomIn() {
         GameInfo.zoomIn();
-        setGrid(width, height, grid.getIsles(), grid.getBridges());
+        grid.zoomInOut(width, height, showMissingBridges);
     }
 
     /**
@@ -102,7 +102,7 @@ class Board extends StackPane {
      */
     void zoomOut() {
         GameInfo.zoomOut();
-        setGrid(width, height, grid.getIsles(), grid.getBridges());
+        grid.zoomInOut(width, height, showMissingBridges);
     }
 
     void setSound() {

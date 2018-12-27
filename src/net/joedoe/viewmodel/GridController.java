@@ -117,7 +117,12 @@ public class GridController {
                 lines.add(line);
             }
         }
-        BridgeLine line = lines.get(lines.size()-1);
+        BridgeLine line;
+        try {
+            line = lines.get(lines.size() - 1);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return;
+        }
         line.getLine().getStyleClass().clear();
         line.getLine().getStyleClass().add("bridge-first");
     }

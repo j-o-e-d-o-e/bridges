@@ -24,11 +24,11 @@
 
 /*isles*/
 .isle-alert {
-    -fx-effect: dropshadow(three-pass-box, red, 10, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, red, 20, 0, 0, 0);
 }
 
 .isle-solved {
-    -fx-effect: dropshadow(three-pass-box, palegreen, 10, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, palegreen, 20, 0, 0, 0);
 }
 
 /*bridges*/

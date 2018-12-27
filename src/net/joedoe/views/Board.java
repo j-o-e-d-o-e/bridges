@@ -9,6 +9,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
+import net.joedoe.logics.Generator;
 import net.joedoe.utils.GameData;
 import net.joedoe.utils.GameInfo;
 import net.joedoe.utils.Mocks;
@@ -30,6 +31,7 @@ class Board extends StackPane {
     private EventHandler<StatusEvent> statusListener;
     private GameData gameData = GameData.getInstance();
     private MediaPlayer player;
+    private EventHandler<PointEvent> pointListener;
 
     /**
      * Board wird Listener übergeben, um die Statuszeile im
@@ -74,6 +76,7 @@ class Board extends StackPane {
         getChildren().remove(grid);
         grid.shutdownAutoSolve();
         grid = new Grid(statusListener, width, height, isles, bridges);
+        grid.setPointListener(pointListener);
         scroll = new ScrollPane();
         scroll.setContent(grid);
         scroll.setFitToHeight(true);
@@ -181,7 +184,17 @@ class Board extends StackPane {
         grid.saveGame();
     }
 
-    void setPointListener(EventHandler<PointEvent> listener){
+    void setPointListener(EventHandler<PointEvent> listener) {
+        pointListener = listener;
         grid.setPointListener(listener);
+    }
+
+    void createNewGame(int level) {
+        grid.stopAutoSolve();
+        int islesCount = 5 * level;
+        Generator generator = new Generator();
+        generator.setData(islesCount);
+        generator.generateGame();
+        setGrid(generator.getWidth(), generator.getHeight(), generator.getIsles(), null);
     }
 }

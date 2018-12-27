@@ -264,6 +264,13 @@ public class Generator {
         this.islesCount = islesCount;
     }
 
+    public void setData(int islesCount) {
+        this.islesCount = islesCount;
+        int min = (int) Math.sqrt(5 * islesCount);
+        width = min;
+        height = min;
+    }
+
     /**
      * Gibt die Breite des Spielfelds zurück.
      *

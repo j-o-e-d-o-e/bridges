@@ -88,7 +88,7 @@ class Grid extends GridPane {
         if (bridge == null) return;
         addBridge(bridge);
         gameManager.addPoints(10);
-        pointListener.handle(new PointEvent(gameManager.getPoints()));
+        pointListener.handle(new PointEvent(gameManager.getPoints(), false));
     }
 
     /**
@@ -99,7 +99,7 @@ class Grid extends GridPane {
     private void addBridgeAuto(IBridge bridge) {
         addBridge(bridge);
         gameManager.removePoints(5);
-        pointListener.handle(new PointEvent(gameManager.getPoints()));
+        pointListener.handle(new PointEvent(gameManager.getPoints(), false));
     }
 
     /**
@@ -127,7 +127,7 @@ class Grid extends GridPane {
         if (bridge == null) return;
         removeBridge(bridge);
         gameManager.removePoints(10);
-        pointListener.handle(new PointEvent(gameManager.getPoints()));
+        pointListener.handle(new PointEvent(gameManager.getPoints(), false));
     }
 
     /**
@@ -175,7 +175,7 @@ class Grid extends GridPane {
             gridController.updateLines();
             statusListener.handle(new StatusEvent("Gelöst!"));
             gameManager.addPoints(50);
-            pointListener.handle(new PointEvent(gameManager.getPoints()));
+            pointListener.handle(new PointEvent(gameManager.getPoints(), true));
         } else {
             statusListener.handle(new StatusEvent("Noch nicht gelöst."));
         }

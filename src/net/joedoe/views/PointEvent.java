@@ -8,15 +8,17 @@ import javafx.event.Event;
  */
 class PointEvent extends Event {
     private String points;
+    private boolean solved;
 
     /**
      * Werden aktuelle Punkte übergeben.
      *
      * @param points Punkte des Spielers
      */
-    PointEvent(int points) {
+    PointEvent(int points, boolean solved) {
         super(null);
         this.points = String.valueOf(points);
+        this.solved = solved;
     }
 
     /**
@@ -26,5 +28,9 @@ class PointEvent extends Event {
      */
     String getPoints() {
         return points;
+    }
+
+    boolean isSolved() {
+        return solved;
     }
 }

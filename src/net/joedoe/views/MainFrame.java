@@ -11,6 +11,7 @@ import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.joedoe.utils.FileHandler;
+import net.joedoe.utils.GameManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,9 +23,10 @@ import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
  * Das Hauptfenster, das das Spielfeld und die Steuerung enthält.
  */
 public class MainFrame extends BorderPane {
+    private GameManager gameManager = GameManager.getInstance();
     private Stage window;
     private Board board;
-    private Label status, points;
+    private Label status, level, points;
     private FileChooser fileChooser;
     private String directory;
     private String filepath;
@@ -75,6 +77,13 @@ public class MainFrame extends BorderPane {
     }
 
     private Node createTopBar() {
+        HBox hBoxLevel = new HBox();
+        hBoxLevel.setAlignment(Pos.CENTER);
+        hBoxLevel.setSpacing(CONTAINER_OFFSET);
+        level = new Label("Level 1");
+        level.setFont(new Font(15));
+        hBoxLevel.getChildren().add(level);
+
         HBox hBox1 = new HBox();
         hBox1.setAlignment(Pos.CENTER);
         hBox1.setSpacing(CONTAINER_OFFSET);
@@ -114,7 +123,7 @@ public class MainFrame extends BorderPane {
 
         HBox box = new HBox();
         box.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, 0, CONTAINER_OFFSET));
-        box.getChildren().addAll(region1, hBox1, region2, hBox2);
+        box.getChildren().addAll(hBoxLevel, region1, hBox1, region2, hBox2);
         return box;
     }
 
@@ -228,6 +237,21 @@ public class MainFrame extends BorderPane {
 
     private void handlePoints(PointEvent e) {
         points.setText(e.getPoints());
+        if (e.isSolved()) setCongrats();
+    }
+
+    private void setCongrats() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Solved!");
+        alert.setHeaderText("Level " + gameManager.getLevel() + " solved. Next puzzle?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.CANCEL) alert.close();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            alert.close();
+            gameManager.increaseLevel();
+            level.setText("Level " + gameManager.getLevel());
+            board.createNewGame(gameManager.getLevel());
+        }
     }
 
     /**

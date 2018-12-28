@@ -60,7 +60,11 @@ public class MainFrame extends BorderPane {
         MenuItem newGame = new MenuItem("Neues Rätsel");
         newGame.setOnAction(e -> createNewGame());
         MenuItem reset = new MenuItem("Rätsel neu starten");
-        reset.setOnAction(e -> board.reset());
+        reset.setOnAction(e -> {
+            gameManager.resetPoints();
+            points.setText(String.valueOf(gameManager.getPoints()));
+            board.reset();
+        });
         MenuItem loadGame = new MenuItem("Rätsel laden");
         loadGame.setOnAction(e -> loadGame());
         MenuItem saveGame = new MenuItem("Rätsel speichern");
@@ -80,7 +84,7 @@ public class MainFrame extends BorderPane {
         HBox hBoxLevel = new HBox();
         hBoxLevel.setAlignment(Pos.CENTER);
         hBoxLevel.setSpacing(CONTAINER_OFFSET);
-        level = new Label("Level 1");
+        level = new Label("Level 1/25");
         level.setFont(new Font(15));
         hBoxLevel.getChildren().add(level);
 
@@ -135,7 +139,7 @@ public class MainFrame extends BorderPane {
     }
 
     private Node createBoard() {
-        board = new Board(this::handle);
+        board = new Board(this::handle, gameManager.getLevel());
         board.setPointListener(this::handlePoints);
         return board;
     }
@@ -241,15 +245,16 @@ public class MainFrame extends BorderPane {
     }
 
     private void setCongrats() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Solved!");
-        alert.setHeaderText("Level " + gameManager.getLevel() + " solved. Next puzzle?");
+        alert.setHeaderText("Level " + gameManager.getLevel() + " solved.");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.CANCEL) alert.close();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             alert.close();
             gameManager.increaseLevel();
-            level.setText("Level " + gameManager.getLevel());
+            gameManager.savePoints();
+            level.setText("Level " + gameManager.getLevel() + "/25");
             board.createNewGame(gameManager.getLevel());
         }
     }

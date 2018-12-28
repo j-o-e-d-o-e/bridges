@@ -2,7 +2,7 @@ package net.joedoe.utils;
 
 public class GameManager {
     private static final GameManager gameManager = new GameManager();
-    private int points = 0, level = 1;
+    private int points = 0, tempPoints = 0, level = 1;
 
     /**
      * Gibt Singleton-Instanz dieser Klasse zurück.
@@ -14,15 +14,24 @@ public class GameManager {
     }
 
     public int getPoints() {
-        return points;
+        return points + tempPoints;
     }
 
     public void addPoints(int points) {
-        this.points += points;
+        tempPoints += points;
     }
 
     public void removePoints(int points) {
-        this.points -= points;
+        tempPoints -= points;
+    }
+
+    public void resetPoints(){
+        tempPoints = 0;
+    }
+
+    public void savePoints(){
+        points += tempPoints;
+        tempPoints = 0;
     }
 
     public int getLevel() {

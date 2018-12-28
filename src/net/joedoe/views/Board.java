@@ -54,7 +54,29 @@ class Board extends StackPane {
         scroll.setFitToWidth(true);
         getChildren().add(scroll);
         setShowMissingBridges(showMissingBridges);
+        initializeSound();
+    }
 
+    Board(EventHandler<StatusEvent> statusListener, int level) {
+        this.statusListener = statusListener;
+        int islesCount = 5 * level;
+        Generator generator = new Generator();
+        generator.setData(islesCount);
+        generator.generateGame();
+        width = generator.getWidth();
+        height = generator.getHeight();
+        setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, 0, CONTAINER_OFFSET));
+        grid = new Grid(statusListener, width, height, generator.getIsles(), null);
+        scroll = new ScrollPane();
+        scroll.setContent(grid);
+        scroll.setFitToHeight(true);
+        scroll.setFitToWidth(true);
+        getChildren().add(scroll);
+        setShowMissingBridges(showMissingBridges);
+        initializeSound();
+    }
+
+    private void initializeSound() {
         String file = "assets" + File.separator + "sounds" + File.separator + "waves.wav";
         Media sound = new Media(new File(file).toURI().toString());
         player = new MediaPlayer(sound);

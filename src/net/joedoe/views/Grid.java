@@ -86,8 +86,8 @@ class Grid extends GridPane {
     void addBridge(IslePane isle, Direction direction) {
         IBridge bridge = controller.addBridge(isle.getPos(), direction);
         if (bridge == null) return;
-        addBridge(bridge);
         gameManager.addPoints(10);
+        addBridge(bridge);
         pointListener.handle(new PointEvent(gameManager.getPoints(), false));
     }
 
@@ -97,8 +97,8 @@ class Grid extends GridPane {
      * @param bridge hinzuzufügende Brücke (Modell)
      */
     private void addBridgeAuto(IBridge bridge) {
+        gameManager.removePoints(10);
         addBridge(bridge);
-        gameManager.removePoints(5);
         pointListener.handle(new PointEvent(gameManager.getPoints(), false));
     }
 

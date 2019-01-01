@@ -259,9 +259,10 @@ class Grid extends GridPane {
      * Ergänzt zeitverzögert neue Brücken, die sicher hinzugefügt werden können.
      */
     private void getNextBridgeAuto() {
-        if (checker.error() || checker.unsolvable() || checker.solved()) {
+        boolean solved = checker.solved();
+        if (checker.error() || checker.unsolvable() || solved) {
             autoSolver.stop();
-            if (!checker.solved()) setAlert();
+            if (!solved) setAlert();
             return;
         }
         IBridge next = autoSolver.getNextBridge();

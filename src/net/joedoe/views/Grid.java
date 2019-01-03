@@ -246,8 +246,9 @@ class Grid extends GridPane {
      * bereits gelöst ist.
      */
     void getNextBridge() {
-        if (checker.error() || checker.unsolvable() || checker.solved()) {
-            if (!checker.solved()) setAlert();
+        boolean solved = checker.solved();
+        if (checker.error() || checker.unsolvable() || solved) {
+            if (!solved) setAlert();
             return;
         }
         IBridge next = solver.getNextBridge();

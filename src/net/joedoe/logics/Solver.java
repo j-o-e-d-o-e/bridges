@@ -1,10 +1,5 @@
 package net.joedoe.logics;
 
-import net.joedoe.entities.Bridge;
-import net.joedoe.entities.IBridge;
-import net.joedoe.entities.Isle;
-import net.joedoe.utils.Direction;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -13,8 +8,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import net.joedoe.entities.Bridge;
+import net.joedoe.entities.IBridge;
+import net.joedoe.entities.Isle;
+import net.joedoe.utils.Direction;
+
 /**
  * Berechnet einen neuen Spielzug.
+ *
  */
 public class Solver {
     private BridgeController controller;
@@ -26,7 +27,8 @@ public class Solver {
      * Wird {@link net.joedoe.logics.BridgeController} übergeben, um auf die
      * aktuellen Brücken zugreifen zu können.
      *
-     * @param controller enthält Liste mit aktuellen Brücken
+     * @param controller
+     *            enthält Liste mit aktuellen Brücken
      */
     public Solver(BridgeController controller) {
         this.controller = controller;
@@ -53,25 +55,21 @@ public class Solver {
                 LOGGER.info("firstRule: " + missingBridges + "/" + connectablesSize);
                 return addBridge(startIsle, endIsle);
             }
-            if (secondRule(missingBridges, connectablesSize)) {
-                LOGGER.info("secondRule: " + missingBridges + "/" + connectablesSize);
-                return addBridge(startIsle, endIsle);
-            }
             // Insel, zu denen maximal eine Brücke gebaut werden kann
             int connectablesOneBridge = getConnectablesOneBridge(startIsle, connectables);
             if (connectablesOneBridge == 0) continue;
             LOGGER.info(startIsle.toString() + " with " + connectablesSize + " (" + connectablesOneBridge
                     + ") connectables (one bridge)");
 
-            if (thirdRule(missingBridges, connectablesSize, connectablesOneBridge)) {
+            if (secondRule(missingBridges, connectablesSize, connectablesOneBridge)) {
                 LOGGER.info("thirdRule: " + missingBridges + "/" + connectablesSize + "/" + connectablesOneBridge);
                 return addBridge(startIsle, endIsle);
             }
-            if (fourthRule(missingBridges, connectablesSize, connectablesOneBridge)) {
+            if (thirdRule(missingBridges, connectablesSize, connectablesOneBridge)) {
                 LOGGER.info("fourthRule: " + missingBridges + "/" + connectablesSize + "/" + connectablesOneBridge);
                 return addBridge(startIsle, endIsle);
             }
-            if (fifthRule(missingBridges, connectablesSize, connectablesOneBridge)) {
+            if (fourthRule(missingBridges, connectablesSize, connectablesOneBridge)) {
                 LOGGER.info("fifthRule: " + missingBridges + "/" + connectablesSize + "/" + connectablesOneBridge);
                 return addBridge(startIsle, endIsle);
             }
@@ -80,24 +78,20 @@ public class Solver {
     }
 
     private boolean firstRule(int missingBridges, int connactablesSize) {
-        return missingBridges % 2 == 0 && missingBridges == connactablesSize * 2;
+        return missingBridges + 1 >= connactablesSize * 2;
     }
 
-    private boolean secondRule(int missingBridges, int connectablesSize) {
-        return missingBridges % 2 != 0 && missingBridges + 1 == connectablesSize * 2;
-    }
-
-    private boolean thirdRule(int missingBridges, int connectablesSize, int connectablesOneBridge) {
+    private boolean secondRule(int missingBridges, int connectablesSize, int connectablesOneBridge) {
         return (missingBridges == 6 || missingBridges == 4 || missingBridges == 2)
                 && missingBridges + 2 == connectablesSize * 2 && connectablesOneBridge >= 1;
     }
 
-    private boolean fourthRule(int missingBridges, int connectablesSize, int connectablesOneBridge) {
+    private boolean thirdRule(int missingBridges, int connectablesSize, int connectablesOneBridge) {
         return (missingBridges == 5 || missingBridges == 3) && missingBridges + 3 == connectablesSize * 2
                 && connectablesOneBridge >= 2;
     }
 
-    private boolean fifthRule(int missingBridges, int neighboursSize, int neighboursOneBridge) {
+    private boolean fourthRule(int missingBridges, int neighboursSize, int neighboursOneBridge) {
         return missingBridges == 4 && missingBridges + 4 == neighboursSize * 2 && neighboursOneBridge >= 3;
     }
 
@@ -117,7 +111,8 @@ public class Solver {
      * Gibt Liste von Nachbar-Inseln zurück, mit denen die 'startIsle' über eine
      * Brücke verbunden werden könnte.
      *
-     * @param startIsle Insel, für die mögliche Nachbar-Inseln gesucht werden
+     * @param startIsle
+     *            Insel, für die mögliche Nachbar-Inseln gesucht werden
      * @return Liste aller möglichen Nachbar-Inseln
      */
     public List<Isle> getConnectables(Isle startIsle) {
@@ -136,12 +131,14 @@ public class Solver {
      * Nachbar-Insel hat keine fehlenden Brücken mehr, die beiden Inseln dürfen
      * aufgrund von Isolationsverbot nicht miteinander verbunden werden.
      *
-     * @param startIsle   Insel, für die mögliche Nachbar-Insel zum Brückenbau gesucht
-     *                    werden
-     * @param connectable mögliche Nachbar-Insel, die mit 'startIsle' verbunden werden
-     *                    könnte
+     * @param startIsle
+     *            Insel, für die mögliche Nachbar-Insel zum Brückenbau gesucht
+     *            werden
+     * @param connectable
+     *            mögliche Nachbar-Insel, die mit 'startIsle' verbunden werden
+     *            könnte
      * @return true, falls die mögliche Nachbar-Insel eines der oben genannten
-     * Kriterien erfüllt
+     *         Kriterien erfüllt
      */
     private boolean invalidConnectable(Isle startIsle, Isle connectable) {
         Bridge bridge = controller.getBridge(startIsle.getPos(), connectable.getPos());
@@ -156,9 +153,11 @@ public class Solver {
      * Gibt Anzahl an benachbarten Inseln von 'startIsle' zurück, zu denen nur noch
      * eine Brücke gebaut werden kann.
      *
-     * @param startIsle    Insel, von der eine Brücke gebaut werden soll
-     * @param connectables benachbarte Inseln von 'startIsle, zu denen eine Brücke gebaut
-     *                     werden könnte
+     * @param startIsle
+     *            Insel, von der eine Brücke gebaut werden soll
+     * @param connectables
+     *            benachbarte Inseln von 'startIsle, zu denen eine Brücke gebaut
+     *            werden könnte
      * @return Anzahl an Inseln, zu denen maximal eine Brücke gebaut werden könnte
      */
     public int getConnectablesOneBridge(Isle startIsle, List<Isle> connectables) {
@@ -171,9 +170,11 @@ public class Solver {
      * Gibt die zweite Insel zurück, die über eine Brücke mit 'startIsle' verbunden
      * werden kann
      *
-     * @param startIsle    erste Insel einer neuen Brücke
-     * @param connectables Liste mit möglichen Nachbar-Inseln, um eine neue Brücke ausgehend
-     *                     von 'startIsle' zu bauen
+     * @param startIsle
+     *            erste Insel einer neuen Brücke
+     * @param connectables
+     *            Liste mit möglichen Nachbar-Inseln, um eine neue Brücke ausgehend
+     *            von 'startIsle' zu bauen
      * @return zweite Insel einer neuen Brücke ausgehend von 'startIsle'
      */
     public Isle getEndIsle(Isle startIsle, List<Isle> connectables) {

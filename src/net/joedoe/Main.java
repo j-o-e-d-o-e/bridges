@@ -5,8 +5,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import net.joedoe.views.MainFrame;
 
-import java.io.File;
-
 /**
  * Start-Klasse der Applikation.
  */

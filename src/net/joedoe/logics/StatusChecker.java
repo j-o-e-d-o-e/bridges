@@ -81,7 +81,44 @@ public class StatusChecker {
         return true;
     }
 
-    // Alternative Implementierung von unsolvable()
+    /**
+     * Prüft, ob das Spiel im aktuellen Zustand gelöst ist. Spiel ist gelöst, falls
+     * alle Inseln so viele Brücken wie gefordert haben und direkt oder indirekt
+     * miteinander verbunden sind
+     *
+     * @return true, falls alle Inseln so viele Brücken wie gefordert haben und
+     * direkt oder indirekt miteinander verbunden sind
+     */
+    public boolean solved() {
+        List<Isle> isles = controller.getIsles();
+        // Prüft, ob alle Inseln keine fehlenden Brücken mehr haben
+        boolean noBridges = isles.stream().allMatch(i -> i.getMissingBridges() == 0);
+        if (noBridges) {
+            // Prüft, ob die Anzahl der verbundenen Inseln gleich der Gesamt-Anzahl ist
+            Set<Isle> connectedIsles = new HashSet<>();
+            connected(isles.get(0), connectedIsles);
+            return connectedIsles.size() == isles.size();
+        }
+        return false;
+    }
+
+    /**
+     * Prüft, ob alle Inseln indirekt miteinander verbunden sind. Iteriert rekursiv
+     * über die Insel-Nachbarn und deren Nachbarn.
+     *
+     * @param isle      Start-Insel, deren Nachbarn gesucht werden
+     * @param connected Liste von Inseln, mit denen die Start-Insel direkt oder indirekt
+     *                  verbunden ist
+     */
+    private void connected(Isle isle, Set<Isle> connected) {
+        for (Isle neighbour : isle.getNeighbours()) {
+            if (connected.contains(neighbour)) continue;
+            connected.add(neighbour);
+            connected(neighbour, connected);
+        }
+    }
+
+    /** Alternative Implementierung von unsolvable()*/
     // public boolean unsolvable() {
     // List<Isle> isles = controller.getIsles();
     // // Prüft, ob einzelne Insel oder Insel-Gruppe isoliert ist
@@ -126,41 +163,4 @@ public class StatusChecker {
 //        }
 //        return false;
 //    }
-
-    /**
-     * Prüft, ob das Spiel im aktuellen Zustand gelöst ist. Spiel ist gelöst, falls
-     * alle Inseln so viele Brücken wie gefordert haben und direkt oder indirekt
-     * miteinander verbunden sind
-     *
-     * @return true, falls alle Inseln so viele Brücken wie gefordert haben und
-     * direkt oder indirekt miteinander verbunden sind
-     */
-    public boolean solved() {
-        List<Isle> isles = controller.getIsles();
-        // Prüft, ob alle Inseln keine fehlenden Brücken mehr haben
-        boolean noBridges = isles.stream().allMatch(i -> i.getMissingBridges() == 0);
-        if (noBridges) {
-            // Prüft, ob die Anzahl der verbundenen Inseln gleich der Gesamt-Anzahl ist
-            Set<Isle> connectedIsles = new HashSet<>();
-            connected(isles.get(0), connectedIsles);
-            return connectedIsles.size() == isles.size();
-        }
-        return false;
-    }
-
-    /**
-     * Prüft, ob alle Inseln indirekt miteinander verbunden sind. Iteriert rekursiv
-     * über die Insel-Nachbarn und deren Nachbarn.
-     *
-     * @param isle      Start-Insel, deren Nachbarn gesucht werden
-     * @param connected Liste von Inseln, mit denen die Start-Insel direkt oder indirekt
-     *                  verbunden ist
-     */
-    private void connected(Isle isle, Set<Isle> connected) {
-        for (Isle neighbour : isle.getNeighbours()) {
-            if (connected.contains(neighbour)) continue;
-            connected.add(neighbour);
-            connected(neighbour, connected);
-        }
-    }
 }

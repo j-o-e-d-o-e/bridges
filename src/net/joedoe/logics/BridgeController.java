@@ -112,9 +112,20 @@ public class BridgeController {
             startIsle.removeNeighbour(endIsle);
             endIsle.removeNeighbour(startIsle);
         }
-        startIsle.removeBridge();
-        endIsle.removeBridge();
+        startIsle.removeBridge(false);
+        endIsle.removeBridge(false);
         return bridge;
+    }
+
+    public void removeBridge(IBridge bridge) {
+        Isle startIsle = getIsle(bridge.getStart());
+        Isle endIsle = getIsle(bridge.getEnd());
+        startIsle.removeBridge(true);
+        startIsle.removeNeighbour(endIsle);
+        endIsle.removeBridge(true);
+        endIsle.removeNeighbour(startIsle);
+        Bridge bridge1 = (Bridge) bridge;
+        this.bridges.remove(bridge1);
     }
 
     /**
@@ -160,6 +171,12 @@ public class BridgeController {
      */
     Bridge getBridge(Coordinate start, Coordinate end) {
         return bridges.stream().filter(b -> b.contains(start, end)).findFirst().orElse(null);
+    }
+
+    public Bridge getBridge(Coordinate pos, Direction direction) {
+        Isle startIsle = getIsle(pos);
+        Isle endIsle = getEndIsle(startIsle, direction);
+        return getBridge(startIsle.getPos(), endIsle.getPos());
     }
 
     /**

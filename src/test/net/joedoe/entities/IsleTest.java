@@ -32,7 +32,7 @@ public class IsleTest {
         startIsle.addBridge(false);
         startIsle.addNeighbour(endIsle);
 
-        startIsle.removeBridge();
+        startIsle.removeBridge(false);
         startIsle.removeNeighbour(endIsle);
 
         assertEquals(startIsle.getBridges(), startIsle.getMissingBridges());

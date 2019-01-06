@@ -84,11 +84,26 @@ class Grid extends GridPane {
      * @param direction Richtung, in die der Nutzer mittels Klick-Sektor geklickt hat
      */
     void addBridge(IslePane isle, Direction direction) {
-        IBridge bridge = controller.addBridge(isle.getPos(), direction);
+        IBridge bridge = controller.getBridge(isle.getPos(), direction);
+        if (bridge != null && bridge.isDoubleBridge()) {
+            removeDoubleBridge(bridge);
+            return;
+        }
+        bridge = controller.addBridge(isle.getPos(), direction);
         if (bridge == null) return;
         gameManager.addPoints(10);
         addBridge(bridge);
         pointListener.handle(new PointEvent(gameManager.getPoints(), false));
+    }
+
+    private void removeDoubleBridge(IBridge bridge) {
+        controller.removeBridge(bridge);
+        List<BridgeLine> lines = gridController.removeLines(bridge);
+        lines.forEach(l -> getChildren().remove(l.getLine()));
+        gameManager.removePoints(20);
+        pointListener.handle(new PointEvent(gameManager.getPoints(), false));
+        updateIsles();
+        checkStatus();
     }
 
     /**

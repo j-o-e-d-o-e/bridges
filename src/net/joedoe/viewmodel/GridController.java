@@ -80,6 +80,13 @@ public class GridController {
         }
     }
 
+    public List<BridgeLine> removeLines(IBridge bridge) {
+        updateLines();
+        List<BridgeLine> lines = getLines(bridge.getStart(), bridge.getEnd());
+        this.lines.removeAll(lines);
+        return lines;
+    }
+
     /**
      * Gibt alle Brücken-Linien zurück, die die beiden Koordinaten enthalten.
      *

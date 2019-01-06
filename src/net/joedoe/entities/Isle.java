@@ -40,8 +40,9 @@ public class Isle implements IIsle, Comparable<Isle> {
     /**
      * Erhöht die Anzahl der fehlenden Brücken um eins.
      */
-    public void removeBridge() {
-        missingBridges++;
+    public void removeBridge(boolean doubleBridge) {
+        if (doubleBridge) missingBridges += 2;
+        else missingBridges++;
     }
 
     /**

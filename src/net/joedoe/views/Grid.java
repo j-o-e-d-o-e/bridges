@@ -222,6 +222,7 @@ class Grid extends GridPane {
 
     void zoomInOut(int width, int height, boolean showMissingBridges) {
 //        setStyle("-fx-grid-lines-visible: false;");
+        //TODO: zoomInOut BackGroundImage, too
         getRowConstraints().clear();
         IntStream.range(0, height).mapToObj(i -> new RowConstraints(ONE_TILE))
                 .forEach(row -> getRowConstraints().add(row));

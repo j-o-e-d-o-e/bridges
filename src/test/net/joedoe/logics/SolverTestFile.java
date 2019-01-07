@@ -2,6 +2,7 @@ package test.net.joedoe.logics;
 
 import net.joedoe.entities.IBridge;
 import net.joedoe.logics.Solver;
+import net.joedoe.logics.StatusChecker;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,7 +13,7 @@ public class SolverTestFile extends FileHandlerTesting {
 
     @Before
     public void setUp() {
-        solver = new Solver(controller);
+        solver = new Solver(controller, new StatusChecker(controller));
     }
 
     private void solve() {

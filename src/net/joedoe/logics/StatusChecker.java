@@ -110,7 +110,7 @@ public class StatusChecker {
      * @param connected Liste von Inseln, mit denen die Start-Insel direkt oder indirekt
      *                  verbunden ist
      */
-    private void connected(Isle isle, Set<Isle> connected) {
+    void connected(Isle isle, Set<Isle> connected) {
         for (Isle neighbour : isle.getNeighbours()) {
             if (connected.contains(neighbour)) continue;
             connected.add(neighbour);
@@ -118,7 +118,7 @@ public class StatusChecker {
         }
     }
 
-    /** Alternative Implementierung von unsolvable()*/
+    /* Alternative Implementierung von unsolvable()*/
     // public boolean unsolvable() {
     // List<Isle> isles = controller.getIsles();
     // // Prüft, ob einzelne Insel oder Insel-Gruppe isoliert ist

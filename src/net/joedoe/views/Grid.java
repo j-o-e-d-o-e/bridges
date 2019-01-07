@@ -63,7 +63,7 @@ class Grid extends GridPane {
         gridController = new GridController();
         controller = new BridgeController();
         checker = new StatusChecker(controller);
-        solver = new Solver(controller);
+        solver = new Solver(controller, checker);
         autoSolver = new AutoSolver(solver);
         autoSolver.setListener(() -> Platform.runLater(this::getNextBridgeAuto));
         this.statusListener = statusListener;

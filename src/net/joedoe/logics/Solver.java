@@ -5,10 +5,7 @@ import net.joedoe.entities.IBridge;
 import net.joedoe.entities.Isle;
 import net.joedoe.utils.Direction;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -18,6 +15,7 @@ import java.util.stream.Collectors;
  */
 public class Solver {
     private BridgeController controller;
+    private StatusChecker checker;
     private BridgeDetector detector;
 
     private final static Logger LOGGER = Logger.getLogger(Solver.class.getName());
@@ -28,8 +26,9 @@ public class Solver {
      *
      * @param controller enthält Liste mit aktuellen Brücken
      */
-    public Solver(BridgeController controller) {
+    public Solver(BridgeController controller, StatusChecker checker) {
         this.controller = controller;
+        this.checker = checker;
         detector = new BridgeDetector(controller.getBridges());
         LOGGER.setLevel(Level.OFF);
     }
@@ -74,8 +73,8 @@ public class Solver {
         return null;
     }
 
-    private boolean firstRule(int missingBridges, int connactablesSize) {
-        return missingBridges + 1 >= connactablesSize * 2;
+    private boolean firstRule(int missingBridges, int connectablesSize) {
+        return missingBridges + 1 >= connectablesSize * 2;
     }
 
     private boolean secondRule(int missingBridges, int connectablesSize, int connectablesOneBridge) {
@@ -140,7 +139,27 @@ public class Solver {
         return (bridge == null && detector.collides(startIsle, connectable))
                 || (bridge != null && bridge.isDoubleBridge()) || connectable.getMissingBridges() == 0
                 || (startIsle.getBridges() == 1 && connectable.getBridges() == 1 && islesSize != 2)
-                || (startIsle.getBridges() == 2 && connectable.getBridges() == 2 && islesSize != 2 && bridge != null);
+                || (startIsle.getBridges() == 2 && connectable.getBridges() == 2 && islesSize != 2 && bridge != null)
+                || (bridge == null && startIsle.getMissingBridges() == 1 && connectable.getMissingBridges() == 1 && disconnected(startIsle, connectable));
+    }
+
+    private boolean disconnected(Isle startIsle, Isle connectable) {
+        startIsle.addBridge(false);
+        startIsle.addNeighbour(connectable);
+        connectable.addBridge(false);
+        connectable.addNeighbour(startIsle);
+
+        Set<Isle> connectedIsles = new HashSet<>();
+        checker.connected(startIsle, connectedIsles);
+        List<Isle> isles = controller.getIsles();
+        boolean disconnected = connectedIsles.stream().allMatch(i -> i.getMissingBridges() == 0)
+                && connectedIsles.size() < isles.size();
+
+        startIsle.removeBridge(false);
+        startIsle.removeNeighbour(connectable);
+        connectable.removeBridge(false);
+        connectable.removeNeighbour(startIsle);
+        return disconnected;
     }
 
     /**

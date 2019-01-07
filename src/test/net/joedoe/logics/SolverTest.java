@@ -4,6 +4,7 @@ import net.joedoe.entities.IIsle;
 import net.joedoe.entities.Isle;
 import net.joedoe.logics.BridgeController;
 import net.joedoe.logics.Solver;
+import net.joedoe.logics.StatusChecker;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
 import net.joedoe.utils.Mocks;
@@ -26,7 +27,7 @@ public class SolverTest {
         controller = new BridgeController();
         isles = Mocks.getIsles();
         controller.setIsles(isles);
-        solver = new Solver(controller);
+        solver = new Solver(controller, new StatusChecker(controller));
         startIsle = (Isle) isles.get(0);
         start = startIsle.getPos();
     }

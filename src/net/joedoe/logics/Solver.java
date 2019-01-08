@@ -140,7 +140,7 @@ public class Solver {
                 || (bridge != null && bridge.isDoubleBridge()) || connectable.getMissingBridges() == 0
                 || (startIsle.getBridges() == 1 && connectable.getBridges() == 1 && islesSize != 2)
                 || (startIsle.getBridges() == 2 && connectable.getBridges() == 2 && islesSize != 2 && bridge != null)
-                || (bridge == null && startIsle.getMissingBridges() == 1 && connectable.getMissingBridges() == 1 && disconnected(startIsle, connectable));
+                || (startIsle.getMissingBridges() == 1 && connectable.getMissingBridges() == 1 && disconnected(startIsle, connectable));
     }
 
     private boolean disconnected(Isle startIsle, Isle connectable) {
@@ -159,6 +159,7 @@ public class Solver {
         startIsle.removeNeighbour(connectable);
         connectable.removeBridge(false);
         connectable.removeNeighbour(startIsle);
+        LOGGER.info( startIsle.toString() + " - " + connectable.toString() + " disconnected? " + disconnected);
         return disconnected;
     }
 

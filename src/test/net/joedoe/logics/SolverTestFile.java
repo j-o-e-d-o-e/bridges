@@ -74,4 +74,17 @@ public class SolverTestFile extends FileHandlerTesting {
         String res = convertResultToString(file);
         assertEquals(exp, res);
     }
+
+    @Test
+    public void puzzleDisconnected1() {
+        String file = "disconnected1.bgs";
+        loadData(file);
+
+        solve();
+
+        saveData(file);
+        String exp = convertSolutionToString(file);
+        String res = convertResultToString(file);
+        assertEquals(exp, res);
+    }
 }

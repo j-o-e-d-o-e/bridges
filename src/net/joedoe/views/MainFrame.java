@@ -255,7 +255,7 @@ public class MainFrame extends BorderPane {
             gameManager.increaseLevel();
             gameManager.savePoints();
             level.setText("Level " + gameManager.getLevel() + "/25");
-            board.createNewGame(gameManager.getLevel());
+//            board.createNewGame(gameManager.getLevel());
         }
     }
 

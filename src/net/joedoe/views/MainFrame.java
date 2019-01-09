@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
+import static net.joedoe.views.StatusEvent.*;
 
 /**
  * Das Hauptfenster, das das Spielfeld und die Steuerung enthält.
@@ -255,9 +256,9 @@ public class MainFrame extends BorderPane {
     }
 
     private void handle(StatusEvent e) {
-        String text = e.getStatus();
-        status.setText(text);
-        if (text.equals("Solved!")) {
+        Status status = e.getStatus();
+        this.status.setText(status.getText());
+        if (status == Status.SOLVED) {
             if (gameManager.isLevelMode()) {
                 solved("Level " + gameManager.getLevel() + " solved.");
                 gameManager.increaseLevel();

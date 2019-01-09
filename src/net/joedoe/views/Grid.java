@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static net.joedoe.utils.GameInfo.ONE_TILE;
+import static net.joedoe.views.StatusEvent.*;
 
 /**
  * Das Raster, auf dem Inseln und Brücken platziert werden.
@@ -191,18 +192,18 @@ class Grid extends GridPane {
      */
     private void checkStatus() {
         if (checker.error()) {
-            statusListener.handle(new StatusEvent("Enthält Fehler."));
+            statusListener.handle(new StatusEvent(Status.ERROR));
         } else if (checker.unsolvable()) {
-            statusListener.handle(new StatusEvent("Nicht mehr lösbar."));
+            statusListener.handle(new StatusEvent(Status.UNSOLVABLE));
         } else if (checker.solved()) {
             gridController.updateLines();
-            statusListener.handle(new StatusEvent("Solved!"));
+            statusListener.handle(new StatusEvent(Status.SOLVED));
             if (!gameManager.isTimeMode()) {
                 gameManager.addPoints(50);
                 pointListener.handle(new PointEvent(gameManager.getPoints()));
             }
         } else {
-            statusListener.handle(new StatusEvent("Noch nicht gelöst."));
+            statusListener.handle(new StatusEvent(Status.NOT_SOLVED));
         }
     }
 
@@ -356,7 +357,7 @@ class Grid extends GridPane {
             isle.setText(Integer.toString(controller.getBridges(isle.getPos())));
         });
         autoSolver.stop();
-        statusListener.handle(new StatusEvent("Noch nicht gelöst."));
+        statusListener.handle(new StatusEvent(Status.NOT_SOLVED));
     }
 
     /**

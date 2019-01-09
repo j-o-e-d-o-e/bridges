@@ -8,7 +8,7 @@ import javafx.event.Event;
  */
 class StatusEvent extends Event {
     private static final long serialVersionUID = 225178481951279734L;
-    private String status;
+    private Status status;
 
     /**
      * Wird Text übergeben, der den aktuellen Spielstatus beschreibt: Entweder
@@ -16,17 +16,26 @@ class StatusEvent extends Event {
      *
      * @param status Text, der den aktuellen Spielstatus beschreibt
      */
-    StatusEvent(String status) {
+    StatusEvent(Status status) {
         super(null);
         this.status = status;
     }
 
-    /**
-     * Gibt den aktuellen Spiel-Status zurück.
-     *
-     * @return Text zum aktuellen Spielstatus
-     */
-    String getStatus() {
+    Status getStatus() {
         return status;
+    }
+
+    public enum Status {
+        ERROR("Error . . ."), SOLVED("Solved!"), UNSOLVABLE("Unsolvable . . ."), NOT_SOLVED("Not solved, yet.");
+
+        private String text;
+
+        Status(String text) {
+            this.text = text;
+        }
+
+        public String getText() {
+            return text;
+        }
     }
 }

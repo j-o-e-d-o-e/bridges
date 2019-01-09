@@ -1,5 +1,6 @@
 package net.joedoe.views;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -12,6 +13,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.joedoe.utils.FileHandler;
 import net.joedoe.utils.GameManager;
+import net.joedoe.utils.Timer;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,10 +28,12 @@ public class MainFrame extends BorderPane {
     private GameManager gameManager = GameManager.getInstance();
     private Stage window;
     private Board board;
-    private Label status, level, points;
+    private Label status, mode, points;
+    private ImageView coin;
     private FileChooser fileChooser;
     private String directory;
     private String filepath;
+    private Timer timer;
 
     /**
      * Erzeugt das Hauptfenster und die darin enthaltene Menüleiste, Spielsteuerung
@@ -43,6 +47,8 @@ public class MainFrame extends BorderPane {
         fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Bridges (*.bgs)", "*.bgs");
         fileChooser.getExtensionFilters().add(extFilter);
+        timer = new Timer();
+        timer.setListener(() -> Platform.runLater(this::getTime));
         setTop(createTop());
         setCenter(createBoard());
         setBottom(createControls());
@@ -57,8 +63,20 @@ public class MainFrame extends BorderPane {
     private Node createMenuBar() {
         MenuBar menuBar = new MenuBar();
         Menu menu = new Menu("\u2630");
-        MenuItem newGame = new MenuItem("Neues Rätsel");
-        newGame.setOnAction(e -> createNewGame());
+        Menu newGame = new Menu("New Game");
+        MenuItem levelMode = new MenuItem("Level mode");
+        levelMode.setOnAction(e -> board.createNewGame(gameManager.getLevel()));
+        MenuItem timeMode = new MenuItem("Time mode");
+        timeMode.setOnAction(e -> {
+            gameManager.setTimeMode(true);
+            board.createNewGame(5);
+            mode.setText("Time mode");
+            coin.setVisible(false);
+            if (!timer.isRunning()) timer.start();
+        });
+        MenuItem freeMode = new MenuItem("Free mode");
+        freeMode.setOnAction(e -> createFreeGame());
+        newGame.getItems().addAll(levelMode, timeMode, freeMode);
         MenuItem reset = new MenuItem("Rätsel neu starten");
         reset.setOnAction(e -> {
             gameManager.resetPoints();
@@ -84,23 +102,23 @@ public class MainFrame extends BorderPane {
         HBox hBoxLevel = new HBox();
         hBoxLevel.setAlignment(Pos.CENTER);
         hBoxLevel.setSpacing(CONTAINER_OFFSET);
-        level = new Label("Level 1/25");
-        level.setFont(new Font(15));
-        hBoxLevel.getChildren().add(level);
+        mode = new Label("Level 1/25");
+        mode.setFont(new Font(15));
+        hBoxLevel.getChildren().add(mode);
 
         HBox hBox1 = new HBox();
         hBox1.setAlignment(Pos.CENTER);
         hBox1.setSpacing(CONTAINER_OFFSET);
-        ImageView imageView = new ImageView();
+        coin = new ImageView();
         Image image = new Image("file:assets" + File.separator + "images" + File.separator + "coin.png");
-        imageView.setImage(image);
-        imageView.setPreserveRatio(true);
-        imageView.setFitHeight(15);
+        coin.setImage(image);
+        coin.setPreserveRatio(true);
+        coin.setFitHeight(15);
         points = new Label("0");
         points.setMinWidth(50);
         points.setFont(new Font(15));
         Label spacer = new Label("                               ");
-        hBox1.getChildren().addAll(spacer, imageView, points);
+        hBox1.getChildren().addAll(spacer, coin, points);
 
         HBox hBox2 = new HBox();
         hBox2.setMinWidth(100);
@@ -174,7 +192,7 @@ public class MainFrame extends BorderPane {
     /**
      * Erzeugt Dialog-Fenster, um ein neues Spiel zu generieren.
      */
-    private void createNewGame() {
+    private void createFreeGame() {
         board.stopAutoSolve();
         NewGameFrame newGameFrame = new NewGameFrame(board);
         newGameFrame.initOwner(window);
@@ -254,9 +272,13 @@ public class MainFrame extends BorderPane {
             alert.close();
             gameManager.increaseLevel();
             gameManager.savePoints();
-            level.setText("Level " + gameManager.getLevel() + "/25");
-//            board.createNewGame(gameManager.getLevel());
+            mode.setText("Level " + gameManager.getLevel() + "/25");
+            board.createNewGame(gameManager.getLevel());
         }
+    }
+
+    private void getTime() {
+        points.setText(timer.getTime());
     }
 
     /**
@@ -265,5 +287,6 @@ public class MainFrame extends BorderPane {
     public void close() {
         window.close();
         board.shutdownAutoSolve();
+        if (timer.isRunning()) timer.shutdown();
     }
 }

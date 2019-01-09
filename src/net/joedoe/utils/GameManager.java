@@ -1,7 +1,11 @@
 package net.joedoe.utils;
 
+import java.time.Duration;
+import java.time.LocalTime;
+
 public class GameManager {
     private static final GameManager gameManager = new GameManager();
+    private boolean levelMode, timeMode, freeMode;
     private int points = 0, tempPoints = 0, level = 1;
 
     /**
@@ -11,6 +15,30 @@ public class GameManager {
      */
     public static GameManager getInstance() {
         return gameManager;
+    }
+
+    public boolean isLevelMode() {
+        return levelMode;
+    }
+
+    public void setLevelMode(boolean levelMode) {
+        this.levelMode = levelMode;
+    }
+
+    public boolean isTimeMode() {
+        return timeMode;
+    }
+
+    public void setTimeMode(boolean timeMode) {
+        this.timeMode = timeMode;
+    }
+
+    public boolean isFreeMode() {
+        return freeMode;
+    }
+
+    public void setFreeMode(boolean freeMode) {
+        this.freeMode = freeMode;
     }
 
     public int getPoints() {
@@ -25,11 +53,11 @@ public class GameManager {
         tempPoints -= points;
     }
 
-    public void resetPoints(){
+    public void resetPoints() {
         tempPoints = 0;
     }
 
-    public void savePoints(){
+    public void savePoints() {
         points += tempPoints;
         tempPoints = 0;
     }

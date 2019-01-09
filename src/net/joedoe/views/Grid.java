@@ -91,17 +91,21 @@ class Grid extends GridPane {
         }
         bridge = controller.addBridge(isle.getPos(), direction);
         if (bridge == null) return;
-        gameManager.addPoints(10);
         addBridge(bridge);
-        pointListener.handle(new PointEvent(gameManager.getPoints(), false));
+        if (!gameManager.isTimeMode()) {
+            gameManager.addPoints(10);
+            pointListener.handle(new PointEvent(gameManager.getPoints(), false));
+        }
     }
 
     private void removeDoubleBridge(IBridge bridge) {
         controller.removeBridge(bridge);
         List<BridgeLine> lines = gridController.removeLines(bridge);
         lines.forEach(l -> getChildren().remove(l.getLine()));
-        gameManager.removePoints(20);
-        pointListener.handle(new PointEvent(gameManager.getPoints(), false));
+        if (!gameManager.isTimeMode()) {
+            gameManager.removePoints(20);
+            pointListener.handle(new PointEvent(gameManager.getPoints(), false));
+        }
         updateIsles();
         checkStatus();
     }
@@ -112,9 +116,11 @@ class Grid extends GridPane {
      * @param bridge hinzuzufügende Brücke (Modell)
      */
     private void addBridgeAuto(IBridge bridge) {
-        gameManager.removePoints(10);
         addBridge(bridge);
-        pointListener.handle(new PointEvent(gameManager.getPoints(), false));
+        if (!gameManager.isTimeMode()) {
+            gameManager.removePoints(10);
+            pointListener.handle(new PointEvent(gameManager.getPoints(), false));
+        }
     }
 
     /**
@@ -141,8 +147,10 @@ class Grid extends GridPane {
         IBridge bridge = controller.removeBridge(isle.getPos(), direction);
         if (bridge == null) return;
         removeBridge(bridge);
-        gameManager.removePoints(10);
-        pointListener.handle(new PointEvent(gameManager.getPoints(), false));
+        if (!gameManager.isTimeMode()) {
+            gameManager.removePoints(10);
+            pointListener.handle(new PointEvent(gameManager.getPoints(), false));
+        }
     }
 
     /**
@@ -189,8 +197,10 @@ class Grid extends GridPane {
         } else if (checker.solved()) {
             gridController.updateLines();
             statusListener.handle(new StatusEvent("Gelöst!"));
-            gameManager.addPoints(50);
-            pointListener.handle(new PointEvent(gameManager.getPoints(), true));
+            if (!gameManager.isTimeMode()) {
+                gameManager.addPoints(50);
+                pointListener.handle(new PointEvent(gameManager.getPoints(), true));
+            }
         } else {
             statusListener.handle(new StatusEvent("Noch nicht gelöst."));
         }

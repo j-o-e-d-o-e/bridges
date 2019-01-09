@@ -94,7 +94,7 @@ class Grid extends GridPane {
         addBridge(bridge);
         if (!gameManager.isTimeMode()) {
             gameManager.addPoints(10);
-            pointListener.handle(new PointEvent(gameManager.getPoints(), false));
+            pointListener.handle(new PointEvent(gameManager.getPoints()));
         }
     }
 
@@ -104,7 +104,7 @@ class Grid extends GridPane {
         lines.forEach(l -> getChildren().remove(l.getLine()));
         if (!gameManager.isTimeMode()) {
             gameManager.removePoints(20);
-            pointListener.handle(new PointEvent(gameManager.getPoints(), false));
+            pointListener.handle(new PointEvent(gameManager.getPoints()));
         }
         updateIsles();
         checkStatus();
@@ -119,7 +119,7 @@ class Grid extends GridPane {
         addBridge(bridge);
         if (!gameManager.isTimeMode()) {
             gameManager.removePoints(10);
-            pointListener.handle(new PointEvent(gameManager.getPoints(), false));
+            pointListener.handle(new PointEvent(gameManager.getPoints()));
         }
     }
 
@@ -149,7 +149,7 @@ class Grid extends GridPane {
         removeBridge(bridge);
         if (!gameManager.isTimeMode()) {
             gameManager.removePoints(10);
-            pointListener.handle(new PointEvent(gameManager.getPoints(), false));
+            pointListener.handle(new PointEvent(gameManager.getPoints()));
         }
     }
 
@@ -196,10 +196,10 @@ class Grid extends GridPane {
             statusListener.handle(new StatusEvent("Nicht mehr lösbar."));
         } else if (checker.solved()) {
             gridController.updateLines();
-            statusListener.handle(new StatusEvent("Gelöst!"));
+            statusListener.handle(new StatusEvent("Solved!"));
             if (!gameManager.isTimeMode()) {
                 gameManager.addPoints(50);
-                pointListener.handle(new PointEvent(gameManager.getPoints(), true));
+                pointListener.handle(new PointEvent(gameManager.getPoints()));
             }
         } else {
             statusListener.handle(new StatusEvent("Noch nicht gelöst."));

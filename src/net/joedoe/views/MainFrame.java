@@ -28,6 +28,7 @@ public class MainFrame extends BorderPane {
     private GameManager gameManager = GameManager.getInstance();
     private Stage window;
     private Board board;
+    private HBox controls;
     private Label status, mode, points;
     private ImageView coin;
     private FileChooser fileChooser;
@@ -71,7 +72,8 @@ public class MainFrame extends BorderPane {
             gameManager.setTimeMode(true);
             board.createNewGame(5);
             mode.setText("Time mode");
-            coin.setVisible(false);
+            coin.setImage(new Image("file:assets" + File.separator + "images" + File.separator + "timer.png"));
+            controls.setVisible(false);
             if (!timer.isRunning()) timer.start();
         });
         MenuItem freeMode = new MenuItem("Free mode");
@@ -105,7 +107,6 @@ public class MainFrame extends BorderPane {
         mode = new Label("Level 1/25");
         mode.setFont(new Font(15));
         hBoxLevel.getChildren().add(mode);
-
         HBox hBox1 = new HBox();
         hBox1.setAlignment(Pos.CENTER);
         hBox1.setSpacing(CONTAINER_OFFSET);
@@ -169,23 +170,23 @@ public class MainFrame extends BorderPane {
         CheckBox checkBox = new CheckBox("Anzahl fehlender Brücken anzeigen");
         checkBox.setSelected(true);
         checkBox.setOnAction(e -> board.setShowMissingBridges(checkBox.isSelected()));
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER);
-        hBox.setSpacing(CONTAINER_OFFSET);
-        hBox.setPrefWidth(100);
+        controls = new HBox();
+        controls.setAlignment(Pos.CENTER);
+        controls.setSpacing(CONTAINER_OFFSET);
+        controls.setPrefWidth(100);
         Button solveBtn = new Button("_Automatisch lösen");
         solveBtn.setMnemonicParsing(true);
-        solveBtn.setMinWidth(hBox.getPrefWidth());
+        solveBtn.setMinWidth(controls.getPrefWidth());
         solveBtn.setOnAction(e -> {
             if (board.autoSolverIsRunning()) board.stopAutoSolve();
             else board.startAutoSolve();
         });
         Button nextBtn = new Button("_Nächste Brücke");
         nextBtn.setMnemonicParsing(true);
-        nextBtn.setMinWidth(hBox.getPrefWidth());
+        nextBtn.setMinWidth(controls.getPrefWidth());
         nextBtn.setOnAction(e -> board.getNextBridge());
-        hBox.getChildren().addAll(solveBtn, nextBtn);
-        vBox.getChildren().addAll(checkBox, hBox, status);
+        controls.getChildren().addAll(solveBtn, nextBtn);
+        vBox.getChildren().addAll(checkBox, controls, status);
         return vBox;
     }
 
@@ -254,26 +255,37 @@ public class MainFrame extends BorderPane {
     }
 
     private void handle(StatusEvent e) {
-        status.setText(e.getStatus());
+        String text = e.getStatus();
+        status.setText(text);
+        if (text.equals("Solved!")) {
+            if (gameManager.isLevelMode()) {
+                solved("Level " + gameManager.getLevel() + " solved.");
+                gameManager.increaseLevel();
+                gameManager.savePoints();
+                mode.setText("Level " + gameManager.getLevel() + "/25");
+                board.createNewGame(gameManager.getLevel());
+            }
+            if (gameManager.isTimeMode()) {
+                timer.stop();
+                solved("Puzzle solved in " + points.getText() + ".");
+            } else {
+                solved("Solved.");
+            }
+        }
     }
 
     private void handlePoints(PointEvent e) {
         points.setText(e.getPoints());
-        if (e.isSolved()) setCongrats();
     }
 
-    private void setCongrats() {
+    private void solved(String text) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Solved!");
-        alert.setHeaderText("Level " + gameManager.getLevel() + " solved.");
+        alert.setHeaderText(text);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.CANCEL) alert.close();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             alert.close();
-            gameManager.increaseLevel();
-            gameManager.savePoints();
-            mode.setText("Level " + gameManager.getLevel() + "/25");
-            board.createNewGame(gameManager.getLevel());
         }
     }
 

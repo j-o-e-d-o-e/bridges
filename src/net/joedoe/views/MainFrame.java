@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
-import static net.joedoe.views.StatusEvent.*;
+import static net.joedoe.views.StatusEvent.Status;
 
 /**
  * Das Hauptfenster, das das Spielfeld und die Steuerung enthält.
@@ -34,7 +34,7 @@ public class MainFrame extends BorderPane {
     private ImageView coin;
     private FileChooser fileChooser;
     private String directory;
-    private String filepath;
+    private String filepath = "/data/harwoook.bgs";
     private Timer timer;
 
     /**
@@ -74,27 +74,28 @@ public class MainFrame extends BorderPane {
             board.createNewGame(5);
             mode.setText("Time mode");
             coin.setImage(new Image("file:assets" + File.separator + "images" + File.separator + "timer.png"));
+            points.setText(timer.getStartTime());
             controls.setVisible(false);
             if (!timer.isRunning()) timer.start();
         });
         MenuItem freeMode = new MenuItem("Free mode");
         freeMode.setOnAction(e -> createFreeGame());
         newGame.getItems().addAll(levelMode, timeMode, freeMode);
-        MenuItem reset = new MenuItem("Rätsel neu starten");
+        MenuItem reset = new MenuItem("Restart puzzle");
         reset.setOnAction(e -> {
             gameManager.resetPoints();
             points.setText(String.valueOf(gameManager.getPoints()));
             board.reset();
         });
-        MenuItem loadGame = new MenuItem("Rätsel laden");
+        MenuItem loadGame = new MenuItem("Load puzzle");
         loadGame.setOnAction(e -> loadGame());
-        MenuItem saveGame = new MenuItem("Rätsel speichern");
+        MenuItem saveGame = new MenuItem("Save puzzle");
         saveGame.setOnAction(e -> saveGame());
         MenuItem saveGameAs = new MenuItem("Rätsel speichern unter");
         saveGameAs.setOnAction(e -> saveGameAs());
         MenuItem tutorial = new MenuItem("Tutorial");
         tutorial.setOnAction(e -> showTutorial());
-        MenuItem exit = new MenuItem("Beenden");
+        MenuItem exit = new MenuItem("Exit");
         exit.setOnAction(e -> close());
         menu.getItems().addAll(newGame, reset, loadGame, saveGame, saveGameAs, tutorial, exit);
         menuBar.getMenus().add(menu);
@@ -211,7 +212,7 @@ public class MainFrame extends BorderPane {
             try {
                 FileHandler.loadGame(filepath);
             } catch (IOException | IllegalArgumentException e) {
-                setAlert("Datei konnte nicht geladen werden.");
+                setAlert("Puzzle could not be loaded.");
                 return;
             }
             board.setLoadedGrid();
@@ -219,15 +220,11 @@ public class MainFrame extends BorderPane {
     }
 
     private void saveGame() {
-        if (filepath == null) {
-            saveGameAs();
-        } else {
-            board.saveGame();
-            try {
-                FileHandler.saveGame(filepath);
-            } catch (IOException e) {
-                setAlert("Datei konnte nicht gespeichert werden.");
-            }
+        board.saveGame();
+        try {
+            FileHandler.saveGame(filepath);
+        } catch (IOException e) {
+            setAlert("Puzzle could not be saved.");
         }
     }
 
@@ -237,7 +234,9 @@ public class MainFrame extends BorderPane {
         File file = fileChooser.showSaveDialog(window);
         if (file != null) {
             directory = file.getParent();
+            System.out.println("Dir: " + directory);
             filepath = file.toString();
+            System.out.println("Filepath: " + filepath);
             board.saveGame();
             try {
                 FileHandler.saveGame(filepath);
@@ -249,7 +248,7 @@ public class MainFrame extends BorderPane {
 
     private void setAlert(String text) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Dateiein-/ausgabe");
+        alert.setTitle("Save/Load");
         alert.setHeaderText(text);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) alert.close();

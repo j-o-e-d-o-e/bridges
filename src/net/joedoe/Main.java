@@ -12,11 +12,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage window) {
-        window.setTitle("Joerg Doerwald / M-Nr. 6995349");
+        window.setTitle("Hashiwokakero");
         MainFrame main = new MainFrame(window);
         Scene scene = new Scene(main, 768, 1024);
-        scene.getStylesheets().add("file:assets/css/Dracula.css");
-//        scene.getStylesheets().add(getClass().getResource("assets/css/Dracula.css").toExternalForm());
+        scene.getStylesheets().add("file:assets/css/dracula.css");
         window.setScene(scene);
         window.setOnCloseRequest(e -> {
             e.consume();

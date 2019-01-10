@@ -34,7 +34,7 @@ class NewGameFrame extends Stage {
     NewGameFrame(Board board) {
         this.board = board;
         generator = new Generator();
-        setTitle("Neues Rätsel");
+        setTitle("New Puzzle");
         setResizable(false);
         Scene scene = new Scene(setLayout(), 300, 280);
         setScene(scene);
@@ -55,11 +55,11 @@ class NewGameFrame extends Stage {
         vBox.setSpacing(CONTAINER_OFFSET);
 
         ToggleGroup radios = new ToggleGroup(); //-fx-text-fill: #F8F8F8;
-        autoBtn = new RadioButton("Automatische Größe und Inselanzahl");
+        autoBtn = new RadioButton("Generated size and number of isles");
         autoBtn.setStyle("-fx-text-fill: #F8F8F8;");
         autoBtn.setSelected(true);
         autoBtn.setToggleGroup(radios);
-        RadioButton customBtn = new RadioButton("Größe und/oder Inselanzahl selbst festlegen");
+        RadioButton customBtn = new RadioButton("Set size and number of isles yourself");
         customBtn.setStyle("-fx-text-fill: #F8F8F8;");
         customBtn.setToggleGroup(radios);
         radios.selectedToggleProperty().addListener(e -> {
@@ -80,19 +80,19 @@ class NewGameFrame extends Stage {
                 checkBox.setDisable(false);
             }
         });
-        heightLabel = new Label("Höhe:");
+        heightLabel = new Label("Height:");
         heightLabel.setStyle("-fx-text-fill: #F8F8F8;");
         heightLabel.setDisable(true);
         heightTxt = new TextField();
         heightTxt.setDisable(true);
 
-        widthLabel = new Label("Breite:");
+        widthLabel = new Label("Width:");
         widthLabel.setStyle("-fx-text-fill: #F8F8F8;");
         widthTxt = new TextField();
         widthTxt.setDisable(true);
         widthLabel.setDisable(true);
 
-        checkBox = new CheckBox("Inselanzahl festlegen");
+        checkBox = new CheckBox("Set number of isles");
         checkBox.setStyle("-fx-text-fill: #F8F8F8;");
         checkBox.setDisable(true);
         checkBox.setOnAction(e -> {
@@ -104,7 +104,7 @@ class NewGameFrame extends Stage {
                 islesTxt.setDisable(true);
             }
         });
-        islesLabel = new Label("Inseln:");
+        islesLabel = new Label("Isles:");
         islesLabel.setStyle("-fx-text-fill: #F8F8F8;");
         islesLabel.setDisable(true);
         islesTxt = new TextField();
@@ -127,7 +127,7 @@ class NewGameFrame extends Stage {
         HBox buttons = new HBox();
         buttons.setPadding(new Insets(0, 0, 0, 20));
         buttons.setPrefWidth(100);
-        Button cancelBtn = new Button("Abbrechen");
+        Button cancelBtn = new Button("Cancel");
         cancelBtn.setMinWidth(buttons.getPrefWidth());
         cancelBtn.setOnAction(e -> close());
         Button confirmBtn = new Button("OK");
@@ -155,7 +155,7 @@ class NewGameFrame extends Stage {
                     int height = Integer.parseInt(heightTxt.getText().trim());
                     generator.setData(width, height);
                 } catch (IllegalArgumentException e) {
-                    setAlert("Breite und Höhe müssen \u2265 " + MIN_WIDTH + " und \u2264 " + MAX_WIDTH + " sein.");
+                    setAlert("Width and height must be \u2265 " + MIN_WIDTH + " and \u2264 " + MAX_WIDTH + ".");
                     return;
                 }
             } else {
@@ -165,9 +165,9 @@ class NewGameFrame extends Stage {
                     int islesCount = Integer.parseInt(islesTxt.getText().trim());
                     generator.setData(width, height, islesCount);
                 } catch (IllegalArgumentException e) {
-                    setAlert("Breite und Höhe müssen \u2265 " + MIN_WIDTH + " und \u2264 " + MAX_WIDTH
-                            + " sein.\nInselanzahl muss \u2265 " + MIN_ISLES_COUNT
-                            + " und \u2264 Breite * Höhe * 0.2 sein.");
+                    setAlert("Width and height must be \u2265 " + MIN_WIDTH + " and \u2264 " + MAX_WIDTH
+                            + ".\nNumber of isles must be \u2265 " + MIN_ISLES_COUNT
+                            + " and \u2264 Width * Height * 0.2.");
                     return;
                 }
             }
@@ -181,7 +181,7 @@ class NewGameFrame extends Stage {
 
     private void setAlert(String text) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Ungültige Eingabe");
+        alert.setTitle("Invalid input");
         alert.setHeaderText(text);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) alert.close();

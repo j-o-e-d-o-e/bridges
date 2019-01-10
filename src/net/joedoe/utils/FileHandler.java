@@ -18,6 +18,7 @@ import static net.joedoe.utils.GameInfo.*;
  */
 public class FileHandler {
     private static GameData gameData = GameData.getInstance();
+    private static String filepath = new File("").getAbsolutePath() + File.separator + "data" + File.separator + "puzzle.bgs";
 
     /**
      * Lädt Spiel-Daten aus Datei.
@@ -26,7 +27,7 @@ public class FileHandler {
      * @throws IOException              falls Ausnahme beim Auslesen auftritt
      * @throws IllegalArgumentException falls Datei semantische oder syntaktische Fehler aufweist
      */
-    public static void loadGame(String filepath) throws IOException, IllegalArgumentException {
+    public static void loadGame() throws IOException, IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         BufferedReader in = new BufferedReader(new FileReader(filepath));
         String line = in.readLine();
@@ -126,7 +127,7 @@ public class FileHandler {
      * @param filepath Dateipfad zu der Speicher-Datei.
      * @throws IOException falls Ausnahme beim Einlesen auftritt
      */
-    public static void saveGame(String filepath) throws IOException {
+    public static void saveGame() throws IOException {
         BufferedWriter out = new BufferedWriter(new FileWriter(filepath));
         out.write(saveData());
         out.close();

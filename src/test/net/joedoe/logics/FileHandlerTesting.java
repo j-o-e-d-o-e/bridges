@@ -24,7 +24,7 @@ public class FileHandlerTesting {
     void loadData(String filename) {
         String filepath = load + filename;
         try {
-            FileHandler.loadGame(filepath);
+            FileHandler.loadGame();
         } catch (IOException | IllegalArgumentException e) {
             e.printStackTrace();
         }
@@ -36,7 +36,7 @@ public class FileHandlerTesting {
         String filepath = res + filename;
         try {
             if (Files.exists(Paths.get(filepath))) Files.delete(Paths.get(filepath));
-            FileHandler.saveGame(filepath);
+            FileHandler.saveGame();
         } catch (IOException | IllegalArgumentException e) {
             e.printStackTrace();
         }

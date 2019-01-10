@@ -9,7 +9,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.joedoe.utils.FileHandler;
 import net.joedoe.utils.GameManager;
@@ -20,21 +19,19 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
+import static net.joedoe.utils.GameManager.*;
 import static net.joedoe.views.StatusEvent.Status;
 
 /**
  * Das Hauptfenster, das das Spielfeld und die Steuerung enthält.
  */
 public class MainFrame extends BorderPane {
-    private GameManager gameManager = GameManager.getInstance();
+    private GameManager gameManager = getInstance();
     private Stage window;
     private Board board;
     private HBox controls;
     private Label status, mode, points;
     private ImageView coin;
-    private FileChooser fileChooser;
-    private String directory;
-    private String filepath = "/data/harwoook.bgs";
     private Timer timer;
 
     /**
@@ -46,9 +43,6 @@ public class MainFrame extends BorderPane {
     public MainFrame(Stage window) {
         this.window = window;
         status = new Label();
-        fileChooser = new FileChooser();
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Bridges (*.bgs)", "*.bgs");
-        fileChooser.getExtensionFilters().add(extFilter);
         timer = new Timer();
         timer.setListener(() -> Platform.runLater(this::getTime));
         setTop(createTop());
@@ -70,7 +64,7 @@ public class MainFrame extends BorderPane {
         levelMode.setOnAction(e -> board.createNewGame(gameManager.getLevel()));
         MenuItem timeMode = new MenuItem("Time mode");
         timeMode.setOnAction(e -> {
-            gameManager.setTimeMode(true);
+            gameManager.setTimeMode();
             board.createNewGame(5);
             mode.setText("Time mode");
             coin.setImage(new Image("file:assets" + File.separator + "images" + File.separator + "timer.png"));
@@ -78,7 +72,7 @@ public class MainFrame extends BorderPane {
             controls.setVisible(false);
             if (!timer.isRunning()) timer.start();
         });
-        MenuItem freeMode = new MenuItem("Free mode");
+        MenuItem freeMode = new MenuItem("FREE mode");
         freeMode.setOnAction(e -> createFreeGame());
         newGame.getItems().addAll(levelMode, timeMode, freeMode);
         MenuItem reset = new MenuItem("Restart puzzle");
@@ -91,13 +85,11 @@ public class MainFrame extends BorderPane {
         loadGame.setOnAction(e -> loadGame());
         MenuItem saveGame = new MenuItem("Save puzzle");
         saveGame.setOnAction(e -> saveGame());
-        MenuItem saveGameAs = new MenuItem("Rätsel speichern unter");
-        saveGameAs.setOnAction(e -> saveGameAs());
         MenuItem tutorial = new MenuItem("Tutorial");
         tutorial.setOnAction(e -> showTutorial());
         MenuItem exit = new MenuItem("Exit");
         exit.setOnAction(e -> close());
-        menu.getItems().addAll(newGame, reset, loadGame, saveGame, saveGameAs, tutorial, exit);
+        menu.getItems().addAll(newGame, reset, loadGame, saveGame, tutorial, exit);
         menuBar.getMenus().add(menu);
         return menuBar;
     }
@@ -203,46 +195,21 @@ public class MainFrame extends BorderPane {
     }
 
     private void loadGame() {
-        fileChooser.setTitle("Datei öffnen");
-        if (directory != null) fileChooser.setInitialDirectory(new File(directory));
-        File file = fileChooser.showOpenDialog(window);
-        if (file != null) {
-            directory = file.getParent();
-            String filepath = file.toString();
-            try {
-                FileHandler.loadGame(filepath);
-            } catch (IOException | IllegalArgumentException e) {
-                setAlert("Puzzle could not be loaded.");
-                return;
-            }
-            board.setLoadedGrid();
+        try {
+            FileHandler.loadGame();
+        } catch (IOException | IllegalArgumentException e) {
+            setAlert("Puzzle could not be loaded.");
+            return;
         }
+        board.setLoadedGrid();
     }
 
     private void saveGame() {
         board.saveGame();
         try {
-            FileHandler.saveGame(filepath);
+            FileHandler.saveGame();
         } catch (IOException e) {
             setAlert("Puzzle could not be saved.");
-        }
-    }
-
-    private void saveGameAs() {
-        fileChooser.setTitle("Datei speichern");
-        if (directory != null) fileChooser.setInitialDirectory(new File(directory));
-        File file = fileChooser.showSaveDialog(window);
-        if (file != null) {
-            directory = file.getParent();
-            System.out.println("Dir: " + directory);
-            filepath = file.toString();
-            System.out.println("Filepath: " + filepath);
-            board.saveGame();
-            try {
-                FileHandler.saveGame(filepath);
-            } catch (IOException e) {
-                setAlert("Datei konnte nicht gespeichert werden.");
-            }
         }
     }
 
@@ -258,14 +225,14 @@ public class MainFrame extends BorderPane {
         Status status = e.getStatus();
         this.status.setText(status.getText());
         if (status == Status.SOLVED) {
-            if (gameManager.isLevelMode()) {
+            if (gameManager.getMode() == Mode.LEVEL) {
                 solved("Level " + gameManager.getLevel() + " solved.");
                 gameManager.increaseLevel();
                 gameManager.savePoints();
                 mode.setText("Level " + gameManager.getLevel() + "/25");
                 board.createNewGame(gameManager.getLevel());
             }
-            if (gameManager.isTimeMode()) {
+            if (gameManager.getMode() == Mode.TIME) {
                 timer.stop();
                 solved("Puzzle solved in " + points.getText() + ".");
             } else {

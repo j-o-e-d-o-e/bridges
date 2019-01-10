@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import net.joedoe.utils.FileHandler;
@@ -31,8 +32,8 @@ public class MainFrame extends BorderPane {
     private Stage window;
     private Board board;
     private HBox controls;
-    private Label status, mode, points;
-    private ImageView coin;
+    private Label status, mode, infoLabel;
+    private ImageView infoImg;
     private Timer timer;
 
     /**
@@ -73,9 +74,9 @@ public class MainFrame extends BorderPane {
             gameManager.setTimeMode();
             board.createNewGame(5);
             mode.setText("Time mode");
-            coin.setImage(new Image("file:assets" + File.separator + "images" + File.separator + "timer.png"));
-            points.setText(timer.getStartTime());
             controls.setVisible(false);
+            infoImg.setImage(new Image("file:assets" + File.separator + "images" + File.separator + "timer.png"));
+            infoLabel.setText(timer.getStartTime());
             if (!timer.isRunning()) timer.start();
         });
         MenuItem freeMode = new MenuItem("Free mode");
@@ -84,7 +85,7 @@ public class MainFrame extends BorderPane {
         MenuItem reset = new MenuItem("Restart");
         reset.setOnAction(e -> {
             gameManager.resetPoints();
-            points.setText(String.valueOf(gameManager.getPoints()));
+            infoLabel.setText(String.valueOf(gameManager.getPoints()));
             board.reset();
         });
         MenuItem loadGame = new MenuItem("Load puzzle");
@@ -101,30 +102,28 @@ public class MainFrame extends BorderPane {
     }
 
     private Node createTopBar() {
-        HBox hBoxLevel = new HBox();
-        hBoxLevel.setAlignment(Pos.CENTER);
-        hBoxLevel.setSpacing(CONTAINER_OFFSET);
+        HBox modeBox = new HBox(CONTAINER_OFFSET);
+        modeBox.setAlignment(Pos.CENTER_LEFT);
+        modeBox.setMinWidth(200);
         mode = new Label("Level " + gameManager.getLevel() + "/25");
-        mode.setFont(new Font(15));
-        hBoxLevel.getChildren().add(mode);
-        HBox hBox1 = new HBox();
-        hBox1.setAlignment(Pos.CENTER);
-        hBox1.setSpacing(CONTAINER_OFFSET);
-        coin = new ImageView();
-        Image image = new Image("file:assets" + File.separator + "images" + File.separator + "coin.png");
-        coin.setImage(image);
-        coin.setPreserveRatio(true);
-        coin.setFitHeight(15);
-        points = new Label(Integer.toString(gameManager.getPoints()));
-        points.setMinWidth(50);
-        points.setFont(new Font(15));
-        Label spacer = new Label("                               ");
-        hBox1.getChildren().addAll(spacer, coin, points);
+        mode.setFont(new Font(14));
+        modeBox.getChildren().add(mode);
 
-        HBox hBox2 = new HBox();
-        hBox2.setMinWidth(100);
-        hBox2.setAlignment(Pos.CENTER_RIGHT);
-        hBox2.setSpacing(CONTAINER_OFFSET);
+        HBox infoBox = new HBox(CONTAINER_OFFSET);
+        infoBox.setAlignment(Pos.CENTER);
+        infoBox.setMinWidth(200);
+        infoImg = new ImageView();
+        Image image = new Image("file:assets" + File.separator + "images" + File.separator + "coin.png");
+        infoImg.setImage(image);
+        infoImg.setPreserveRatio(true);
+        infoImg.setFitHeight(15);
+        infoLabel = new Label(Integer.toString(gameManager.getPoints()));
+        infoLabel.setFont(new Font(14));
+        infoBox.getChildren().addAll(infoImg, infoLabel);
+
+        HBox controlsBox = new HBox(CONTAINER_OFFSET);
+        controlsBox.setAlignment(Pos.CENTER_RIGHT);
+        controlsBox.setMinWidth(200);
         Button zoomIn = new Button("\uD83D\uDD0D+");
         zoomIn.setOnAction(e -> board.zoomIn());
         Button zoomOut = new Button("\uD83D\uDD0D-");
@@ -137,16 +136,16 @@ public class MainFrame extends BorderPane {
             else sound.setText("\uD83D\uDD07");
             board.setSound();
         });
-        hBox2.getChildren().addAll(zoomIn, zoomOut, sound);
+        controlsBox.getChildren().addAll(zoomIn, zoomOut, sound);
 
-        Region region1 = new Region();
-        HBox.setHgrow(region1, Priority.ALWAYS);
-        Region region2 = new Region();
-        HBox.setHgrow(region2, Priority.ALWAYS);
+        Region regionLeft = new Region();
+        HBox.setHgrow(regionLeft, Priority.ALWAYS);
+        Region regionRight = new Region();
+        HBox.setHgrow(regionRight, Priority.ALWAYS);
 
         HBox box = new HBox();
         box.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, 0, CONTAINER_OFFSET));
-        box.getChildren().addAll(hBoxLevel, region1, hBox1, region2, hBox2);
+        box.getChildren().addAll(modeBox, regionLeft, infoBox, regionRight, controlsBox);
         return box;
     }
 
@@ -164,15 +163,13 @@ public class MainFrame extends BorderPane {
     }
 
     private Node createControls() {
-        VBox vBox = new VBox();
+        VBox vBox = new VBox(CONTAINER_OFFSET);
         vBox.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
-        vBox.setSpacing(CONTAINER_OFFSET);
         CheckBox checkBox = new CheckBox("Show missing bridges");
         checkBox.setSelected(true);
         checkBox.setOnAction(e -> board.setShowMissingBridges(checkBox.isSelected()));
-        controls = new HBox();
+        controls = new HBox(CONTAINER_OFFSET);
         controls.setAlignment(Pos.CENTER);
-        controls.setSpacing(CONTAINER_OFFSET);
         controls.setPrefWidth(100);
         Button solveBtn = new Button("_Solve auto");
         solveBtn.setMnemonicParsing(true);
@@ -240,7 +237,7 @@ public class MainFrame extends BorderPane {
             }
             if (gameManager.getMode() == Mode.TIME) {
                 timer.stop();
-                solved("Puzzle solved in " + points.getText() + ".");
+                solved("Puzzle solved in " + infoLabel.getText() + ".");
             } else {
                 solved("Solved.");
             }
@@ -248,7 +245,7 @@ public class MainFrame extends BorderPane {
     }
 
     private void handlePoints(PointEvent e) {
-        points.setText(e.getPoints());
+        infoLabel.setText(e.getPoints());
     }
 
     private void solved(String text) {
@@ -263,7 +260,7 @@ public class MainFrame extends BorderPane {
     }
 
     private void getTime() {
-        points.setText(timer.getTime());
+        infoLabel.setText(timer.getTime());
     }
 
     /**

@@ -51,8 +51,7 @@ class NewGameFrame extends Stage {
                 new BorderStroke(Color.GREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         innerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
 
-        VBox vBox = new VBox();
-        vBox.setSpacing(CONTAINER_OFFSET);
+        VBox vBox = new VBox(CONTAINER_OFFSET);
 
         ToggleGroup radios = new ToggleGroup(); //-fx-text-fill: #F8F8F8;
         autoBtn = new RadioButton("Generated size and number of isles");
@@ -124,7 +123,7 @@ class NewGameFrame extends Stage {
         grid.add(islesLabel, 0, 3);
         grid.add(islesTxt, 1, 3);
 
-        HBox buttons = new HBox();
+        HBox buttons = new HBox(CONTAINER_OFFSET);
         buttons.setPadding(new Insets(0, 0, 0, 20));
         buttons.setPrefWidth(100);
         Button cancelBtn = new Button("Cancel");
@@ -133,7 +132,6 @@ class NewGameFrame extends Stage {
         Button confirmBtn = new Button("OK");
         confirmBtn.setOnAction(e -> handleInput());
         confirmBtn.setMinWidth(buttons.getPrefWidth());
-        buttons.setSpacing(CONTAINER_OFFSET);
         buttons.getChildren().addAll(cancelBtn, confirmBtn);
 
         vBox.getChildren().addAll(autoBtn, customBtn, grid, buttons);

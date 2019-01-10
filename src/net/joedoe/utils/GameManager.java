@@ -59,6 +59,14 @@ public class GameManager {
         return mode;
     }
 
+    void setPoints(int points) {
+        this.points = points;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
     public enum Mode {
         LEVEL, TIME, FREE
     }

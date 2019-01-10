@@ -18,7 +18,9 @@ import static net.joedoe.utils.GameInfo.*;
  */
 public class FileHandler {
     private static GameData gameData = GameData.getInstance();
-    private static String filepath = new File("").getAbsolutePath() + File.separator + "data" + File.separator + "puzzle.bgs";
+    private static GameManager gameManager = GameManager.getInstance();
+    private static String filepathPuzzle = new File("").getAbsolutePath() + File.separator + "data" + File.separator + "puzzle.bgs";
+    private static String filepathUser = new File("").getAbsolutePath() + File.separator + "data" + File.separator + "player.usr";
 
     /**
      * Lädt Spiel-Daten aus Datei.
@@ -29,7 +31,7 @@ public class FileHandler {
      */
     public static void loadGame() throws IOException, IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
-        BufferedReader in = new BufferedReader(new FileReader(filepath));
+        BufferedReader in = new BufferedReader(new FileReader(filepathPuzzle));
         String line = in.readLine();
         while (line != null) {
             if (!line.startsWith("#") && !line.isEmpty()) {
@@ -128,7 +130,7 @@ public class FileHandler {
      * @throws IOException falls Ausnahme beim Einlesen auftritt
      */
     public static void saveGame() throws IOException {
-        BufferedWriter out = new BufferedWriter(new FileWriter(filepath));
+        BufferedWriter out = new BufferedWriter(new FileWriter(filepathPuzzle));
         out.write(saveData());
         out.close();
     }
@@ -162,5 +164,30 @@ public class FileHandler {
             }
         }
         return sb.toString();
+    }
+
+    public static void loadUser() throws IOException {
+        BufferedReader in = new BufferedReader(new FileReader(filepathUser));
+        String line = in.readLine();
+        StringBuilder sb = new StringBuilder();
+        while (line != null) {
+            if (!line.startsWith("#") && !line.isEmpty()) sb.append(line);
+            line = in.readLine();
+        }
+        Pattern pattern = Pattern.compile("Points: (\\d+)");
+        Matcher matcher = pattern.matcher(sb);
+        if (matcher.find()) gameManager.setPoints(Integer.parseInt(matcher.group(1)));
+        pattern = Pattern.compile("Level: (\\d+)");
+        matcher = pattern.matcher(sb);
+        if (matcher.find()) gameManager.setLevel(Integer.parseInt(matcher.group(1)));
+        in.close();
+    }
+
+    public static void saveUser() throws IOException {
+        BufferedWriter out = new BufferedWriter(new FileWriter(filepathUser));
+        String sb = "#User" + System.lineSeparator() + "Points: " + gameManager.getPoints() +
+                System.lineSeparator() + "Level: " + gameManager.getLevel();
+        out.write(sb);
+        out.close();
     }
 }

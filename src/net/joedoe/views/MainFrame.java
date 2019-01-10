@@ -19,7 +19,8 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
-import static net.joedoe.utils.GameManager.*;
+import static net.joedoe.utils.GameManager.Mode;
+import static net.joedoe.utils.GameManager.getInstance;
 import static net.joedoe.views.StatusEvent.Status;
 
 /**
@@ -45,6 +46,11 @@ public class MainFrame extends BorderPane {
         status = new Label();
         timer = new Timer();
         timer.setListener(() -> Platform.runLater(this::getTime));
+        try {
+            FileHandler.loadUser();
+        } catch (IOException e) {
+            setAlert("User data could not be loaded.");
+        }
         setTop(createTop());
         setCenter(createBoard());
         setBottom(createControls());
@@ -59,7 +65,7 @@ public class MainFrame extends BorderPane {
     private Node createMenuBar() {
         MenuBar menuBar = new MenuBar();
         Menu menu = new Menu("\u2630");
-        Menu newGame = new Menu("New Game");
+        Menu newGame = new Menu("New game");
         MenuItem levelMode = new MenuItem("Level mode");
         levelMode.setOnAction(e -> board.createNewGame(gameManager.getLevel()));
         MenuItem timeMode = new MenuItem("Time mode");
@@ -72,10 +78,10 @@ public class MainFrame extends BorderPane {
             controls.setVisible(false);
             if (!timer.isRunning()) timer.start();
         });
-        MenuItem freeMode = new MenuItem("FREE mode");
+        MenuItem freeMode = new MenuItem("Free mode");
         freeMode.setOnAction(e -> createFreeGame());
         newGame.getItems().addAll(levelMode, timeMode, freeMode);
-        MenuItem reset = new MenuItem("Restart puzzle");
+        MenuItem reset = new MenuItem("Restart");
         reset.setOnAction(e -> {
             gameManager.resetPoints();
             points.setText(String.valueOf(gameManager.getPoints()));
@@ -87,7 +93,7 @@ public class MainFrame extends BorderPane {
         saveGame.setOnAction(e -> saveGame());
         MenuItem tutorial = new MenuItem("Tutorial");
         tutorial.setOnAction(e -> showTutorial());
-        MenuItem exit = new MenuItem("Exit");
+        MenuItem exit = new MenuItem("Quit");
         exit.setOnAction(e -> close());
         menu.getItems().addAll(newGame, reset, loadGame, saveGame, tutorial, exit);
         menuBar.getMenus().add(menu);
@@ -98,7 +104,7 @@ public class MainFrame extends BorderPane {
         HBox hBoxLevel = new HBox();
         hBoxLevel.setAlignment(Pos.CENTER);
         hBoxLevel.setSpacing(CONTAINER_OFFSET);
-        mode = new Label("Level 1/25");
+        mode = new Label("Level " + gameManager.getLevel() + "/25");
         mode.setFont(new Font(15));
         hBoxLevel.getChildren().add(mode);
         HBox hBox1 = new HBox();
@@ -109,7 +115,7 @@ public class MainFrame extends BorderPane {
         coin.setImage(image);
         coin.setPreserveRatio(true);
         coin.setFitHeight(15);
-        points = new Label("0");
+        points = new Label(Integer.toString(gameManager.getPoints()));
         points.setMinWidth(50);
         points.setFont(new Font(15));
         Label spacer = new Label("                               ");
@@ -161,21 +167,21 @@ public class MainFrame extends BorderPane {
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
         vBox.setSpacing(CONTAINER_OFFSET);
-        CheckBox checkBox = new CheckBox("Anzahl fehlender Br¸cken anzeigen");
+        CheckBox checkBox = new CheckBox("Show missing bridges");
         checkBox.setSelected(true);
         checkBox.setOnAction(e -> board.setShowMissingBridges(checkBox.isSelected()));
         controls = new HBox();
         controls.setAlignment(Pos.CENTER);
         controls.setSpacing(CONTAINER_OFFSET);
         controls.setPrefWidth(100);
-        Button solveBtn = new Button("_Automatisch lˆsen");
+        Button solveBtn = new Button("_Solve auto");
         solveBtn.setMnemonicParsing(true);
         solveBtn.setMinWidth(controls.getPrefWidth());
         solveBtn.setOnAction(e -> {
             if (board.autoSolverIsRunning()) board.stopAutoSolve();
             else board.startAutoSolve();
         });
-        Button nextBtn = new Button("_N‰chste Br¸cke");
+        Button nextBtn = new Button("_Next bridge");
         nextBtn.setMnemonicParsing(true);
         nextBtn.setMinWidth(controls.getPrefWidth());
         nextBtn.setOnAction(e -> board.getNextBridge());
@@ -264,6 +270,12 @@ public class MainFrame extends BorderPane {
      * Schlieﬂt die Applikation.
      */
     public void close() {
+        try {
+            FileHandler.saveUser();
+        } catch (IOException e) {
+            setAlert("User data could not be saved.");
+            return;
+        }
         window.close();
         board.shutdownAutoSolve();
         if (timer.isRunning()) timer.shutdown();

@@ -14,16 +14,8 @@ public class GameManager {
         return gameManager;
     }
 
-    public void setLevelMode() {
-        mode = Mode.LEVEL;
-    }
-
-    public void setTimeMode() {
-        mode = Mode.TIME;
-    }
-
-    public void setFreeMode() {
-        mode = Mode.FREE;
+    public void setMode(Mode mode) {
+        this.mode = mode;
     }
 
     public int getPoints() {

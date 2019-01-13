@@ -14,11 +14,11 @@ import javafx.stage.Stage;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 
-class DifficultyFrame extends Stage {
+class DifficultyStage extends Stage {
     private ToggleGroup group;
     private EventHandler<DifficultyEvent> listener;
 
-    DifficultyFrame() {
+    DifficultyStage() {
         setTitle("Difficulty");
         setResizable(false);
         Scene scene = new Scene(setLayout(), 250, 280);

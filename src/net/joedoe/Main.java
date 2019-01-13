@@ -13,13 +13,13 @@ public class Main extends Application {
     @Override
     public void start(Stage window) {
         window.setTitle("Hashiwokakero");
-        MainFrame main = new MainFrame(window);
-        Scene scene = new Scene(main, 768, 1024);
+        MainFrame mainFrame = new MainFrame(window);
+        Scene scene = new Scene(mainFrame, 768, 1024);
         scene.getStylesheets().add("file:assets/css/dracula.css");
         window.setScene(scene);
         window.setOnCloseRequest(e -> {
             e.consume();
-            main.close();
+            mainFrame.close();
         });
         window.show();
     }

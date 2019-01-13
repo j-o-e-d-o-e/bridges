@@ -7,6 +7,7 @@ import net.joedoe.entities.Isle;
 import net.joedoe.utils.Alignment;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
+import net.joedoe.utils.GameData;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +24,7 @@ import static net.joedoe.utils.GameInfo.*;
  * Generiert ein neues Spiel.
  */
 public class Generator {
+    private GameData gameData = GameData.getInstance();
     private BridgeDetector detector;
     private int height, width, islesCount;
     private List<Isle> isles = new ArrayList<>();
@@ -72,6 +74,10 @@ public class Generator {
                 }
             }
         }
+        gameData.setWidth(width);
+        gameData.setHeight(height);
+        gameData.setIsles(getIsles());
+        gameData.setBridges(getBridges());
     }
 
     /**

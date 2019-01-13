@@ -8,12 +8,12 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import net.joedoe.utils.FileHandler;
 import net.joedoe.utils.GameManager;
 import net.joedoe.utils.Timer;
+import net.joedoe.views.DifficultyFrame.Difficulty;
 
 import java.io.File;
 import java.io.IOException;
@@ -70,15 +70,7 @@ public class MainFrame extends BorderPane {
         MenuItem levelMode = new MenuItem("Level mode");
         levelMode.setOnAction(e -> board.createNewGame(gameManager.getLevel()));
         MenuItem timeMode = new MenuItem("Time mode");
-        timeMode.setOnAction(e -> {
-            gameManager.setTimeMode();
-            board.createNewGame(5);
-            mode.setText("Time mode");
-            controls.setVisible(false);
-            infoImg.setImage(new Image("file:assets" + File.separator + "images" + File.separator + "timer.png"));
-            infoLabel.setText(timer.getStartTime());
-            if (!timer.isRunning()) timer.start();
-        });
+        timeMode.setOnAction(e -> chooseDifficulty());
         MenuItem freeMode = new MenuItem("Free mode");
         freeMode.setOnAction(e -> createFreeGame());
         newGame.getItems().addAll(levelMode, timeMode, freeMode);
@@ -99,6 +91,27 @@ public class MainFrame extends BorderPane {
         menu.getItems().addAll(newGame, reset, loadGame, saveGame, tutorial, exit);
         menuBar.getMenus().add(menu);
         return menuBar;
+    }
+
+    private void chooseDifficulty() {
+        DifficultyFrame difficultyFrame = new DifficultyFrame();
+        difficultyFrame.setListener(e -> {
+            Difficulty difficulty = e.getDifficulty();
+            createTimeGame(difficulty.getLevel());
+        });
+        difficultyFrame.initOwner(window);
+        difficultyFrame.show();
+    }
+
+    private void createTimeGame(int level) {
+        board.stopAutoSolve();
+        gameManager.setTimeMode();
+        mode.setText("Time mode");
+        infoImg.setImage(new Image("file:assets" + File.separator + "images" + File.separator + "timer.png"));
+        controls.setVisible(false);
+        board.createNewGame(level);
+        infoLabel.setText(timer.getStartTime());
+        if (!timer.isRunning()) timer.start();
     }
 
     private Node createTopBar() {

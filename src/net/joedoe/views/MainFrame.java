@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -30,6 +31,7 @@ import static net.joedoe.views.StatusEvent.Status;
 public class MainFrame extends BorderPane {
     private GameManager gameManager = getInstance();
     private Stage window;
+    private CustomMenuBar menuBar;
     private Board board;
     private HBox controls;
     private Label status, mode, infoLabel;
@@ -59,41 +61,30 @@ public class MainFrame extends BorderPane {
 
     private Node createTop() {
         VBox box = new VBox();
-        box.getChildren().addAll(createMenuBar(), createTopBar());
+        menuBar = new CustomMenuBar(this);
+        box.getChildren().addAll(menuBar, createTopBar());
         return box;
     }
 
-    private Node createMenuBar() {
-        MenuBar menuBar = new MenuBar();
-        Menu menu = new Menu("\u2630");
-        Menu newGame = new Menu("New game");
-        MenuItem levelMode = new MenuItem("Level mode");
-        levelMode.setOnAction(e -> board.createNewGame(gameManager.getLevel()));
-        MenuItem timeMode = new MenuItem("Time mode");
-        timeMode.setOnAction(e -> chooseDifficulty());
-        MenuItem freeMode = new MenuItem("Free mode");
-        freeMode.setOnAction(e -> createFreeGame());
-        newGame.getItems().addAll(levelMode, timeMode, freeMode);
-        MenuItem reset = new MenuItem("Restart");
-        reset.setOnAction(e -> {
-            gameManager.resetPoints();
-            infoLabel.setText(String.valueOf(gameManager.getPoints()));
-            board.reset();
-        });
-        MenuItem loadGame = new MenuItem("Load puzzle");
-        loadGame.setOnAction(e -> loadGame());
-        MenuItem saveGame = new MenuItem("Save puzzle");
-        saveGame.setOnAction(e -> saveGame());
-        MenuItem tutorial = new MenuItem("Tutorial");
-        tutorial.setOnAction(e -> showTutorial());
-        MenuItem exit = new MenuItem("Quit");
-        exit.setOnAction(e -> close());
-        menu.getItems().addAll(newGame, reset, loadGame, saveGame, tutorial, exit);
-        menuBar.getMenus().add(menu);
-        return menuBar;
+    void createNewGame() {
+        board.createNewGame(gameManager.getLevel());
     }
 
-    private void chooseDifficulty() {
+    void reset() {
+        gameManager.resetPoints();
+        infoLabel.setText(String.valueOf(gameManager.getPoints()));
+        board.reset();
+    }
+
+    void showHighScore() {
+        HighScoreFrame highScoreFrame = new HighScoreFrame(menuBar);
+        Scene main = window.getScene();
+        highScoreFrame.setListener(e -> window.setScene(main));
+        Scene highScore = new Scene(highScoreFrame, 768, 1024);
+        window.setScene(highScore);
+    }
+
+    void chooseDifficulty() {
         DifficultyFrame difficultyFrame = new DifficultyFrame();
         difficultyFrame.setListener(e -> {
             Difficulty difficulty = e.getDifficulty();
@@ -162,7 +153,7 @@ public class MainFrame extends BorderPane {
         return box;
     }
 
-    private void showTutorial() {
+    void showTutorial() {
         board.stopAutoSolve();
         Tutorial tutorial = new Tutorial();
         tutorial.initOwner(window);
@@ -203,14 +194,14 @@ public class MainFrame extends BorderPane {
     /**
      * Erzeugt Dialog-Fenster, um ein neues Spiel zu generieren.
      */
-    private void createFreeGame() {
+    void createFreeGame() {
         board.stopAutoSolve();
         NewGameFrame newGameFrame = new NewGameFrame(board);
         newGameFrame.initOwner(window);
         newGameFrame.show();
     }
 
-    private void loadGame() {
+    void loadGame() {
         try {
             FileHandler.loadGame();
         } catch (IOException | IllegalArgumentException e) {
@@ -220,7 +211,7 @@ public class MainFrame extends BorderPane {
         board.setLoadedGrid();
     }
 
-    private void saveGame() {
+    void saveGame() {
         board.saveGame();
         try {
             FileHandler.saveGame();

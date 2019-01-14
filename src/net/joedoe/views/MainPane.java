@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import net.joedoe.utils.GameManager;
+import net.joedoe.utils.GameManager.Mode;
 import net.joedoe.utils.Timer;
 
 import java.io.File;
@@ -27,9 +28,7 @@ public class MainPane extends BorderPane {
 
 
     MainPane() {
-        timer = new Timer();
         status = new Label();
-        timer.setListener(() -> Platform.runLater(() -> infoLbl.setText(timer.getTime())));
         board = new Board(this::handle, gameManager.getLevel());
         board.setPointListener(this::handlePoints);
         setTop(createTopBar());
@@ -116,14 +115,14 @@ public class MainPane extends BorderPane {
         StatusEvent.Status status = e.getStatus();
         this.status.setText(status.getText());
         if (status == StatusEvent.Status.SOLVED) {
-            if (gameManager.getMode() == GameManager.Mode.LEVEL) {
+            if (gameManager.getMode() == Mode.LEVEL) {
                 solved("Level " + gameManager.getLevel() + " solved.");
                 gameManager.increaseLevel();
                 gameManager.savePoints();
                 mode.setText("Level " + gameManager.getLevel() + "/25");
                 board.createNewGame(gameManager.getLevel());
             }
-            if (gameManager.getMode() == GameManager.Mode.TIME) {
+            if (gameManager.getMode() == Mode.TIME) {
                 timer.stop();
                 solved("Puzzle solved in " + infoLbl.getText() + ".");
             } else {
@@ -154,13 +153,22 @@ public class MainPane extends BorderPane {
     }
 
     void createLevelGame() {
+        if (board.autoSolverIsRunning()) board.stopAutoSolve();
+        if (gameManager.getMode() == Mode.TIME) {
+            timer.stop();
+            controls.setVisible(true);
+        }
+        gameManager.setMode(Mode.LEVEL);
         board.createNewGame(gameManager.getLevel());
-        if (!controls.isVisible()) controls.setVisible(true);
     }
 
     void createTimeGame(int level) {
-        board.stopAutoSolve();
-        gameManager.setTimeMode();
+        if (board.autoSolverIsRunning()) board.stopAutoSolve();
+        if (timer == null) {
+            timer = new Timer();
+            timer.setListener(() -> Platform.runLater(() -> infoLbl.setText(timer.getTime())));
+        }
+        gameManager.setMode(Mode.TIME);
         mode.setText("Time mode");
         infoImg.setImage(new Image("file:assets" + File.separator + "images" + File.separator + "timer.png"));
         controls.setVisible(false);
@@ -170,6 +178,9 @@ public class MainPane extends BorderPane {
     }
 
     void createFreeGame() {
+        if (board.autoSolverIsRunning()) board.stopAutoSolve();
+        if (!controls.isVisible()) controls.setVisible(true);
+        gameManager.setMode(Mode.FREE);
         board.setGrid();
     }
 

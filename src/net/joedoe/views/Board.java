@@ -24,7 +24,7 @@ import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
  */
 class Board extends StackPane {
     private Grid grid;
-    private ScrollPane scroll;
+    private Generator generator;
     private int width, height;
     private boolean showMissingBridges = true;
     private EventHandler<StatusEvent> statusListener;
@@ -41,25 +41,14 @@ class Board extends StackPane {
      */
     Board(EventHandler<StatusEvent> statusListener, int level) {
         this.statusListener = statusListener;
-        int islesCount = 5 * level;
-        Generator generator = new Generator();
-        generator.setData(islesCount);
-        generator.generateGame();
-        width = generator.getWidth();
-        height = generator.getHeight();
         setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, 0, CONTAINER_OFFSET));
-        grid = new Grid(statusListener, width, height, generator.getIsles(), null);
-        scroll = new ScrollPane();
-        scroll.setContent(grid);
-        scroll.setFitToHeight(true);
-        scroll.setFitToWidth(true);
-        getChildren().add(scroll);
-        setShowMissingBridges(showMissingBridges);
         String file = "assets" + File.separator + "sounds" + File.separator + "waves.wav";
         Media sound = new Media(new File(file).toURI().toString());
         player = new MediaPlayer(sound);
         player.setOnEndOfMedia(() -> player.seek(Duration.ZERO));
         player.play();
+        generator = new Generator();
+        createNewGame(level);
     }
 
     void setGrid() {
@@ -74,10 +63,10 @@ class Board extends StackPane {
         this.width = width;
         this.height = height;
         getChildren().remove(grid);
-        grid.shutdownAutoSolve();
+        if (grid != null) grid.shutdownAutoSolve();
         grid = new Grid(statusListener, width, height, isles, bridges);
         grid.setPointListener(pointListener);
-        scroll = new ScrollPane();
+        ScrollPane scroll = new ScrollPane();
         scroll.setContent(grid);
         scroll.setFitToHeight(true);
         scroll.setFitToWidth(true);
@@ -183,10 +172,7 @@ class Board extends StackPane {
     }
 
     void createNewGame(int level) {
-        grid.stopAutoSolve();
-        int islesCount = 5 * level;
-        Generator generator = new Generator();
-        generator.setData(islesCount);
+        generator.setData(5 * level);
         generator.generateGame();
         setGrid(generator.getWidth(), generator.getHeight(), generator.getIsles(), null);
     }

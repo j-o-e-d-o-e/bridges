@@ -28,13 +28,13 @@ public class MainFrame extends BorderPane {
     public MainFrame(Stage window) {
         this.window = window;
         setTop(new CustomMenuBar(this));
-        main = new MainPane();
-        setCenter(main);
         try {
             FileHandler.loadUser();
         } catch (IOException e) {
             setAlert("User data could not be loaded.");
         }
+        main = new MainPane();
+        setCenter(main);
     }
 
     void createLevelGame() {

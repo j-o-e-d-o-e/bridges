@@ -29,7 +29,7 @@ public class MainPane extends BorderPane {
 
     MainPane() {
         status = new Label();
-        board = new Board(this::handle, gameManager.getLevel());
+        board = new Board(this::handleStatus, gameManager.getLevel());
         board.setPointListener(this::handlePoints);
         setTop(createTopBar());
         setCenter(board);
@@ -110,8 +110,11 @@ public class MainPane extends BorderPane {
         return vBox;
     }
 
+    private void handlePoints(PointEvent e) {
+        infoLbl.setText(e.getPoints());
+    }
 
-    private void handle(StatusEvent e) {
+    private void handleStatus(StatusEvent e) {
         StatusEvent.Status status = e.getStatus();
         this.status.setText(status.getText());
         if (status == StatusEvent.Status.SOLVED) {
@@ -146,10 +149,6 @@ public class MainPane extends BorderPane {
         gameManager.resetPoints();
         infoLbl.setText(String.valueOf(gameManager.getPoints()));
         board.reset();
-    }
-
-    private void handlePoints(PointEvent e) {
-        infoLbl.setText(e.getPoints());
     }
 
     void createLevelGame() {
@@ -198,6 +197,6 @@ public class MainPane extends BorderPane {
 
     public void close() {
         board.shutdownAutoSolve();
-        if (timer.isRunning()) timer.shutdown();
+        if (timer != null && timer.isRunning()) timer.shutdown();
     }
 }

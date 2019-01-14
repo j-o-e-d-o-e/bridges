@@ -176,6 +176,7 @@ public class BridgeController {
     public Bridge getBridge(Coordinate pos, Direction direction) {
         Isle startIsle = getIsle(pos);
         Isle endIsle = getEndIsle(startIsle, direction);
+        if (endIsle == null) return null;
         return getBridge(startIsle.getPos(), endIsle.getPos());
     }
 

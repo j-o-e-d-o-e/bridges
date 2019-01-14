@@ -2,7 +2,7 @@ package net.joedoe.utils;
 
 public class GameManager {
     private static final GameManager gameManager = new GameManager();
-    private Mode mode;
+    private Mode mode = Mode.LEVEL;
     private int points = 0, tempPoints = 0, level = 1;
 
     /**

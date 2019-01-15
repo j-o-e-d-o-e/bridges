@@ -112,12 +112,12 @@ public class MainFrame extends BorderPane {
     }
 
     public void close() {
-        try {
-            FileHandler.saveUser();
-        } catch (IOException e) {
-            setAlert("User data could not be saved.");
-            return;
-        }
+//        try {
+//            FileHandler.saveUser();
+//        } catch (IOException e) {
+//            setAlert("User data could not be saved.");
+//            return;
+//        }
         main.close();
         window.close();
     }

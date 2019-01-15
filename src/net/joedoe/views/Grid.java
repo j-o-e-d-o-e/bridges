@@ -75,8 +75,8 @@ class Grid extends GridPane {
         if (bridges != null) {
             controller.setBridges(bridges);
             setBridges(bridges);
+            checkStatus();
         }
-        checkStatus();
     }
 
     /**

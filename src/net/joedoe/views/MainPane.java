@@ -119,13 +119,12 @@ public class MainPane extends BorderPane {
         this.status.setText(status.getText());
         if (status == StatusEvent.Status.SOLVED) {
             if (gameManager.getMode() == Mode.LEVEL) {
+                gameManager.savePoints();
                 solved("Level " + gameManager.getLevel() + " solved.");
                 gameManager.increaseLevel();
-                gameManager.savePoints();
                 mode.setText("Level " + gameManager.getLevel() + "/25");
                 board.createNewGame(gameManager.getLevel());
-            }
-            if (gameManager.getMode() == Mode.TIME) {
+            } else if (gameManager.getMode() == Mode.TIME) {
                 timer.stop();
                 solved("Puzzle solved in " + infoLbl.getText() + ".");
             } else {
@@ -139,10 +138,8 @@ public class MainPane extends BorderPane {
         alert.setTitle("Solved!");
         alert.setHeaderText(text);
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.CANCEL) alert.close();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            alert.close();
-        }
+        if (result.isPresent() && result.get() == ButtonType.OK) alert.close();
+
     }
 
     public void reset() {

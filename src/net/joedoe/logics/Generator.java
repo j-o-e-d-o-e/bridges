@@ -43,6 +43,8 @@ public class Generator {
      * Generiert ein neues Spiel.
      */
     public void generateGame() {
+        isles.clear();
+        bridges.clear();
         // erstellt Liste aus allen verfügbaren Koordinaten als Ganzzahlen
         indices = IntStream.range(0, height * width).boxed().collect(Collectors.toList());
         // legt Anfangs-Insel fest

@@ -4,7 +4,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 
-public class CustomMenuBar extends MenuBar {
+class CustomMenuBar extends MenuBar {
     private MainFrame main;
 
     CustomMenuBar(MainFrame main) {
@@ -16,7 +16,7 @@ public class CustomMenuBar extends MenuBar {
         Menu menu = new Menu("\u2630");
         Menu newGame = new Menu("New game");
         MenuItem levelMode = new MenuItem("Level mode");
-        levelMode.setOnAction(e -> main.createNewGame());
+        levelMode.setOnAction(e -> main.createLevelGame());
         MenuItem timeMode = new MenuItem("Time mode");
         timeMode.setOnAction(e -> main.chooseDifficulty());
         MenuItem freeMode = new MenuItem("Free mode");

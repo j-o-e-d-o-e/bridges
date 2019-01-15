@@ -1,5 +1,7 @@
 package net.joedoe.views;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -15,13 +17,13 @@ import static net.joedoe.utils.GameInfo.*;
 /**
  * Dialog zur Generierung eines neuen Spiels.
  */
-class NewGameFrame extends Stage {
-    private Board board;
+class NewGameStage extends Stage {
     private Generator generator;
     private RadioButton autoBtn;
     private Label heightLabel, widthLabel, islesLabel;
     private TextField heightTxt, widthTxt, islesTxt;
     private CheckBox checkBox;
+    private EventHandler<Event> listener;
 
     /**
      * Erzeugt einen Dialog, in dem der Nutzer Angaben bzgl. Breite und Höhe des
@@ -31,8 +33,7 @@ class NewGameFrame extends Stage {
      * @param board Spielfeld, an das die Daten des generierten Spiels zurückgegeben
      *              werden
      */
-    NewGameFrame(Board board) {
-        this.board = board;
+    NewGameStage() {
         generator = new Generator();
         setTitle("New Puzzle");
         setResizable(false);
@@ -40,6 +41,7 @@ class NewGameFrame extends Stage {
         setScene(scene);
     }
 
+    @SuppressWarnings("Duplicates")
     private StackPane setLayout() {
         StackPane outerPane = new StackPane();
         outerPane.setStyle("-fx-background-color: #282828;");
@@ -130,7 +132,11 @@ class NewGameFrame extends Stage {
         cancelBtn.setMinWidth(buttons.getPrefWidth());
         cancelBtn.setOnAction(e -> close());
         Button confirmBtn = new Button("OK");
-        confirmBtn.setOnAction(e -> handleInput());
+        confirmBtn.setOnAction(e -> {
+            handleInput();
+            listener.handle(e);
+            close();
+        });
         confirmBtn.setMinWidth(buttons.getPrefWidth());
         buttons.getChildren().addAll(cancelBtn, confirmBtn);
 
@@ -171,10 +177,6 @@ class NewGameFrame extends Stage {
             }
         }
         generator.generateGame();
-        board.setGrid(generator.getWidth(), generator.getHeight(), generator.getIsles(), null);
-        // board.setGrid(generator.getWidth(), generator.getHeight(),
-        // generator.getIsles(), generator.getBridges());
-        close();
     }
 
     private void setAlert(String text) {
@@ -183,5 +185,9 @@ class NewGameFrame extends Stage {
         alert.setHeaderText(text);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) alert.close();
+    }
+
+    void setListener(EventHandler<Event> listener) {
+        this.listener = listener;
     }
 }

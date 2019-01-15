@@ -16,6 +16,10 @@ public class Timer {
         service.submit(this::run);
     }
 
+    public void restart() {
+        currentTime = startTime;
+    }
+
     private void run() {
         while (running) {
             try {

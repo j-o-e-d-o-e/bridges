@@ -12,7 +12,6 @@ import net.joedoe.entities.IIsle;
 import net.joedoe.logics.Generator;
 import net.joedoe.utils.GameData;
 import net.joedoe.utils.GameInfo;
-import net.joedoe.utils.Mocks;
 
 import java.io.File;
 import java.util.List;
@@ -25,7 +24,7 @@ import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
  */
 class Board extends StackPane {
     private Grid grid;
-    private ScrollPane scroll;
+    private Generator generator;
     private int width, height;
     private boolean showMissingBridges = true;
     private EventHandler<StatusEvent> statusListener;
@@ -40,78 +39,39 @@ class Board extends StackPane {
      *
      * @param statusListener Listener, über den die Statuszeile über Änderungen informiert wird
      */
-    Board(EventHandler<StatusEvent> statusListener) {
-        this.width = Mocks.WIDTH;
-        this.height = Mocks.HEIGHT;
-        this.statusListener = statusListener;
-        setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, 0, CONTAINER_OFFSET));
-        grid = new Grid(statusListener, width, height, Mocks.getIsles(), null);
-        // grid = new Grid(statusListener, width, height, Mocks.getIsles(),
-        // Mocks.getBridges());
-        scroll = new ScrollPane();
-        scroll.setContent(grid);
-        scroll.setFitToHeight(true);
-        scroll.setFitToWidth(true);
-        getChildren().add(scroll);
-        setShowMissingBridges(showMissingBridges);
-        initializeSound();
-    }
-
     Board(EventHandler<StatusEvent> statusListener, int level) {
         this.statusListener = statusListener;
-        int islesCount = 5 * level;
-        Generator generator = new Generator();
-        generator.setData(islesCount);
-        generator.generateGame();
-        width = generator.getWidth();
-        height = generator.getHeight();
         setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, 0, CONTAINER_OFFSET));
-        grid = new Grid(statusListener, width, height, generator.getIsles(), null);
-        scroll = new ScrollPane();
-        scroll.setContent(grid);
-        scroll.setFitToHeight(true);
-        scroll.setFitToWidth(true);
-        getChildren().add(scroll);
-        setShowMissingBridges(showMissingBridges);
-        initializeSound();
-    }
-
-    private void initializeSound() {
         String file = "assets" + File.separator + "sounds" + File.separator + "waves.wav";
         Media sound = new Media(new File(file).toURI().toString());
         player = new MediaPlayer(sound);
         player.setOnEndOfMedia(() -> player.seek(Duration.ZERO));
         player.play();
+        generator = new Generator();
+        createNewGame(level);
     }
 
-    /**
-     * Erzeugt neues Raster mit generierten Spiel-Daten.
-     *
-     * @param width   Breite des Spielfelds
-     * @param height  Höhe des Spielfelds
-     * @param isles   Inseln, die auf dem Spielfeld platziert werden
-     * @param bridges Brücken, die auf dem Spielfeld platziert werden
-     */
-    void setGrid(int width, int height, List<IIsle> isles, List<IBridge> bridges) {
+    void setGrid() {
+        setGrid(gameData.getWidth(), gameData.getHeight(), gameData.getIsles(), null);
+    }
+
+    void setGridWithBridges() {
+        setGrid(gameData.getWidth(), gameData.getHeight(), gameData.getIsles(), gameData.getBridges());
+    }
+
+    private void setGrid(int width, int height, List<IIsle> isles, List<IBridge> bridges) {
         this.width = width;
         this.height = height;
         getChildren().remove(grid);
-        grid.shutdownAutoSolve();
+        if (grid != null) grid.shutdownAutoSolve();
         grid = new Grid(statusListener, width, height, isles, bridges);
         grid.setPointListener(pointListener);
-        scroll = new ScrollPane();
+        ScrollPane scroll = new ScrollPane();
         scroll.setContent(grid);
         scroll.setFitToHeight(true);
         scroll.setFitToWidth(true);
         getChildren().add(scroll);
         setShowMissingBridges(showMissingBridges);
-    }
-
-    /**
-     * Erzeugt neues Raster mit geladenen Spiel-Daten.
-     */
-    void setLoadedGrid() {
-        setGrid(gameData.getWidth(), gameData.getHeight(), gameData.getIsles(), gameData.getBridges());
     }
 
     /**
@@ -212,10 +172,7 @@ class Board extends StackPane {
     }
 
     void createNewGame(int level) {
-        grid.stopAutoSolve();
-        int islesCount = 5 * level;
-        Generator generator = new Generator();
-        generator.setData(islesCount);
+        generator.setData(5 * level);
         generator.generateGame();
         setGrid(generator.getWidth(), generator.getHeight(), generator.getIsles(), null);
     }

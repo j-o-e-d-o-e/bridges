@@ -5,13 +5,10 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 
-class HighScoreFrame extends BorderPane {
-    private CustomMenuBar menuBar;
+class HighScorePane extends BorderPane {
     private EventHandler<Event> listener;
 
-    HighScoreFrame(CustomMenuBar menuBar) {
-        this.menuBar = menuBar;
-        setTop(menuBar);
+    HighScorePane() {
         Button ok = new Button("Ok");
         ok.setOnAction(e -> listener.handle(e));
         setCenter(ok);

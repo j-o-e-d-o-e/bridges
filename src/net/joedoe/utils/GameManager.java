@@ -2,7 +2,7 @@ package net.joedoe.utils;
 
 public class GameManager {
     private static final GameManager gameManager = new GameManager();
-    private Mode mode;
+    private Mode mode = Mode.LEVEL;
     private int points = 0, tempPoints = 0, level = 1;
 
     /**
@@ -14,16 +14,8 @@ public class GameManager {
         return gameManager;
     }
 
-    public void setLevelMode() {
-        mode = Mode.LEVEL;
-    }
-
-    public void setTimeMode() {
-        mode = Mode.TIME;
-    }
-
-    public void setFreeMode() {
-        mode = Mode.FREE;
+    public void setMode(Mode mode) {
+        this.mode = mode;
     }
 
     public int getPoints() {

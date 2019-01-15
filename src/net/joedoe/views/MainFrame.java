@@ -217,6 +217,7 @@ public class MainFrame extends BorderPane {
             FileHandler.saveGame();
         } catch (IOException e) {
             setAlert("Puzzle could not be saved.");
+            
         }
     }
 

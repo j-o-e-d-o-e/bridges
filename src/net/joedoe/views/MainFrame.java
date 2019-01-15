@@ -26,6 +26,7 @@ public class MainFrame extends BorderPane {
      * @param window schlieﬂt die Appplikation und erzeugt neue Dialoge
      */
     public MainFrame(Stage window) {
+        System.out.println("this is a git test");
         this.window = window;
         setTop(new CustomMenuBar(this));
         try {

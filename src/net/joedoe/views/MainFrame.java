@@ -93,6 +93,7 @@ public class MainFrame extends BorderPane {
         alert.setHeaderText(text);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) alert.close();
+        
     }
 
 

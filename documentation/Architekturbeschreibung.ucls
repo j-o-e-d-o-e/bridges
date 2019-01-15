@@ -55,7 +55,7 @@
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </interface>  
-  <class id="7" language="java" name="net.joedoe.viewmodel.BridgeLine" project="Bridges_Doerwald_Joerg" 
+  <class id="7" language="java" name="BridgeLine" project="Bridges_Doerwald_Joerg"
     file="/Bridges_Doerwald_Joerg/src/net/joedoe/viewmodel/BridgeLine.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1208" y="306"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="false" 
@@ -64,7 +64,7 @@
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="net.joedoe.viewmodel.IslePane" project="Bridges_Doerwald_Joerg" 
+  <class id="8" language="java" name="IslePane" project="Bridges_Doerwald_Joerg"
     file="/Bridges_Doerwald_Joerg/src/net/joedoe/viewmodel/IslePane.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1350" y="306"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="false" 
@@ -73,7 +73,7 @@
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="9" language="java" name="net.joedoe.viewmodel.GridController" project="Bridges_Doerwald_Joerg" 
+  <class id="9" language="java" name="GridController" project="Bridges_Doerwald_Joerg"
     file="/Bridges_Doerwald_Joerg/src/net/joedoe/viewmodel/GridController.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1350" y="443"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="false" 

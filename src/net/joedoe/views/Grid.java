@@ -15,9 +15,9 @@ import net.joedoe.logics.Solver;
 import net.joedoe.logics.StatusChecker;
 import net.joedoe.utils.Direction;
 import net.joedoe.utils.GameManager;
-import net.joedoe.viewmodel.BridgeLine;
-import net.joedoe.viewmodel.GridController;
-import net.joedoe.viewmodel.IslePane;
+import net.joedoe.views.entities.BridgeLine;
+import net.joedoe.views.controllers.GridController;
+import net.joedoe.views.entities.IslePane;
 
 import java.util.ArrayList;
 import java.util.List;

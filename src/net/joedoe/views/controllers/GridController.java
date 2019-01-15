@@ -1,9 +1,11 @@
-package net.joedoe.viewmodel;
+package net.joedoe.views.controllers;
 
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.views.IsleListener;
+import net.joedoe.views.entities.BridgeLine;
+import net.joedoe.views.entities.IslePane;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -18,7 +18,7 @@ class CustomMenuBar extends MenuBar {
         MenuItem levelMode = new MenuItem("Level mode");
         levelMode.setOnAction(e -> main.createLevelGame());
         MenuItem timeMode = new MenuItem("Time mode");
-        timeMode.setOnAction(e -> main.chooseDifficulty());
+        timeMode.setOnAction(e -> main.createTimeGame());
         MenuItem freeMode = new MenuItem("Free mode");
         freeMode.setOnAction(e -> main.createFreeGame());
         newGame.getItems().addAll(levelMode, timeMode, freeMode);

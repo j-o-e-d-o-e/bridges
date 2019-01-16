@@ -22,6 +22,11 @@ public class FileHandler {
     private static String filepathPuzzle = new File("").getAbsolutePath() + File.separator + "data" + File.separator + "puzzle.bgs";
     private static String filepathUser = new File("").getAbsolutePath() + File.separator + "data" + File.separator + "player.usr";
 
+
+    public static void loadPuzzle() throws IOException {
+        loadPuzzle(filepathPuzzle);
+    }
+
     /**
      * Lädt Spiel-Daten aus Datei.
      *
@@ -29,7 +34,7 @@ public class FileHandler {
      * @throws IOException              falls Ausnahme beim Auslesen auftritt
      * @throws IllegalArgumentException falls Datei semantische oder syntaktische Fehler aufweist
      */
-    public static void loadPuzzle() throws IOException, IllegalArgumentException {
+    public static void loadPuzzle(String filepathPuzzle) throws IOException, IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         BufferedReader in = new BufferedReader(new FileReader(filepathPuzzle));
         String line = in.readLine();
@@ -123,13 +128,17 @@ public class FileHandler {
         gameData.setBridges(bridges);
     }
 
+    public static void savePuzzle() throws IOException {
+        savePuzzle(filepathPuzzle);
+    }
+
     /**
      * Speichert Spiel-Daten in Datei.
      *
      * @param filepath Dateipfad zu der Speicher-Datei.
      * @throws IOException falls Ausnahme beim Einlesen auftritt
      */
-    public static void savePuzzle() throws IOException {
+    public static void savePuzzle(String filepathPuzzle) throws IOException {
         BufferedWriter out = new BufferedWriter(new FileWriter(filepathPuzzle));
         out.write(saveData());
         out.close();

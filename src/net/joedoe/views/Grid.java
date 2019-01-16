@@ -15,9 +15,6 @@ import net.joedoe.logics.Solver;
 import net.joedoe.logics.StatusChecker;
 import net.joedoe.utils.Direction;
 import net.joedoe.utils.GameManager;
-import net.joedoe.views.entities.BridgeLine;
-import net.joedoe.views.controllers.GridController;
-import net.joedoe.views.entities.IslePane;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +42,7 @@ class Grid extends GridPane {
 
     /**
      * Grid wird der StatusListener, der die Status-Zeile im
-     * {@link net.joedoe.views.MainFrame} benachrichtigt, übergeben sowie die Breite
+     * {@link Board} benachrichtigt, übergeben sowie die Breite
      * und Höhe des Spielfelds und die Listen mit den zu platzierenden Inseln und
      * Brücken.
      *
@@ -190,7 +187,7 @@ class Grid extends GridPane {
 
     /**
      * Checkt den Spielstatus und gibt Status an Status-Zeile in
-     * {@link net.joedoe.views.MainFrame} zurück.
+     * {@link Board} zurück.
      */
     private void checkStatus() {
         if (checker.error()) {
@@ -366,7 +363,7 @@ class Grid extends GridPane {
      * Leitet die Nutzer-Anfrage, den aktuellen Spielstand zu speichern, an
      * {@link net.joedoe.logics.GridController} weiter.
      */
-    void saveGame() {
+    void savePuzzle() {
         controller.saveGame();
     }
 

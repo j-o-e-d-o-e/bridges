@@ -29,7 +29,7 @@ public class FileHandler {
      * @throws IOException              falls Ausnahme beim Auslesen auftritt
      * @throws IllegalArgumentException falls Datei semantische oder syntaktische Fehler aufweist
      */
-    public static void loadGame() throws IOException, IllegalArgumentException {
+    public static void loadPuzzle() throws IOException, IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         BufferedReader in = new BufferedReader(new FileReader(filepathPuzzle));
         String line = in.readLine();
@@ -129,7 +129,7 @@ public class FileHandler {
      * @param filepath Dateipfad zu der Speicher-Datei.
      * @throws IOException falls Ausnahme beim Einlesen auftritt
      */
-    public static void saveGame() throws IOException {
+    public static void savePuzzle() throws IOException {
         BufferedWriter out = new BufferedWriter(new FileWriter(filepathPuzzle));
         out.write(saveData());
         out.close();

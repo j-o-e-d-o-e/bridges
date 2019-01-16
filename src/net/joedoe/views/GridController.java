@@ -1,11 +1,8 @@
-package net.joedoe.views.controllers;
+package net.joedoe.views;
 
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
 import net.joedoe.utils.Coordinate;
-import net.joedoe.views.IsleListener;
-import net.joedoe.views.entities.BridgeLine;
-import net.joedoe.views.entities.IslePane;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +24,7 @@ public class GridController {
      *
      * @param bridge hinzuzufügende Brücke (Modell)
      */
-    public BridgeLine addLine(IBridge bridge) {
+    BridgeLine addLine(IBridge bridge) {
         updateLines();
         // suche existierende Linien mit diesen Koordinaten
         List<BridgeLine> lines = getLines(bridge.getStart(), bridge.getEnd());
@@ -58,7 +55,7 @@ public class GridController {
      *
      * @param bridge zu entferndende Brücke (Modell)
      */
-    public BridgeLine removeLine(IBridge bridge) {
+    BridgeLine removeLine(IBridge bridge) {
         updateLines();
         List<BridgeLine> lines = getLines(bridge.getStart(), bridge.getEnd());
         BridgeLine line;
@@ -82,7 +79,7 @@ public class GridController {
         }
     }
 
-    public List<BridgeLine> removeLines(IBridge bridge) {
+    List<BridgeLine> removeLines(IBridge bridge) {
         updateLines();
         List<BridgeLine> lines = getLines(bridge.getStart(), bridge.getEnd());
         this.lines.removeAll(lines);
@@ -105,7 +102,7 @@ public class GridController {
      * Setzt die Farbe der zuletzt hinzugefügten Brücken-Linie auf die
      * Standard-Farbe, bevor eine neue Brücken-Linie hinzugefügt wird.
      */
-    public void updateLines() {
+    void updateLines() {
         if (lines.size() > 0) lines.get(lines.size() - 1).setStdColor();
     }
 
@@ -114,7 +111,7 @@ public class GridController {
      *
      * @param bridges Liste mit zu ladenen Brücken
      */
-    public void setLines(List<IBridge> bridges) {
+    void setLines(List<IBridge> bridges) {
         for (IBridge bridge : bridges) {
             BridgeLine line = new BridgeLine(bridge.getStart(), bridge.getEnd(), false);
             line.setStdColor();
@@ -141,7 +138,7 @@ public class GridController {
      *
      * @return Liste mit aktuellen Brücken-Linien.
      */
-    public List<BridgeLine> getLines() {
+    List<BridgeLine> getLines() {
         return lines;
     }
 
@@ -150,7 +147,7 @@ public class GridController {
      *
      * @param isles Liste mit zu ladenen Inseln
      */
-    public void setPanes(List<IIsle> isles, IsleListener listener) {
+    void setPanes(List<IIsle> isles, IsleListener listener) {
         for (IIsle i : isles) {
             IslePane isle = new IslePane(i.getPos(), i.getBridges());
             isle.setOnMouseClicked(listener);
@@ -163,18 +160,15 @@ public class GridController {
      *
      * @return Liste mit aktuellen Inseln
      */
-    public List<IslePane> getPanes() {
+    List<IslePane> getPanes() {
         return panes;
     }
 
-    /**
-     * Setzt den Spielstatus zurück. Brücken werden entfernt.
-     */
-    public void reset() {
+    void reset() {
         lines.clear();
     }
 
-    public void clear() {
+    void clear() {
         lines.clear();
         panes.clear();
     }

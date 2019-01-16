@@ -5,11 +5,10 @@ public class GameManager {
     private Mode mode = Mode.LEVEL;
     private int points = 0, tempPoints = 0, level = 1;
 
-    /**
-     * Gibt Singleton-Instanz dieser Klasse zurück.
-     *
-     * @return einzige Instanz dieser Klasse
-     */
+    public enum Mode {
+        LEVEL, TIME, FREE
+    }
+
     public static GameManager getInstance() {
         return gameManager;
     }
@@ -22,6 +21,10 @@ public class GameManager {
         return points + tempPoints;
     }
 
+    public int getTempPoints() {
+        return tempPoints;
+    }
+
     public void addPoints(int points) {
         tempPoints += points;
     }
@@ -30,8 +33,12 @@ public class GameManager {
         tempPoints -= points;
     }
 
-    public void resetPoints() {
+    public void resetTempPoints() {
         tempPoints = 0;
+    }
+
+    public void resetPoints() {
+        points = 0;
     }
 
     public void savePoints() {
@@ -57,9 +64,5 @@ public class GameManager {
 
     public void setLevel(int level) {
         this.level = level;
-    }
-
-    public enum Mode {
-        LEVEL, TIME, FREE
     }
 }

@@ -1,13 +1,9 @@
 package net.joedoe.views;
 
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import net.joedoe.logics.Generator;
 
 import java.util.Optional;
@@ -17,13 +13,13 @@ import static net.joedoe.utils.GameInfo.*;
 /**
  * Dialog zur Generierung eines neuen Spiels.
  */
-class NewGameStage extends Stage {
-    private Generator generator;
+public class SizeChooser extends StackPane {
+    private final SceneController controller;
+    private Generator generator = new Generator();
     private RadioButton autoBtn;
     private Label heightLabel, widthLabel, islesLabel;
     private TextField heightTxt, widthTxt, islesTxt;
     private CheckBox checkBox;
-    private EventHandler<Event> listener;
 
     /**
      * Erzeugt einen Dialog, in dem der Nutzer Angaben bzgl. Breite und Höhe des
@@ -33,27 +29,19 @@ class NewGameStage extends Stage {
      * @param board Spielfeld, an das die Daten des generierten Spiels zurückgegeben
      *              werden
      */
-    NewGameStage() {
-        generator = new Generator();
-        setTitle("New Puzzle");
-        setResizable(false);
-        Scene scene = new Scene(setLayout(), 300, 280);
-        setScene(scene);
+    public SizeChooser(SceneController controller) {
+        this.controller = controller;
+        setStyle("-fx-background-color: #282828;");
+        setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
+        getChildren().add(setLayout());
     }
 
     @SuppressWarnings("Duplicates")
     private StackPane setLayout() {
-        StackPane outerPane = new StackPane();
-        outerPane.setStyle("-fx-background-color: #282828;");
-        outerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
-
-        StackPane innerPane = new StackPane();
-//        innerPane.setStyle("-fx-background-color: #282828;");
-        innerPane.setBorder(new Border(
+        StackPane stackPane = new StackPane();
+        stackPane.setBorder(new Border(
                 new BorderStroke(Color.GREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        innerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
-
-        VBox vBox = new VBox(CONTAINER_OFFSET);
+        stackPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
 
         ToggleGroup radios = new ToggleGroup(); //-fx-text-fill: #F8F8F8;
         autoBtn = new RadioButton("Generated size and number of isles");
@@ -130,26 +118,18 @@ class NewGameStage extends Stage {
         buttons.setPrefWidth(100);
         Button cancelBtn = new Button("Cancel");
         cancelBtn.setMinWidth(buttons.getPrefWidth());
-        cancelBtn.setOnAction(e -> close());
+        cancelBtn.setOnAction(e -> controller.switchToBoard());
         Button confirmBtn = new Button("OK");
-        confirmBtn.setOnAction(e -> {
-            handleInput();
-            listener.handle(e);
-            close();
-        });
+        confirmBtn.setOnAction(e -> handleInput());
         confirmBtn.setMinWidth(buttons.getPrefWidth());
         buttons.getChildren().addAll(cancelBtn, confirmBtn);
 
+        VBox vBox = new VBox(CONTAINER_OFFSET);
         vBox.getChildren().addAll(autoBtn, customBtn, grid, buttons);
-        innerPane.getChildren().addAll(vBox);
-        outerPane.getChildren().add(innerPane);
-        return outerPane;
+        stackPane.getChildren().addAll(vBox);
+        return stackPane;
     }
 
-    /**
-     * Validiert grundlegend Nutzer-Eingaben und leitet diese an
-     * {@link net.joedoe.logics.Generator} weiter.
-     */
     private void handleInput() {
         if (autoBtn.isSelected()) generator.setData();
         else {
@@ -177,6 +157,8 @@ class NewGameStage extends Stage {
             }
         }
         generator.generateGame();
+        controller.setPuzzle();
+        controller.switchToBoard();
     }
 
     private void setAlert(String text) {
@@ -185,9 +167,5 @@ class NewGameStage extends Stage {
         alert.setHeaderText(text);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) alert.close();
-    }
-
-    void setListener(EventHandler<Event> listener) {
-        this.listener = listener;
     }
 }

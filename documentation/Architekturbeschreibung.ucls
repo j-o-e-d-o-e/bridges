@@ -10,7 +10,7 @@
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="net.joedoe.views.MainFrame" project="Bridges_Doerwald_Joerg" 
+  <class id="2" language="java" name="net.joedoe.views.Board" project="Bridges_Doerwald_Joerg"
     file="/Bridges_Doerwald_Joerg/src/net/joedoe/views/MainFrame.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1178" y="986"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="false" 
@@ -28,7 +28,7 @@
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="4" language="java" name="net.joedoe.views.NewGameStage" project="Bridges_Doerwald_Joerg"
+  <class id="4" language="java" name="net.joedoe.views.SizeChooser" project="Bridges_Doerwald_Joerg"
     file="/Bridges_Doerwald_Joerg/src/net/joedoe/views/NewGameFrame.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="645" y="739"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="false" 

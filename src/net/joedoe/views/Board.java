@@ -1,58 +1,205 @@
 package net.joedoe.views;
 
-import javafx.event.EventHandler;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.StackPane;
+import javafx.geometry.Pos;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
-import net.joedoe.logics.Generator;
 import net.joedoe.utils.GameData;
 import net.joedoe.utils.GameInfo;
+import net.joedoe.utils.GameManager;
+import net.joedoe.utils.GameManager.Mode;
+import net.joedoe.utils.Timer;
 
 import java.io.File;
 import java.util.List;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 
-/**
- * Spielfeld, das das Raster enthält, auf dem Inseln und Brücken platziert
- * werden, und dessen Erstellung und Größe verwaltet.
- */
-class Board extends StackPane {
-    private Grid grid;
-    private Generator generator;
-    private int width, height;
-    private boolean showMissingBridges = true;
-    private EventHandler<StatusEvent> statusListener;
+public class Board extends BorderPane {
+    private final SceneController controller;
+    private GameManager gameManager = GameManager.getInstance();
     private GameData gameData = GameData.getInstance();
+    private int width, height;
+    private StackPane board;
+    private Grid grid;
+    private Timer timer;
+    private Label mode, info, status = new Label();
+    private Image coin = new Image("file:assets" + File.separator + "images" + File.separator + "coin.png");
+    private Image clock = new Image("file:assets" + File.separator + "images" + File.separator + "clock.png");
+    private ImageView imageView;
+    private CheckBox checkBox;
+    private HBox controls;
     private MediaPlayer player;
-    private EventHandler<PointEvent> pointListener;
 
-    /**
-     * Board wird Listener übergeben, um die Statuszeile im
-     * {@link net.joedoe.views.MainFrame} über Änderungen zu benachrichtigen. Es
-     * erzeugt das Raster, auf dem die Inseln und Brücken platziert werden.
-     *
-     * @param statusListener Listener, über den die Statuszeile über Änderungen informiert wird
-     */
-    Board(EventHandler<StatusEvent> statusListener, int level) {
-        this.statusListener = statusListener;
-        setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, 0, CONTAINER_OFFSET));
-        String file = "assets" + File.separator + "sounds" + File.separator + "waves.wav";
-        Media sound = new Media(new File(file).toURI().toString());
+    public Board(SceneController controller) {
+        this.controller = controller;
+        getStylesheets().add("file:assets/css/dracula.css");
+        setTop(createMenuBar());
+        setCenter(createBoard());
+        String soundUrl = "assets" + File.separator + "sounds" + File.separator + "waves.wav";
+        Media sound = new Media(new File(soundUrl).toURI().toString());
         player = new MediaPlayer(sound);
         player.setOnEndOfMedia(() -> player.seek(Duration.ZERO));
         player.play();
-        generator = new Generator();
-        createNewGame(level);
     }
 
-    void setGrid() {
+    private MenuBar createMenuBar() {
+        Menu menu = new Menu("\u2630");
+        Menu newGame = new Menu("New game");
+        MenuItem levelMode = new MenuItem("Level mode");
+        levelMode.setOnAction(e -> controller.createNewGame(Mode.LEVEL));
+        MenuItem timeMode = new MenuItem("Time mode");
+        timeMode.setOnAction(e -> controller.createNewGame(Mode.TIME));
+        MenuItem freeMode = new MenuItem("Free mode");
+        freeMode.setOnAction(e -> controller.createNewGame(Mode.FREE));
+        newGame.getItems().addAll(levelMode, timeMode, freeMode);
+        MenuItem reset = new MenuItem("Restart");
+        reset.setOnAction(e -> grid.reset());
+        MenuItem loadGame = new MenuItem("Load puzzle");
+        loadGame.setOnAction(e -> controller.loadPuzzle());
+        MenuItem saveGame = new MenuItem("Save puzzle");
+        saveGame.setOnAction(e -> controller.savePuzzle());
+        MenuItem highScore = new MenuItem("HighScore");
+        highScore.setOnAction(e -> controller.showHighScore());
+        MenuItem tutorial = new MenuItem("Tutorial");
+        tutorial.setOnAction(e -> controller.showTutorial());
+        MenuItem exit = new MenuItem("Quit");
+        exit.setOnAction(e -> controller.close());
+        menu.getItems().addAll(newGame, reset, loadGame, saveGame, highScore, tutorial, exit);
+        MenuBar menuBar = new MenuBar();
+        menuBar.getMenus().add(menu);
+        return menuBar;
+    }
+
+    private BorderPane createBoard() {
+        BorderPane borderPane = new BorderPane();
+        borderPane.setTop(createBoardTop());
+        board = new StackPane();
+        board.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, 0, CONTAINER_OFFSET));
+        borderPane.setCenter(board);
+        borderPane.setBottom(createBoardBottom());
+        return borderPane;
+    }
+
+    private HBox createBoardTop() {
+        HBox modeBox = new HBox(CONTAINER_OFFSET);
+        modeBox.setAlignment(Pos.CENTER_LEFT);
+        modeBox.setMinWidth(200);
+        mode = new Label("Level " + gameManager.getLevel() + "/25");
+        mode.setFont(new Font(14));
+        modeBox.getChildren().add(mode);
+
+        HBox infoBox = new HBox(CONTAINER_OFFSET);
+        infoBox.setAlignment(Pos.CENTER);
+        infoBox.setMinWidth(200);
+        imageView = new ImageView();
+        imageView.setImage(coin);
+        imageView.setPreserveRatio(true);
+        imageView.setFitHeight(15);
+        info = new Label(Integer.toString(gameManager.getPoints()));
+        info.setFont(new Font(14));
+        infoBox.getChildren().addAll(imageView, info);
+
+        HBox controlsBox = new HBox(CONTAINER_OFFSET);
+        controlsBox.setAlignment(Pos.CENTER_RIGHT);
+        controlsBox.setMinWidth(200);
+        Button zoomIn = new Button("\uD83D\uDD0D+");
+        zoomIn.setOnAction(e -> {
+            GameInfo.zoomIn();
+            grid.zoomInOut(width, height, checkBox.isSelected());
+        });
+        Button zoomOut = new Button("\uD83D\uDD0D-");
+        zoomOut.setOnAction(e -> {
+            GameInfo.zoomOut();
+            grid.zoomInOut(width, height, checkBox.isSelected());
+        });
+        Button sound = new Button("\uD83D\uDD0A");
+        sound.setMinWidth(30);
+        sound.setOnAction(e -> {
+            String txt = sound.getText();
+            if (txt.equals("\uD83D\uDD07")) sound.setText("\uD83D\uDD0A");
+            else sound.setText("\uD83D\uDD07");
+            if (player.getStatus() == MediaPlayer.Status.PLAYING) player.pause();
+            else player.play();
+        });
+        controlsBox.getChildren().addAll(zoomIn, zoomOut, sound);
+
+        Region regionLeft = new Region();
+        HBox.setHgrow(regionLeft, Priority.ALWAYS);
+        Region regionRight = new Region();
+        HBox.setHgrow(regionRight, Priority.ALWAYS);
+
+        HBox box = new HBox();
+        box.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, 0, CONTAINER_OFFSET));
+        box.getChildren().addAll(modeBox, regionLeft, infoBox, regionRight, controlsBox);
+        return box;
+    }
+
+    private VBox createBoardBottom() {
+        VBox vBox = new VBox(CONTAINER_OFFSET);
+        vBox.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
+        checkBox = new CheckBox("Show missing bridges");
+        checkBox.setSelected(true);
+        checkBox.setOnAction(e -> grid.setShowMissingBridges(checkBox.isSelected()));
+        controls = new HBox(CONTAINER_OFFSET);
+        controls.setAlignment(Pos.CENTER);
+        controls.setPrefWidth(100);
+        Button solveBtn = new Button("_Solve auto");
+        solveBtn.setMnemonicParsing(true);
+        solveBtn.setMinWidth(controls.getPrefWidth());
+        solveBtn.setOnAction(e -> {
+            if (grid.autoSolverIsRunning()) grid.stopAutoSolve();
+            else grid.startAutoSolve();
+        });
+        Button nextBtn = new Button("_Next bridge");
+        nextBtn.setMnemonicParsing(true);
+        nextBtn.setMinWidth(controls.getPrefWidth());
+        nextBtn.setOnAction(e -> grid.getNextBridge());
+        controls.getChildren().addAll(solveBtn, nextBtn);
+        vBox.getChildren().addAll(checkBox, controls, status);
+        return vBox;
+    }
+
+
+    void setPuzzle(Mode currentMode) {
         setGrid(gameData.getWidth(), gameData.getHeight(), gameData.getIsles(), null);
+        if (timer != null) timer.stop();
+        switch (currentMode) {
+            case LEVEL:
+                mode.setText("Level " + gameManager.getLevel() + "/25");
+                imageView.setImage(coin);
+                info.setText(Integer.toString(gameManager.getPoints()));
+                controls.setVisible(true);
+                break;
+            case TIME:
+                mode.setText("Time mode");
+                imageView.setImage(clock);
+                if (timer == null) {
+                    timer = new Timer();
+                    timer.setListener(() -> Platform.runLater(() -> info.setText(timer.getTime())));
+                    timer.start();
+                } else {
+                    timer.restart();
+                }
+                info.setText(timer.getStartTime());
+                controls.setVisible(false);
+                break;
+            case FREE:
+                mode.setText("Free mode");
+                imageView.setImage(coin);
+                info.setText(Integer.toString(gameManager.getTempPoints()));
+                controls.setVisible(true);
+        }
     }
 
     void setGridWithBridges() {
@@ -62,118 +209,47 @@ class Board extends StackPane {
     private void setGrid(int width, int height, List<IIsle> isles, List<IBridge> bridges) {
         this.width = width;
         this.height = height;
-        getChildren().remove(grid);
+        board.getChildren().remove(grid);
         if (grid != null) grid.shutdownAutoSolve();
-        grid = new Grid(statusListener, width, height, isles, bridges);
-        grid.setPointListener(pointListener);
+        grid = new Grid(this::handleStatus, width, height, isles, bridges);
+        grid.setPointListener(this::handlePoints);
         ScrollPane scroll = new ScrollPane();
         scroll.setContent(grid);
         scroll.setFitToHeight(true);
         scroll.setFitToWidth(true);
-        getChildren().add(scroll);
-        setShowMissingBridges(showMissingBridges);
+        board.getChildren().add(scroll);
+        grid.setShowMissingBridges(checkBox.isSelected());
     }
 
-    /**
-     * Inseln vergrößern.
-     */
-    void zoomIn() {
-        GameInfo.zoomIn();
-        grid.zoomInOut(width, height, showMissingBridges);
+    private void handlePoints(PointEvent e) {
+        info.setText(e.getPoints());
     }
 
-    /**
-     * Inseln verkleinern.
-     */
-    void zoomOut() {
-        GameInfo.zoomOut();
-        grid.zoomInOut(width, height, showMissingBridges);
+    private void handleStatus(StatusEvent e) {
+        StatusEvent.Status status = e.getStatus();
+        this.status.setText(status.getText());
+        if (status == StatusEvent.Status.SOLVED) {
+            if (gameManager.getMode() == Mode.LEVEL) {
+                controller.showAlert(AlertType.INFORMATION, "Solved!", "Level " + gameManager.getLevel() + " solved.");
+                gameManager.savePoints();
+                gameManager.increaseLevel();
+                mode.setText("Level " + gameManager.getLevel() + "/25");
+//                board.createNewGame(gameManager.getLevel());
+            } else if (gameManager.getMode() == Mode.TIME) {
+                timer.stop();
+                controller.showAlert(AlertType.INFORMATION, "Solved!", "Puzzle solved in " + info.getText() + ".");
+            } else {
+                controller.showAlert(AlertType.INFORMATION, "Solved!", "Solved.");
+            }
+        }
     }
 
-    void setSound() {
-        if (player.getStatus() == MediaPlayer.Status.PLAYING) player.pause();
-        else player.play();
+    void close() {
+        if (grid != null) grid.shutdownAutoSolve();
+        if (timer != null) timer.shutdown();
     }
 
-    /**
-     * Leitet Nutzer-Eingabe an {@link net.joedoe.views.Grid} weiter.
-     *
-     * @param selected true, falls fehlende Brücken angezeigt werden sollen
-     */
-    void setShowMissingBridges(boolean selected) {
-        showMissingBridges = selected;
-        grid.setShowMissingBridges(showMissingBridges);
-    }
-
-    /**
-     * Leitet Nutzer-Eingabe "Nächste Brücke" an {@link net.joedoe.views.Grid}
-     * weiter.
-     */
-    void getNextBridge() {
-        grid.getNextBridge();
-    }
-
-    /**
-     * Leitet Nutzer-Eingabe "Automatisch lösen" an {@link net.joedoe.views.Grid}
-     * weiter.
-     */
-    void startAutoSolve() {
-        grid.startAutoSolve();
-    }
-
-    /**
-     * Leitet Nutzer-Eingabe, dass automatisches Lösen gestoppt werden soll, an
-     * {@link net.joedoe.views.Grid} weiter.
-     */
-    void stopAutoSolve() {
-        grid.stopAutoSolve();
-    }
-
-    /**
-     * Leitet Aufruf an {@link net.joedoe.views.Grid} weiter, dass
-     * {@link net.joedoe.logics.AutoSolver} terminiert werden soll, wenn Applikation
-     * geschlossen wird.
-     */
-    void shutdownAutoSolve() {
-        grid.shutdownAutoSolve();
-    }
-
-    /**
-     * Gibt zurück, ob {@link net.joedoe.logics.AutoSolver} aktuell läuft.
-     *
-     * @return true, falls {@link net.joedoe.logics.AutoSolver} aktuell läuft
-     */
-    boolean autoSolverIsRunning() {
-        return grid.autoSolverIsRunning();
-    }
-
-    /**
-     * Leitet Nutzer-Eingabe, dass Spielfortschritt zurückgesetzt werden soll, an
-     * {@link net.joedoe.views.Grid} weiter.
-     */
-    void reset() {
-        grid.reset();
-    }
-
-    /**
-     * Speichert Breite und Höhe des Spielfelds als Spieldaten und leitet
-     * Nutzer-Anfrage zur Speicherung der aktuellen Inseln und Brücken an
-     * {@link net.joedoe.views.Grid} weiter.
-     */
-    void saveGame() {
-        gameData.setWidth(width);
-        gameData.setHeight(height);
-        grid.saveGame();
-    }
-
-    void setPointListener(EventHandler<PointEvent> listener) {
-        pointListener = listener;
-        grid.setPointListener(listener);
-    }
-
-    void createNewGame(int level) {
-        generator.setData(5 * level);
-        generator.generateGame();
-        setGrid(generator.getWidth(), generator.getHeight(), generator.getIsles(), null);
+    void savePuzzle() {
+        grid.savePuzzle();
     }
 }

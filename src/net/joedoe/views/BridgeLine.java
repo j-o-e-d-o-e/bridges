@@ -1,4 +1,4 @@
-package net.joedoe.views.entities;
+package net.joedoe.views;
 
 import javafx.scene.shape.Line;
 import net.joedoe.utils.Alignment;
@@ -55,7 +55,7 @@ public class BridgeLine {
      *
      * @param offset true, Linie wird versetzt platziert - andernfalls zentriert
      */
-    public void setOffset(boolean offset) {
+    void setOffset(boolean offset) {
         if (alignment == Alignment.HORIZONTAL) {
             if (offset) {
                 if (start.getX() < end.getX()) line.setTranslateY(BRIDGE_OFFSET);
@@ -86,7 +86,7 @@ public class BridgeLine {
      *
      * @return x-Wert der Koordinate
      */
-    public int getStartX() {
+    int getStartX() {
         return start.getX();
     }
 
@@ -95,7 +95,7 @@ public class BridgeLine {
      *
      * @return y-Wert der Koordinate
      */
-    public int getStartY() {
+    int getStartY() {
         return start.getY();
     }
 
@@ -120,7 +120,7 @@ public class BridgeLine {
     /**
      * Färbt die Linie in der Standard-Farbe.
      */
-    public void setStdColor() {
+    void setStdColor() {
         line.getStyleClass().remove("bridge-first");
         line.getStyleClass().add("bridge-last");
     }
@@ -130,7 +130,7 @@ public class BridgeLine {
      *
      * @return Linie, die die Brücke im View repräsentiert
      */
-    public Line getLine() {
+    Line getLine() {
         return line;
     }
 

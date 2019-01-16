@@ -1,4 +1,4 @@
-package net.joedoe.views.entities;
+package net.joedoe.views;
 
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;

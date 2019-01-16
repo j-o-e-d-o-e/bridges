@@ -4,7 +4,7 @@ import javafx.event.Event;
 
 /**
  * Enthält aktuellen Punktestatus, über den die Punkte-Zeile im
- * {@link MainFrame} informiert wird.
+ * {@link Board} informiert wird.
  */
 class PointEvent extends Event {
     private String points;

@@ -4,7 +4,6 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import net.joedoe.utils.Direction;
-import net.joedoe.views.entities.IslePane;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

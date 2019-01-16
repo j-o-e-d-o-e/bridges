@@ -4,7 +4,7 @@ import javafx.event.Event;
 
 /**
  * Enthält aktuellen Spielstatus, über den die Status-Zeile im
- * {@link net.joedoe.views.MainFrame} informiert wird.
+ * {@link Board} informiert wird.
  */
 class StatusEvent extends Event {
     private static final long serialVersionUID = 225178481951279734L;

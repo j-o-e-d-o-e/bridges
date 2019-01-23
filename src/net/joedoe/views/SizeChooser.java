@@ -2,7 +2,6 @@ package net.joedoe.views;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -35,24 +34,8 @@ public class SizeChooser extends BorderPane {
     public SizeChooser(SceneController controller) {
         this.controller = controller;
         setStyle("-fx-background-color: #282828;");
-        setTop(createToolbar());
+        setTop(new TopBar(controller, "New Game", "Free mode"));
         setCenter(setLayout());
-    }
-
-    @SuppressWarnings("Duplicates")
-    private Node createToolbar(){
-        ToolBar bar = new ToolBar();
-        Button back = new Button("<");
-        back.setPrefHeight(10);
-        back.setOnAction(e-> controller.goTo("New Game"));
-        Label title = new Label("Free mode");
-        title.setStyle("-fx-font-weight: bold");
-        Region regionLeft = new Region();
-        HBox.setHgrow(regionLeft, Priority.ALWAYS);
-        Region regionRight = new Region();
-        HBox.setHgrow(regionRight, Priority.ALWAYS);
-        bar.getItems().addAll(back, regionLeft, title,regionRight);
-        return bar;
     }
 
     @SuppressWarnings("Duplicates")
@@ -130,9 +113,9 @@ public class SizeChooser extends BorderPane {
         grid.setAlignment(Pos.CENTER);
         grid.getColumnConstraints().add(new ColumnConstraints(50));
         grid.setVgap(10);
-        grid.add(autoBtn,0,0);
+        grid.add(autoBtn, 0, 0);
         GridPane.setColumnSpan(autoBtn, 4);
-        grid.add(customBtn,0,1);
+        grid.add(customBtn, 0, 1);
         GridPane.setColumnSpan(customBtn, 4);
         grid.add(widthLabel, 0, 2);
         grid.add(widthTxt, 1, 2);

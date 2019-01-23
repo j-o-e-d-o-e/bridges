@@ -5,7 +5,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ToolBar;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -20,24 +19,11 @@ class Start extends BorderPane {
     Start(SceneController controller) {
         this.controller = controller;
         setStyle("-fx-background-color: #282828;");
-        setTop(createToolbar());
+        setTop(new TopBar(controller, "Hashiwokakero"));
         setCenter(setLayout());
         if (FileHandler.fileExists()) {
             loadGame.setDisable(true);
         }
-    }
-
-    @SuppressWarnings("Duplicates")
-    private Node createToolbar(){
-        ToolBar bar = new ToolBar();
-        Label title = new Label("Hashiwokakero");
-        title.setStyle("-fx-font-weight: bold");
-        Region regionLeft = new Region();
-        HBox.setHgrow(regionLeft, Priority.ALWAYS);
-        Region regionRight = new Region();
-        HBox.setHgrow(regionRight, Priority.ALWAYS);
-        bar.getItems().addAll(regionLeft, title,regionRight);
-        return bar;
     }
 
     @SuppressWarnings("Duplicates")

@@ -18,25 +18,8 @@ class DifficultyChooser extends BorderPane {
     DifficultyChooser(SceneController controller) {
         this.controller = controller;
         setStyle("-fx-background-color: #282828;");
-        setTop(createToolbar());
+        setTop(new TopBar(controller, "New Game", "Time mode"));
         setCenter(setLayout());
-    }
-
-
-    @SuppressWarnings("Duplicates")
-    private Node createToolbar(){
-        ToolBar bar = new ToolBar();
-        Button back = new Button("<");
-        back.setPrefHeight(10);
-        back.setOnAction(e-> controller.goTo("New Game"));
-        Label title = new Label("Time mode");
-        title.setStyle("-fx-font-weight: bold");
-        Region regionLeft = new Region();
-        HBox.setHgrow(regionLeft, Priority.ALWAYS);
-        Region regionRight = new Region();
-        HBox.setHgrow(regionRight, Priority.ALWAYS);
-        bar.getItems().addAll(back, regionLeft, title,regionRight);
-        return bar;
     }
 
     @SuppressWarnings("Duplicates")

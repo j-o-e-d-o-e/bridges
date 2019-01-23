@@ -3,9 +3,11 @@ package net.joedoe.views;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -45,29 +47,13 @@ public class Board extends BorderPane {
     public Board(SceneController controller) {
         this.controller = controller;
         getStylesheets().add("file:assets/css/dracula.css");
-        setTop(createToolbar());
+        setTop(new TopBar(controller, "Start", "Level " + gameManager.getLevel() + "/25"));
         setCenter(createBoard());
         String soundUrl = "assets" + File.separator + "sounds" + File.separator + "waves.wav";
         Media sound = new Media(new File(soundUrl).toURI().toString());
         player = new MediaPlayer(sound);
         player.setOnEndOfMedia(() -> player.seek(Duration.ZERO));
 //        player.play();
-    }
-
-    @SuppressWarnings("Duplicates")
-    private Node createToolbar(){
-        ToolBar bar = new ToolBar();
-        Button back = new Button("<");
-        back.setPrefHeight(10);
-        back.setOnAction(e-> controller.goTo("Start"));
-        mode = new Label("Level " + gameManager.getLevel() + "/25");
-        mode.setStyle("-fx-font-weight: bold; -fx-text-fill: black");
-        Region regionLeft = new Region();
-        HBox.setHgrow(regionLeft, Priority.ALWAYS);
-        Region regionRight = new Region();
-        HBox.setHgrow(regionRight, Priority.ALWAYS);
-        bar.getItems().addAll(back, regionLeft, mode,regionRight);
-        return bar;
     }
 
     private BorderPane createBoard() {

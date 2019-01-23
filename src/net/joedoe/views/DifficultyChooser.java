@@ -1,85 +1,92 @@
 package net.joedoe.views;
 
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleGroup;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import net.joedoe.logics.Generator;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 
-class DifficultyChooser extends StackPane {
+class DifficultyChooser extends BorderPane {
     private final SceneController controller;
     private Generator generator = new Generator();
-    private ToggleGroup group;
 
     DifficultyChooser(SceneController controller) {
         this.controller = controller;
         setStyle("-fx-background-color: #282828;");
-        setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
-        getChildren().add(setLayout());
+        setTop(createToolbar());
+        setCenter(setLayout());
+    }
+
+
+    @SuppressWarnings("Duplicates")
+    private Node createToolbar(){
+        ToolBar bar = new ToolBar();
+        Button back = new Button("<");
+        back.setPrefHeight(10);
+        back.setOnAction(e-> controller.goTo("New Game"));
+        Label title = new Label("Time mode");
+        title.setStyle("-fx-font-weight: bold");
+        Region regionLeft = new Region();
+        HBox.setHgrow(regionLeft, Priority.ALWAYS);
+        Region regionRight = new Region();
+        HBox.setHgrow(regionRight, Priority.ALWAYS);
+        bar.getItems().addAll(back, regionLeft, title,regionRight);
+        return bar;
     }
 
     @SuppressWarnings("Duplicates")
     private StackPane setLayout() {
-        StackPane stackPane = new StackPane();
-        stackPane.setBorder(new Border(
+        StackPane outerPane = new StackPane();
+        outerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
+
+        StackPane innerPane = new StackPane();
+        innerPane.setBorder(new Border(
                 new BorderStroke(Color.GREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        stackPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
 
-        VBox vBox = new VBox(CONTAINER_OFFSET);
-        group = new ToggleGroup();
+        VBox box = new VBox(CONTAINER_OFFSET);
+        box.setAlignment(Pos.CENTER);
 
-        RadioButton veryEasy = new RadioButton("Very easy (5 isles)");
-        veryEasy.setUserData(Difficulty.VERY_EASY);
-        veryEasy.setStyle("-fx-text-fill: #F8F8F8;");
-        veryEasy.setSelected(true);
-        veryEasy.setToggleGroup(group);
+        Label title = new Label("Choose a difficulty:");
+        title.setFont(Font.font(20));
+        title.setPadding(new Insets(0,0, CONTAINER_OFFSET, 0));
+        title.setStyle("-fx-text-fill: ghostwhite");
 
-        RadioButton easy = new RadioButton("Easy (25 isles)");
-        easy.setUserData(Difficulty.EASY);
-        easy.setStyle("-fx-text-fill: #F8F8F8;");
-        easy.setToggleGroup(group);
+        Button veryEasy = new Button("Very easy (5 isles)");
+        veryEasy.setPrefWidth(180);
+        veryEasy.setOnAction(e-> handleInput(Difficulty.VERY_EASY));
 
-        RadioButton medium = new RadioButton("Medium (50 isles)");
-        medium.setUserData(Difficulty.MEDIUM);
-        medium.setStyle("-fx-text-fill: #F8F8F8;");
-        medium.setToggleGroup(group);
+        Button easy = new Button("Easy (25 isles)");
+        easy.setPrefWidth(180);
+        easy.setOnAction(e-> handleInput(Difficulty.EASY));
 
-        RadioButton hard = new RadioButton("Hard (75 isles)");
-        hard.setUserData(Difficulty.HARD);
-        hard.setStyle("-fx-text-fill: #F8F8F8;");
-        hard.setToggleGroup(group);
+        Button medium = new Button("Medium (50 isles)");
+        medium.setPrefWidth(180);
+        medium.setOnAction(e-> handleInput(Difficulty.MEDIUM));
 
-        RadioButton challenging = new RadioButton("Challenging (100 isles)");
-        challenging.setUserData(Difficulty.CHALLENGING);
-        challenging.setStyle("-fx-text-fill: #F8F8F8;");
-        challenging.setToggleGroup(group);
+        Button hard = new Button("Hard (75 isles)");
+        hard.setPrefWidth(180);
+        hard.setOnAction(e-> handleInput(Difficulty.HARD));
 
-        HBox buttons = new HBox(CONTAINER_OFFSET);
-        buttons.setPadding(new Insets(20, 0, 0, 20));
-        buttons.setPrefWidth(100);
-        Button cancelBtn = new Button("Cancel");
-        cancelBtn.setMinWidth(buttons.getPrefWidth());
-        cancelBtn.setOnAction(e -> controller.switchToBoard());
-        Button confirmBtn = new Button("OK");
-        confirmBtn.setOnAction(e -> {
-            Toggle t = group.getSelectedToggle();
-            Difficulty difficulty = (Difficulty) t.getUserData();
-            generator.setData(difficulty.getLevel() * 5);
-            generator.generateGame();
-            controller.setPuzzle();
-            controller.switchToBoard();
-        });
-        confirmBtn.setMinWidth(buttons.getPrefWidth());
-        buttons.getChildren().addAll(cancelBtn, confirmBtn);
+        Button challenging = new Button("Challenging (100 isles)");
+        challenging.setPrefWidth(180);
+        challenging.setOnAction(e-> handleInput(Difficulty.CHALLENGING));
 
-        vBox.getChildren().addAll(veryEasy, easy, medium, hard, challenging, buttons);
-        stackPane.getChildren().addAll(vBox);
-        return stackPane;
+        box.getChildren().addAll(title, veryEasy, easy, medium, hard, challenging);
+        innerPane.getChildren().addAll(box);
+        outerPane.getChildren().add(innerPane);
+        return outerPane;
+    }
+
+    private void handleInput(Difficulty difficulty){
+        generator.setData(difficulty.getLevel() * 5);
+        generator.generateGame();
+        controller.setPuzzle();
+        controller.switchToBoard();
     }
 
     enum Difficulty {

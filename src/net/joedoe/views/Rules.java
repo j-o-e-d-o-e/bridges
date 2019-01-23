@@ -9,10 +9,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 
-class HighScore extends BorderPane {
+class Rules extends BorderPane {
     private SceneController controller;
 
-    HighScore(SceneController controller) {
+    Rules(SceneController controller) {
         this.controller = controller;
         setStyle("-fx-background-color: #282828;");
         setTop(createToolbar());
@@ -25,7 +25,7 @@ class HighScore extends BorderPane {
         Button back = new Button("<");
         back.setPrefHeight(10);
         back.setOnAction(e -> controller.goTo("Start"));
-        Label title = new Label("Highscore");
+        Label title = new Label("Rules");
         title.setStyle("-fx-font-weight: bold");
         Region regionLeft = new Region();
         HBox.setHgrow(regionLeft, Priority.ALWAYS);

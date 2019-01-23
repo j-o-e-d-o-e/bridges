@@ -199,4 +199,10 @@ public class FileHandler {
         out.write(sb);
         out.close();
     }
+
+    public static boolean fileExists() {
+        File user = new File(filepathUser);
+        File puzzle = new File(filepathPuzzle);
+        return !user.exists() || !puzzle.exists();
+    }
 }

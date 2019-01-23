@@ -18,26 +18,24 @@ public class SceneController {
     private Board board;
     private GameManager gameManager = GameManager.getInstance();
     private final int width = 768, height = 1024;
-    private Scene boardScene, timeScene, freeScene, highScoreScene, tutorialScene, modeScene, startScene;
+    private Scene boardScene, timeScene, freeScene, highScoreScene, rulesScene, modeScene, startScene;
     private Generator generator = new Generator();
 
     public SceneController(Stage stage) {
         this.stage = stage;
         Start start = new Start(this);
         startScene = new Scene(start, width, height);
+        board = new Board(this);
+        boardScene = new Scene(board, width, height);
         stage.setScene(startScene);
         stage.show();
-//        try {
-//            FileHandler.loadUser();
-//            FileHandler.loadPuzzle();
-//            board.setGridWithBridges();
-//        } catch (IOException e) {
-//            showAlert(AlertType.ERROR, "Loading Data", "Data could not be loaded.");
-//        }
     }
 
-    void goTo(String text) {
-        switch (text) {
+    void goTo(String btn) {
+        switch (btn) {
+            case "Start":
+                stage.setScene(startScene);
+                return;
             case "New Game":
                 if (modeScene == null) {
                     ModeChooser modeChooser = new ModeChooser(this);
@@ -45,10 +43,32 @@ public class SceneController {
                 }
                 stage.setScene(modeScene);
                 return;
-            case "":
-                System.out.println("hallo");
-            default:
-                System.out.println("oh, noooo");
+            case "Load Game":
+                try {
+                    FileHandler.loadUser();
+                    FileHandler.loadPuzzle();
+                } catch (IOException e) {
+                    showAlert(AlertType.ERROR, "Loading Data", "Data could not be loaded.");
+                }
+                board.setGridWithBridges();
+                stage.setScene(boardScene);
+                return;
+            case "Highscore":
+                if (highScoreScene == null) {
+                    HighScore highScore = new HighScore(this);
+                    highScoreScene = new Scene(highScore, width, height);
+                }
+                stage.setScene(highScoreScene);
+                return;
+            case "Rules":
+                if (rulesScene == null) {
+                    Rules rules = new Rules(this);
+                    rulesScene = new Scene(rules, width, height);
+                }
+                stage.setScene(rulesScene);
+                return;
+            case "Quit":
+                close();
         }
     }
 
@@ -56,7 +76,7 @@ public class SceneController {
         gameManager.setMode(mode);
         switch (mode) {
             case LEVEL:
-                if (showAlert(AlertType.CONFIRMATION, "New game", "Previous porgress will be deleted. Continue?")) {
+                if (showAlert(AlertType.CONFIRMATION, "New game", "Previous progress will be deleted. Continue?")) {
                     gameManager.setLevel(1);
                     gameManager.resetPoints();
                     gameManager.resetTempPoints();
@@ -112,22 +132,6 @@ public class SceneController {
         }
     }
 
-    void showHighScore() {
-        if (highScoreScene == null) {
-            HighScore highscore = new HighScore(this);
-            highScoreScene = new Scene(highscore, width, height);
-        }
-        stage.setScene(highScoreScene);
-    }
-
-    void showTutorial() {
-        if (tutorialScene == null) {
-            Tutorial tutorial = new Tutorial(this);
-            tutorialScene = new Scene(tutorial, width, height);
-        }
-        stage.setScene(tutorialScene);
-    }
-
     boolean showAlert(AlertType alertType, String title, String text) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -145,7 +149,10 @@ public class SceneController {
             try {
                 gameManager.savePoints();
                 FileHandler.saveUser();
-                if (gameManager.getMode() == Mode.LEVEL) FileHandler.savePuzzle();
+                if (gameManager.getMode() == Mode.LEVEL) {
+                    board.savePuzzle();
+                    FileHandler.savePuzzle();
+                }
             } catch (IOException e) {
                 showAlert(AlertType.ERROR, "Saving Data", "Data could not be saved.");
             }

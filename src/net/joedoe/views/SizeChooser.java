@@ -1,9 +1,12 @@
 package net.joedoe.views;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import net.joedoe.logics.Generator;
 
 import java.util.Optional;
@@ -13,7 +16,7 @@ import static net.joedoe.utils.GameInfo.*;
 /**
  * Dialog zur Generierung eines neuen Spiels.
  */
-public class SizeChooser extends StackPane {
+public class SizeChooser extends BorderPane {
     private final SceneController controller;
     private Generator generator = new Generator();
     private RadioButton autoBtn;
@@ -32,16 +35,40 @@ public class SizeChooser extends StackPane {
     public SizeChooser(SceneController controller) {
         this.controller = controller;
         setStyle("-fx-background-color: #282828;");
-        setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
-        getChildren().add(setLayout());
+        setTop(createToolbar());
+        setCenter(setLayout());
+    }
+
+    @SuppressWarnings("Duplicates")
+    private Node createToolbar(){
+        ToolBar bar = new ToolBar();
+        Button back = new Button("<");
+        back.setPrefHeight(10);
+        back.setOnAction(e-> controller.goTo("New Game"));
+        Label title = new Label("Free mode");
+        title.setStyle("-fx-font-weight: bold");
+        Region regionLeft = new Region();
+        HBox.setHgrow(regionLeft, Priority.ALWAYS);
+        Region regionRight = new Region();
+        HBox.setHgrow(regionRight, Priority.ALWAYS);
+        bar.getItems().addAll(back, regionLeft, title,regionRight);
+        return bar;
     }
 
     @SuppressWarnings("Duplicates")
     private StackPane setLayout() {
-        StackPane stackPane = new StackPane();
-        stackPane.setBorder(new Border(
+        StackPane outerPane = new StackPane();
+        outerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
+
+        StackPane innerPane = new StackPane();
+        innerPane.setBorder(new Border(
                 new BorderStroke(Color.GREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        stackPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
+        innerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
+
+        Label title = new Label("Choose a size:");
+        title.setFont(Font.font(20));
+        title.setPadding(new Insets(0, 0, CONTAINER_OFFSET, 0));
+        title.setStyle("-fx-text-fill: ghostwhite");
 
         ToggleGroup radios = new ToggleGroup(); //-fx-text-fill: #F8F8F8;
         autoBtn = new RadioButton("Generated size and number of isles");
@@ -100,21 +127,24 @@ public class SizeChooser extends StackPane {
         islesTxt.setDisable(true);
 
         GridPane grid = new GridPane();
-        // grid.setGridLinesVisible(true);
-        grid.setPadding(new Insets(0, 0, 0, 30));
+        grid.setAlignment(Pos.CENTER);
         grid.getColumnConstraints().add(new ColumnConstraints(50));
         grid.setVgap(10);
-        grid.add(widthLabel, 0, 0);
-        grid.add(widthTxt, 1, 0);
-        grid.add(heightLabel, 0, 1);
-        grid.add(heightTxt, 1, 1);
-        grid.add(checkBox, 0, 2);
-        GridPane.setColumnSpan(checkBox, 3);
-        grid.add(islesLabel, 0, 3);
-        grid.add(islesTxt, 1, 3);
+        grid.add(autoBtn,0,0);
+        GridPane.setColumnSpan(autoBtn, 4);
+        grid.add(customBtn,0,1);
+        GridPane.setColumnSpan(customBtn, 4);
+        grid.add(widthLabel, 0, 2);
+        grid.add(widthTxt, 1, 2);
+        grid.add(heightLabel, 0, 3);
+        grid.add(heightTxt, 1, 3);
+        grid.add(checkBox, 0, 4);
+        GridPane.setColumnSpan(checkBox, 4);
+        grid.add(islesLabel, 0, 5);
+        grid.add(islesTxt, 1, 5);
 
         HBox buttons = new HBox(CONTAINER_OFFSET);
-        buttons.setPadding(new Insets(0, 0, 0, 20));
+        buttons.setAlignment(Pos.CENTER);
         buttons.setPrefWidth(100);
         Button cancelBtn = new Button("Cancel");
         cancelBtn.setMinWidth(buttons.getPrefWidth());
@@ -124,10 +154,12 @@ public class SizeChooser extends StackPane {
         confirmBtn.setMinWidth(buttons.getPrefWidth());
         buttons.getChildren().addAll(cancelBtn, confirmBtn);
 
-        VBox vBox = new VBox(CONTAINER_OFFSET);
-        vBox.getChildren().addAll(autoBtn, customBtn, grid, buttons);
-        stackPane.getChildren().addAll(vBox);
-        return stackPane;
+        VBox box = new VBox(CONTAINER_OFFSET);
+        box.setAlignment(Pos.CENTER);
+        box.getChildren().addAll(title, grid, buttons);
+        innerPane.getChildren().addAll(box);
+        outerPane.getChildren().add(innerPane);
+        return outerPane;
     }
 
     private void handleInput() {

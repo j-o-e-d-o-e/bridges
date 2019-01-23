@@ -3,6 +3,7 @@ package net.joedoe.views;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -44,41 +45,29 @@ public class Board extends BorderPane {
     public Board(SceneController controller) {
         this.controller = controller;
         getStylesheets().add("file:assets/css/dracula.css");
-        setTop(createMenuBar());
+        setTop(createToolbar());
         setCenter(createBoard());
         String soundUrl = "assets" + File.separator + "sounds" + File.separator + "waves.wav";
         Media sound = new Media(new File(soundUrl).toURI().toString());
         player = new MediaPlayer(sound);
         player.setOnEndOfMedia(() -> player.seek(Duration.ZERO));
-        player.play();
+//        player.play();
     }
 
-    private MenuBar createMenuBar() {
-        Menu menu = new Menu("\u2630");
-        Menu newGame = new Menu("New game");
-        MenuItem levelMode = new MenuItem("Level mode");
-        levelMode.setOnAction(e -> controller.createNewGame(Mode.LEVEL));
-        MenuItem timeMode = new MenuItem("Time mode");
-        timeMode.setOnAction(e -> controller.createNewGame(Mode.TIME));
-        MenuItem freeMode = new MenuItem("Free mode");
-        freeMode.setOnAction(e -> controller.createNewGame(Mode.FREE));
-        newGame.getItems().addAll(levelMode, timeMode, freeMode);
-        MenuItem reset = new MenuItem("Restart");
-        reset.setOnAction(e -> grid.reset());
-        MenuItem loadGame = new MenuItem("Load puzzle");
-        loadGame.setOnAction(e -> controller.loadPuzzle());
-        MenuItem saveGame = new MenuItem("Save puzzle");
-        saveGame.setOnAction(e -> controller.savePuzzle());
-        MenuItem highScore = new MenuItem("HighScore");
-        highScore.setOnAction(e -> controller.showHighScore());
-        MenuItem tutorial = new MenuItem("Tutorial");
-        tutorial.setOnAction(e -> controller.showTutorial());
-        MenuItem exit = new MenuItem("Quit");
-        exit.setOnAction(e -> controller.close());
-        menu.getItems().addAll(newGame, reset, loadGame, saveGame, highScore, tutorial, exit);
-        MenuBar menuBar = new MenuBar();
-        menuBar.getMenus().add(menu);
-        return menuBar;
+    @SuppressWarnings("Duplicates")
+    private Node createToolbar(){
+        ToolBar bar = new ToolBar();
+        Button back = new Button("<");
+        back.setPrefHeight(10);
+        back.setOnAction(e-> controller.goTo("Start"));
+        mode = new Label("Level " + gameManager.getLevel() + "/25");
+        mode.setStyle("-fx-font-weight: bold; -fx-text-fill: black");
+        Region regionLeft = new Region();
+        HBox.setHgrow(regionLeft, Priority.ALWAYS);
+        Region regionRight = new Region();
+        HBox.setHgrow(regionRight, Priority.ALWAYS);
+        bar.getItems().addAll(back, regionLeft, mode,regionRight);
+        return bar;
     }
 
     private BorderPane createBoard() {
@@ -91,13 +80,19 @@ public class Board extends BorderPane {
         return borderPane;
     }
 
+    @SuppressWarnings("Duplicates")
     private HBox createBoardTop() {
         HBox modeBox = new HBox(CONTAINER_OFFSET);
         modeBox.setAlignment(Pos.CENTER_LEFT);
         modeBox.setMinWidth(200);
         mode = new Label("Level " + gameManager.getLevel() + "/25");
         mode.setFont(new Font(14));
-        modeBox.getChildren().add(mode);
+//        modeBox.getChildren().add(mode);
+
+        Button reset = new Button("R");
+        reset.setAlignment(Pos.CENTER_LEFT);
+        reset.setOnAction(e -> grid.reset());
+        modeBox.getChildren().add(reset);
 
         HBox infoBox = new HBox(CONTAINER_OFFSET);
         infoBox.setAlignment(Pos.CENTER);

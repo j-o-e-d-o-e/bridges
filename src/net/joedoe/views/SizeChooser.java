@@ -54,7 +54,7 @@ public class SizeChooser extends BorderPane {
         title.setStyle("-fx-text-fill: ghostwhite");
 
         ToggleGroup radios = new ToggleGroup(); //-fx-text-fill: #F8F8F8;
-        autoBtn = new RadioButton("Generated size and number of isles");
+        autoBtn = new RadioButton("Generate randomly");
         autoBtn.setStyle("-fx-text-fill: #F8F8F8;");
         autoBtn.setSelected(true);
         autoBtn.setToggleGroup(radios);

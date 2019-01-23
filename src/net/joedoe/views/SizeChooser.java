@@ -131,7 +131,7 @@ public class SizeChooser extends BorderPane {
         buttons.setPrefWidth(100);
         Button cancelBtn = new Button("Cancel");
         cancelBtn.setMinWidth(buttons.getPrefWidth());
-        cancelBtn.setOnAction(e -> controller.switchToBoard());
+        cancelBtn.setOnAction(e -> controller.goTo("New Game"));
         Button confirmBtn = new Button("OK");
         confirmBtn.setOnAction(e -> handleInput());
         confirmBtn.setMinWidth(buttons.getPrefWidth());

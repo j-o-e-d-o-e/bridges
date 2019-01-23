@@ -14,7 +14,7 @@ import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 
 class Start extends BorderPane {
     private final SceneController controller;
-    private Button loadGame;
+    private Button loadGame, resume;
 
     Start(SceneController controller) {
         this.controller = controller;
@@ -48,6 +48,12 @@ class Start extends BorderPane {
             String text = ((Button) e.getSource()).getText();
             controller.goTo(text);
         });
+        resume = new Button("Resume");
+        resume.setPrefWidth(100);
+        resume.setOnAction(e -> {
+            String text = ((Button) e.getSource()).getText();
+            controller.goTo(text);
+        });
         loadGame = new Button("Load Game");
         loadGame.setPrefWidth(100);
         loadGame.setOnAction(e -> {
@@ -72,7 +78,7 @@ class Start extends BorderPane {
             String text = ((Button) e.getSource()).getText();
             controller.goTo(text);
         });
-        box.getChildren().addAll(title, newGame, loadGame, highScore, tutorial, exit);
+        box.getChildren().addAll(title, newGame, resume, loadGame, highScore, tutorial, exit);
         innerPane.getChildren().add(box);
         outerPane.getChildren().add(innerPane);
         return outerPane;

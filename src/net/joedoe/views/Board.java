@@ -75,7 +75,7 @@ public class Board extends BorderPane {
         mode.setFont(new Font(14));
 //        modeBox.getChildren().add(mode);
 
-        Button reset = new Button("R");
+        Button reset = new Button("\u21BA");
         reset.setAlignment(Pos.CENTER_LEFT);
         reset.setOnAction(e -> grid.reset());
         modeBox.getChildren().add(reset);

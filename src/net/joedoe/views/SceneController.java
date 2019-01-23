@@ -43,6 +43,9 @@ public class SceneController {
                 }
                 stage.setScene(modeScene);
                 return;
+            case "Resume":
+                switchToBoard();
+                return;
             case "Load Game":
                 try {
                     FileHandler.loadUser();

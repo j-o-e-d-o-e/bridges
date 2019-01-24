@@ -11,7 +11,7 @@ import net.joedoe.logics.Generator;
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 
 class DifficultyChooser extends BorderPane {
-    private final SceneController controller;
+    private SceneController controller;
     private Generator generator = new Generator();
 
     DifficultyChooser(SceneController controller) {
@@ -67,8 +67,7 @@ class DifficultyChooser extends BorderPane {
     private void handleInput(Difficulty difficulty){
         generator.setData(difficulty.getLevel() * 5);
         generator.generateGame();
-        controller.setPuzzle();
-        controller.switchToBoard();
+        controller.createBoard();
     }
 
     enum Difficulty {

@@ -15,10 +15,10 @@ import java.util.Optional;
 
 public class SceneController {
     private final Stage stage;
-    private Board board;
     private GameManager gameManager = GameManager.getInstance();
     private final int width = 768, height = 1024;
-    private Scene boardScene, timeScene, freeScene, highScoreScene, rulesScene, modeScene, startScene;
+    private Board board;
+    private Scene startScene, boardScene, modeScene, difficultyChooserScene, sizeChooserScene, highScoreScene, rulesScene;
     private Generator generator = new Generator();
 
     public SceneController(Stage stage) {
@@ -38,7 +38,9 @@ public class SceneController {
                 stage.setScene(modeScene);
                 return;
             case "Resume":
-                switchToBoard();
+                if (board == null) return;
+                else if (gameManager.getMode() == Mode.TIME) ((BoardTime) board).restartTimer();
+                stage.setScene(boardScene);
                 return;
             case "Load Game":
                 try {
@@ -69,34 +71,45 @@ public class SceneController {
         gameManager.setMode(mode);
         switch (mode) {
             case LEVEL:
-                if (showAlert(AlertType.CONFIRMATION, "New game", "Previous progress will be deleted. Continue?")) {
-                    gameManager.setLevel(1);
-                    gameManager.resetPoints();
-                    gameManager.resetTempPoints();
-                    generator.setData(5);
-                    generator.generateGame();
-                    board = new BoardLevel(this);
-                    boardScene = new Scene(board, width, height);
-                    board.setGrid();
-                    stage.setScene(boardScene);
-                }
+                createBoard();
                 break;
             case TIME:
-                if (timeScene == null) timeScene = new Scene(new DifficultyChooser(this), width, height);
-                stage.setScene(timeScene);
+                if (difficultyChooserScene == null)
+                    difficultyChooserScene = new Scene(new DifficultyChooser(this), width, height);
+                stage.setScene(difficultyChooserScene);
                 break;
             case FREE:
-                if (freeScene == null) freeScene = new Scene(new SizeChooser(this), width, height);
-                stage.setScene(freeScene);
+                if (sizeChooserScene == null) sizeChooserScene = new Scene(new SizeChooser(this), width, height);
+                stage.setScene(sizeChooserScene);
         }
     }
 
-    void switchToBoard() {
+    void createBoard() {
+        switch (gameManager.getMode()) {
+            case LEVEL:
+                if (!showAlert(AlertType.CONFIRMATION, "New game", "Previous progress will be deleted. Continue?"))
+                    return;
+                gameManager.setLevel(1);
+                gameManager.resetPoints();
+                gameManager.resetTempPoints();
+                generator.setData(5);
+                generator.generateGame();
+                board = new BoardLevel(this);
+                boardScene = new Scene(board, width, height);
+                board.setGrid();
+                stage.setScene(boardScene);
+                break;
+            case TIME:
+                board = new BoardTime(this);
+                board.setGrid();
+                boardScene = new Scene(board, width, height);
+                break;
+            case FREE:
+                board = new BoardFree(this);
+                board.setGrid();
+                boardScene = new Scene(board, width, height);
+        }
         stage.setScene(boardScene);
-    }
-
-    void setPuzzle() {
-        board.setGrid();
     }
 
     void loadPuzzle() {

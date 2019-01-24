@@ -7,11 +7,11 @@ import net.joedoe.views.StatusEvent.Status;
 
 import java.io.File;
 
-public class BoardFree extends Board {
+class BoardFree extends Board {
     private GameManager gameManager = GameManager.getInstance();
     private Image coin = new Image("file:assets" + File.separator + "images" + File.separator + "coin.png");
 
-    public BoardFree(SceneController controller) {
+    BoardFree(SceneController controller) {
         super(controller);
         setLayout();
     }

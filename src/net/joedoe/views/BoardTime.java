@@ -7,18 +7,25 @@ import net.joedoe.utils.Timer;
 
 import java.io.File;
 
-public class BoardTime extends Board {
+class BoardTime extends Board {
     private Timer timer;
 
-    public BoardTime(SceneController controller) {
+    BoardTime(SceneController controller) {
         super(controller);
+        timer = new Timer();
+        timer.setListener(() -> Platform.runLater(() -> info.setText(timer.getTime())));
         setLayout();
         controls.setVisible(false);
     }
 
     @Override
     ToolBar createToolBar() {
-        return new ToolBar(controller, "Start", "Time mode");
+        ToolBar toolBar = new ToolBar(controller, "Start", "Time mode");
+        toolBar.setListener(e -> {
+            timer.stop();
+            controller.goTo("Start");
+        });
+        return toolBar;
     }
 
     @Override
@@ -34,15 +41,7 @@ public class BoardTime extends Board {
     @Override
     void setGrid() {
         super.setGrid();
-        if (timer != null) timer.stop();
-        if (timer == null) {
-            timer = new Timer();
-            timer.setListener(() -> Platform.runLater(() -> info.setText(timer.getTime())));
-            timer.start();
-        } else {
-            timer.restart();
-        }
-        info.setText(timer.getStartTime());
+        timer.start();
     }
 
     @Override
@@ -52,7 +51,12 @@ public class BoardTime extends Board {
         if (status == StatusEvent.Status.SOLVED) {
             timer.stop();
             controller.showAlert(Alert.AlertType.INFORMATION, "Solved!", "Puzzle solved in " + info.getText() + ".");
+            controller.goTo("Highscore");
         }
+    }
+
+    void restartTimer() {
+        timer.restart();
     }
 
     @Override

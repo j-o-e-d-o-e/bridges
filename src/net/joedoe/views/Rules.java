@@ -18,7 +18,7 @@ class Rules extends BorderPane {
 //        TableView
 
         Button ok = new Button("Ok");
-        ok.setOnAction(e -> controller.switchToBoard());
+        ok.setOnAction(e -> controller.createBoard());
         setCenter(ok);
         return ok;
     }

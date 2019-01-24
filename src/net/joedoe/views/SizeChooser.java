@@ -172,8 +172,7 @@ public class SizeChooser extends BorderPane {
             }
         }
         generator.generateGame();
-        controller.setPuzzle();
-        controller.switchToBoard();
+        controller.createBoard();
     }
 
     private void setAlert(String text) {

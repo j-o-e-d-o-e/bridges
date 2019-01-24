@@ -17,7 +17,8 @@ public class Timer {
     }
 
     public void restart() {
-        currentTime = startTime;
+        running = true;
+        service.submit(this::run);
     }
 
     private void run() {
@@ -47,10 +48,6 @@ public class Timer {
     public void shutdown() {
         running = false;
         service.shutdown();
-    }
-
-    public boolean isRunning() {
-        return running;
     }
 
     public void setListener(TimerListener listener) {

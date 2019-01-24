@@ -17,6 +17,7 @@ import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
 import net.joedoe.utils.GameData;
 import net.joedoe.utils.GameInfo;
+import net.joedoe.utils.GameManager;
 
 import java.io.File;
 import java.util.List;
@@ -26,6 +27,7 @@ import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 public abstract class Board extends BorderPane {
     protected SceneController controller;
     private GameData gameData = GameData.getInstance();
+    private GameManager gameManager = GameManager.getInstance();
     private int width, height;
     private StackPane board;
     private Grid grid;
@@ -39,13 +41,7 @@ public abstract class Board extends BorderPane {
     public Board(SceneController controller) {
         getStylesheets().add("file:assets/css/dracula.css");
         this.controller = controller;
-        setSound();
-    }
-
-    void setLayout(){
-        toolBar = createToolBar();
-        setTop(toolBar);
-        setCenter(createBoard());
+//        setSound();
     }
 
     private void setSound() {
@@ -56,24 +52,27 @@ public abstract class Board extends BorderPane {
         player.play();
     }
 
-    abstract ToolBar createToolBar();
-
-    private BorderPane createBoard() {
+    void setLayout() {
+        toolBar = createToolBar();
+        setTop(toolBar);
         BorderPane borderPane = new BorderPane();
-        borderPane.setTop(createBoardTop());
+        borderPane.setTop(createTop());
         board = new StackPane();
         board.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, 0, CONTAINER_OFFSET));
         borderPane.setCenter(board);
-        borderPane.setBottom(createBoardBottom());
-        return borderPane;
+        borderPane.setBottom(createBottom());
+        setCenter(borderPane);
     }
 
-    private HBox createBoardTop() {
+    private HBox createTop() {
         HBox resetBox = new HBox(CONTAINER_OFFSET);
         resetBox.setMinWidth(200);
         Button reset = new Button("\u21BA");
         reset.setAlignment(Pos.CENTER_LEFT);
-        reset.setOnAction(e -> grid.reset());
+        reset.setOnAction(e -> {
+            gameManager.resetTempPoints();
+            grid.reset();
+        });
         resetBox.getChildren().add(reset);
 
         HBox infoBox = new HBox(CONTAINER_OFFSET);
@@ -122,11 +121,7 @@ public abstract class Board extends BorderPane {
         return box;
     }
 
-    abstract Image getInfoImage();
-
-    abstract String getInfoText();
-
-    private VBox createBoardBottom() {
+    private VBox createBottom() {
         VBox vBox = new VBox(CONTAINER_OFFSET);
         vBox.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
         checkBox = new CheckBox("Show missing bridges");
@@ -151,10 +146,6 @@ public abstract class Board extends BorderPane {
         return vBox;
     }
 
-    void setGrid() {
-        setGrid(gameData.getWidth(), gameData.getHeight(), gameData.getIsles(), null);
-    }
-
     private void setGrid(int width, int height, List<IIsle> isles, List<IBridge> bridges) {
         this.width = width;
         this.height = height;
@@ -170,6 +161,10 @@ public abstract class Board extends BorderPane {
         grid.setShowMissingBridges(checkBox.isSelected());
     }
 
+    void setGrid() {
+        setGrid(gameData.getWidth(), gameData.getHeight(), gameData.getIsles(), null);
+    }
+
     void setGridWithBridges() {
         setGrid(gameData.getWidth(), gameData.getHeight(), gameData.getIsles(), gameData.getBridges());
     }
@@ -177,6 +172,12 @@ public abstract class Board extends BorderPane {
     private void handlePoints(PointEvent e) {
         info.setText(e.getPoints());
     }
+
+    abstract ToolBar createToolBar();
+
+    abstract Image getInfoImage();
+
+    abstract String getInfoText();
 
     abstract void handleStatus(StatusEvent e);
 

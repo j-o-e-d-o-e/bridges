@@ -19,6 +19,7 @@ import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 class HighScore extends BorderPane {
 
     HighScore(SceneController controller) {
+        getStylesheets().add("file:assets/css/highscores.css");
         setStyle("-fx-background-color: #282828;");
         setTop(new ToolBar(controller, "Start", "Highscore"));
         setCenter(setLayout());

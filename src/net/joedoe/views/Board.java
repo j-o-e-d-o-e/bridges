@@ -1,9 +1,7 @@
 package net.joedoe.views;
 
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -19,38 +17,35 @@ import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
 import net.joedoe.utils.GameData;
 import net.joedoe.utils.GameInfo;
-import net.joedoe.utils.GameManager;
-import net.joedoe.utils.Timer;
 
 import java.io.File;
 import java.util.List;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 
-public class Board extends BorderPane {
-    private final SceneController controller;
-    private GameManager gameManager = GameManager.getInstance();
+public abstract class Board extends BorderPane {
+    protected SceneController controller;
     private GameData gameData = GameData.getInstance();
     private int width, height;
     private StackPane board;
-    private ToolBar toolBar;
     private Grid grid;
-    private Timer timer;
-    private Label info, status = new Label();
-    private Image coin = new Image("file:assets" + File.separator + "images" + File.separator + "coin.png");
-    private Image clock = new Image("file:assets" + File.separator + "images" + File.separator + "clock.png");
-    private ImageView imageView;
     private CheckBox checkBox;
-    private HBox controls;
     private MediaPlayer player;
+    ToolBar toolBar;
+    Label info;
+    HBox controls;
+    Label status = new Label();
 
     public Board(SceneController controller) {
         getStylesheets().add("file:assets/css/dracula.css");
         this.controller = controller;
+        setSound();
+    }
+
+    void setLayout(){
         toolBar = createToolBar();
         setTop(toolBar);
         setCenter(createBoard());
-        setSound();
     }
 
     private void setSound() {
@@ -61,23 +56,7 @@ public class Board extends BorderPane {
         player.play();
     }
 
-    private ToolBar createToolBar() {
-        String title;
-        switch (gameManager.getMode()) {
-            case LEVEL:
-                title = "Level " + gameManager.getLevel() + "/25";
-                break;
-            case TIME:
-                title = "Time mode";
-                break;
-            case FREE:
-                title = "Free mode";
-                break;
-            default:
-                title = "Title";
-        }
-        return new ToolBar(controller, "Start", title);
-    }
+    abstract ToolBar createToolBar();
 
     private BorderPane createBoard() {
         BorderPane borderPane = new BorderPane();
@@ -96,6 +75,17 @@ public class Board extends BorderPane {
         reset.setAlignment(Pos.CENTER_LEFT);
         reset.setOnAction(e -> grid.reset());
         resetBox.getChildren().add(reset);
+
+        HBox infoBox = new HBox(CONTAINER_OFFSET);
+        infoBox.setAlignment(Pos.CENTER);
+        infoBox.setMinWidth(200);
+        ImageView imageView = new ImageView();
+        imageView.setPreserveRatio(true);
+        imageView.setFitHeight(15);
+        imageView.setImage(getInfoImage());
+        info = new Label(getInfoText());
+        info.setFont(new Font(14));
+        infoBox.getChildren().addAll(imageView, info);
 
         HBox controlsBox = new HBox(CONTAINER_OFFSET);
         controlsBox.setAlignment(Pos.CENTER_RIGHT);
@@ -128,31 +118,13 @@ public class Board extends BorderPane {
 
         HBox box = new HBox();
         box.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, 0, CONTAINER_OFFSET));
-        box.getChildren().addAll(resetBox, regionLeft, createInfoBox(), regionRight, controlsBox);
+        box.getChildren().addAll(resetBox, regionLeft, infoBox, regionRight, controlsBox);
         return box;
     }
 
-    private HBox createInfoBox() {
-        HBox infoBox = new HBox(CONTAINER_OFFSET);
-        infoBox.setAlignment(Pos.CENTER);
-        infoBox.setMinWidth(200);
-        imageView = new ImageView();
-        imageView.setPreserveRatio(true);
-        imageView.setFitHeight(15);
-        switch (gameManager.getMode()) {
-            case LEVEL:
-            case FREE:
-                imageView.setImage(coin);
-                info = new Label(Integer.toString(gameManager.getPoints()));
-                break;
-            case TIME:
-                imageView.setImage(clock);
-                info = new Label(timer.getStartTime());
-        }
-        info.setFont(new Font(14));
-        infoBox.getChildren().addAll(imageView, info);
-        return infoBox;
-    }
+    abstract Image getInfoImage();
+
+    abstract String getInfoText();
 
     private VBox createBoardBottom() {
         VBox vBox = new VBox(CONTAINER_OFFSET);
@@ -179,35 +151,8 @@ public class Board extends BorderPane {
         return vBox;
     }
 
-    void setPuzzle() {
+    void setGrid() {
         setGrid(gameData.getWidth(), gameData.getHeight(), gameData.getIsles(), null);
-        if (timer != null) timer.stop();
-        switch (gameManager.getMode()) {
-            case LEVEL:
-                toolBar.updateTitle("Level " + gameManager.getLevel() + "/25");
-                imageView.setImage(coin);
-                info.setText(Integer.toString(gameManager.getPoints()));
-                controls.setVisible(true);
-                break;
-            case TIME:
-                toolBar.updateTitle("Time mode");
-                imageView.setImage(clock);
-                if (timer == null) {
-                    timer = new Timer();
-                    timer.setListener(() -> Platform.runLater(() -> info.setText(timer.getTime())));
-                    timer.start();
-                } else {
-                    timer.restart();
-                }
-                info.setText(timer.getStartTime());
-                controls.setVisible(false);
-                break;
-            case FREE:
-                toolBar.updateTitle("Free mode");
-                imageView.setImage(coin);
-                info.setText(Integer.toString(gameManager.getTempPoints()));
-                controls.setVisible(true);
-        }
     }
 
     private void setGrid(int width, int height, List<IIsle> isles, List<IBridge> bridges) {
@@ -233,30 +178,10 @@ public class Board extends BorderPane {
         info.setText(e.getPoints());
     }
 
-    private void handleStatus(StatusEvent e) {
-        StatusEvent.Status status = e.getStatus();
-        this.status.setText(status.getText());
-        if (status == StatusEvent.Status.SOLVED) {
-            switch (gameManager.getMode()) {
-                case LEVEL:
-                    controller.showAlert(AlertType.INFORMATION, "Solved!", "Level " + gameManager.getLevel() + " solved.");
-                    gameManager.savePoints();
-                    gameManager.increaseLevel();
-                    toolBar.updateTitle("Level " + gameManager.getLevel() + "/25");
-                    break;
-                case TIME:
-                    timer.stop();
-                    controller.showAlert(AlertType.INFORMATION, "Solved!", "Puzzle solved in " + info.getText() + ".");
-                    break;
-                case FREE:
-                    controller.showAlert(AlertType.INFORMATION, "Solved!", "Solved.");
-            }
-        }
-    }
+    abstract void handleStatus(StatusEvent e);
 
     void close() {
         if (grid != null) grid.shutdownAutoSolve();
-        if (timer != null) timer.shutdown();
     }
 
     void savePuzzle() {

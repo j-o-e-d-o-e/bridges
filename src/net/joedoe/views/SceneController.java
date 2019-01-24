@@ -23,10 +23,7 @@ public class SceneController {
 
     public SceneController(Stage stage) {
         this.stage = stage;
-        Start start = new Start(this);
-        startScene = new Scene(start, width, height);
-        board = new Board(this);
-        boardScene = new Scene(board, width, height);
+        startScene = new Scene(new Start(this), width, height);
         stage.setScene(startScene);
         stage.show();
     }
@@ -37,10 +34,7 @@ public class SceneController {
                 stage.setScene(startScene);
                 return;
             case "New Game":
-                if (modeScene == null) {
-                    ModeChooser modeChooser = new ModeChooser(this);
-                    modeScene = new Scene(modeChooser, width, height);
-                }
+                if (modeScene == null) modeScene = new Scene(new ModeChooser(this), width, height);
                 stage.setScene(modeScene);
                 return;
             case "Resume":
@@ -57,17 +51,12 @@ public class SceneController {
                 stage.setScene(boardScene);
                 return;
             case "Highscore":
-                if (highScoreScene == null) {
-                    HighScore highScore = new HighScore(this);
-                    highScoreScene = new Scene(highScore, width, height);
-                    highScoreScene.getStylesheets().add("file:assets/css/highscores.css");
-                }
+                if (highScoreScene == null) highScoreScene = new Scene(new HighScore(this), width, height);
                 stage.setScene(highScoreScene);
                 return;
             case "Rules":
                 if (rulesScene == null) {
-                    Rules rules = new Rules(this);
-                    rulesScene = new Scene(rules, width, height);
+                    rulesScene = new Scene(new Rules(this), width, height);
                 }
                 stage.setScene(rulesScene);
                 return;
@@ -86,26 +75,18 @@ public class SceneController {
                     gameManager.resetTempPoints();
                     generator.setData(5);
                     generator.generateGame();
-                    if (boardScene == null) {
-                        board = new Board(this);
-                        boardScene = new Scene(board, width, height);
-                    }
-                    board.setPuzzle();
+                    board = new BoardLevel(this);
+                    boardScene = new Scene(board, width, height);
+                    board.setGrid();
                     stage.setScene(boardScene);
                 }
                 break;
             case TIME:
-                if (timeScene == null) {
-                    DifficultyChooser difficultyChooser = new DifficultyChooser(this);
-                    timeScene = new Scene(difficultyChooser, width, height);
-                }
+                if (timeScene == null) timeScene = new Scene(new DifficultyChooser(this), width, height);
                 stage.setScene(timeScene);
                 break;
             case FREE:
-                if (freeScene == null) {
-                    SizeChooser sizeChooser = new SizeChooser(this);
-                    freeScene = new Scene(sizeChooser, width, height);
-                }
+                if (freeScene == null) freeScene = new Scene(new SizeChooser(this), width, height);
                 stage.setScene(freeScene);
         }
     }
@@ -115,7 +96,7 @@ public class SceneController {
     }
 
     void setPuzzle() {
-        board.setPuzzle();
+        board.setGrid();
     }
 
     void loadPuzzle() {

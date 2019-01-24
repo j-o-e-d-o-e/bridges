@@ -19,7 +19,7 @@ class Start extends BorderPane {
     Start(SceneController controller) {
         this.controller = controller;
         setStyle("-fx-background-color: #282828;");
-        setTop(new TopBar(controller, "Start"));
+        setTop(new ToolBar(controller, "Start"));
         setCenter(setLayout());
         if (FileHandler.fileExists()) {
             loadGame.setDisable(true);

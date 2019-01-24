@@ -18,7 +18,7 @@ class ModeChooser extends BorderPane {
     ModeChooser(SceneController controller) {
         this.controller = controller;
         setStyle("-fx-background-color: #282828;");
-        setTop(new TopBar(controller, "Start", "New Game"));
+        setTop(new ToolBar(controller, "Start", "New Game"));
         setCenter(setLayout());
     }
 

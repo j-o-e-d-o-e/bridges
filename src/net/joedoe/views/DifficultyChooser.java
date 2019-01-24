@@ -2,7 +2,6 @@ package net.joedoe.views;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -18,7 +17,7 @@ class DifficultyChooser extends BorderPane {
     DifficultyChooser(SceneController controller) {
         this.controller = controller;
         setStyle("-fx-background-color: #282828;");
-        setTop(new TopBar(controller, "New Game", "Time mode"));
+        setTop(new ToolBar(controller, "New Game", "Time mode"));
         setCenter(setLayout());
     }
 

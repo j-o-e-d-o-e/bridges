@@ -34,7 +34,7 @@ public class SizeChooser extends BorderPane {
     public SizeChooser(SceneController controller) {
         this.controller = controller;
         setStyle("-fx-background-color: #282828;");
-        setTop(new TopBar(controller, "New Game", "Free mode"));
+        setTop(new ToolBar(controller, "New Game", "Free mode"));
         setCenter(setLayout());
     }
 

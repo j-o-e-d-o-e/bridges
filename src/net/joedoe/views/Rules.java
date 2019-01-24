@@ -10,7 +10,7 @@ class Rules extends BorderPane {
     Rules(SceneController controller) {
         this.controller = controller;
         setStyle("-fx-background-color: #282828;");
-        setTop(new TopBar(controller, "Start", "Rules"));
+        setTop(new ToolBar(controller, "Start", "Rules"));
         setCenter(setLayout());
     }
 

@@ -90,7 +90,7 @@ public class SceneController {
                         board = new Board(this);
                         boardScene = new Scene(board, width, height);
                     }
-                    board.setPuzzle(gameManager.getMode());
+                    board.setPuzzle();
                     stage.setScene(boardScene);
                 }
                 break;
@@ -115,7 +115,7 @@ public class SceneController {
     }
 
     void setPuzzle() {
-        board.setPuzzle(gameManager.getMode());
+        board.setPuzzle();
     }
 
     void loadPuzzle() {

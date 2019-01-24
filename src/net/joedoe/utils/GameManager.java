@@ -1,8 +1,10 @@
 package net.joedoe.utils;
 
+import static net.joedoe.utils.GameManager.Mode.LEVEL;
+
 public class GameManager {
     private static final GameManager gameManager = new GameManager();
-    private Mode mode;
+    private Mode mode = LEVEL;
     private int points = 0, tempPoints = 0, level = 1;
 
     public enum Mode {

@@ -20,7 +20,6 @@ import net.joedoe.entities.IIsle;
 import net.joedoe.utils.GameData;
 import net.joedoe.utils.GameInfo;
 import net.joedoe.utils.GameManager;
-import net.joedoe.utils.GameManager.Mode;
 import net.joedoe.utils.Timer;
 
 import java.io.File;
@@ -34,9 +33,10 @@ public class Board extends BorderPane {
     private GameData gameData = GameData.getInstance();
     private int width, height;
     private StackPane board;
+    private ToolBar toolBar;
     private Grid grid;
     private Timer timer;
-    private Label mode, info, status = new Label();
+    private Label info, status = new Label();
     private Image coin = new Image("file:assets" + File.separator + "images" + File.separator + "coin.png");
     private Image clock = new Image("file:assets" + File.separator + "images" + File.separator + "clock.png");
     private ImageView imageView;
@@ -45,15 +45,38 @@ public class Board extends BorderPane {
     private MediaPlayer player;
 
     public Board(SceneController controller) {
-        this.controller = controller;
         getStylesheets().add("file:assets/css/dracula.css");
-        setTop(new TopBar(controller, "Start", "Level " + gameManager.getLevel() + "/25"));
+        this.controller = controller;
+        toolBar = createToolBar();
+        setTop(toolBar);
         setCenter(createBoard());
+        setSound();
+    }
+
+    private void setSound() {
         String soundUrl = "assets" + File.separator + "sounds" + File.separator + "waves.wav";
         Media sound = new Media(new File(soundUrl).toURI().toString());
         player = new MediaPlayer(sound);
         player.setOnEndOfMedia(() -> player.seek(Duration.ZERO));
-//        player.play();
+        player.play();
+    }
+
+    private ToolBar createToolBar() {
+        String title;
+        switch (gameManager.getMode()) {
+            case LEVEL:
+                title = "Level " + gameManager.getLevel() + "/25";
+                break;
+            case TIME:
+                title = "Time mode";
+                break;
+            case FREE:
+                title = "Free mode";
+                break;
+            default:
+                title = "Title";
+        }
+        return new ToolBar(controller, "Start", title);
     }
 
     private BorderPane createBoard() {
@@ -66,30 +89,13 @@ public class Board extends BorderPane {
         return borderPane;
     }
 
-    @SuppressWarnings("Duplicates")
     private HBox createBoardTop() {
-        HBox modeBox = new HBox(CONTAINER_OFFSET);
-        modeBox.setAlignment(Pos.CENTER_LEFT);
-        modeBox.setMinWidth(200);
-        mode = new Label("Level " + gameManager.getLevel() + "/25");
-        mode.setFont(new Font(14));
-//        modeBox.getChildren().add(mode);
-
+        HBox resetBox = new HBox(CONTAINER_OFFSET);
+        resetBox.setMinWidth(200);
         Button reset = new Button("\u21BA");
         reset.setAlignment(Pos.CENTER_LEFT);
         reset.setOnAction(e -> grid.reset());
-        modeBox.getChildren().add(reset);
-
-        HBox infoBox = new HBox(CONTAINER_OFFSET);
-        infoBox.setAlignment(Pos.CENTER);
-        infoBox.setMinWidth(200);
-        imageView = new ImageView();
-        imageView.setImage(coin);
-        imageView.setPreserveRatio(true);
-        imageView.setFitHeight(15);
-        info = new Label(Integer.toString(gameManager.getPoints()));
-        info.setFont(new Font(14));
-        infoBox.getChildren().addAll(imageView, info);
+        resetBox.getChildren().add(reset);
 
         HBox controlsBox = new HBox(CONTAINER_OFFSET);
         controlsBox.setAlignment(Pos.CENTER_RIGHT);
@@ -122,8 +128,30 @@ public class Board extends BorderPane {
 
         HBox box = new HBox();
         box.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, 0, CONTAINER_OFFSET));
-        box.getChildren().addAll(modeBox, regionLeft, infoBox, regionRight, controlsBox);
+        box.getChildren().addAll(resetBox, regionLeft, createInfoBox(), regionRight, controlsBox);
         return box;
+    }
+
+    private HBox createInfoBox() {
+        HBox infoBox = new HBox(CONTAINER_OFFSET);
+        infoBox.setAlignment(Pos.CENTER);
+        infoBox.setMinWidth(200);
+        imageView = new ImageView();
+        imageView.setPreserveRatio(true);
+        imageView.setFitHeight(15);
+        switch (gameManager.getMode()) {
+            case LEVEL:
+            case FREE:
+                imageView.setImage(coin);
+                info = new Label(Integer.toString(gameManager.getPoints()));
+                break;
+            case TIME:
+                imageView.setImage(clock);
+                info = new Label(timer.getStartTime());
+        }
+        info.setFont(new Font(14));
+        infoBox.getChildren().addAll(imageView, info);
+        return infoBox;
     }
 
     private VBox createBoardBottom() {
@@ -151,19 +179,18 @@ public class Board extends BorderPane {
         return vBox;
     }
 
-
-    void setPuzzle(Mode currentMode) {
+    void setPuzzle() {
         setGrid(gameData.getWidth(), gameData.getHeight(), gameData.getIsles(), null);
         if (timer != null) timer.stop();
-        switch (currentMode) {
+        switch (gameManager.getMode()) {
             case LEVEL:
-                mode.setText("Level " + gameManager.getLevel() + "/25");
+                toolBar.updateTitle("Level " + gameManager.getLevel() + "/25");
                 imageView.setImage(coin);
                 info.setText(Integer.toString(gameManager.getPoints()));
                 controls.setVisible(true);
                 break;
             case TIME:
-                mode.setText("Time mode");
+                toolBar.updateTitle("Time mode");
                 imageView.setImage(clock);
                 if (timer == null) {
                     timer = new Timer();
@@ -176,15 +203,11 @@ public class Board extends BorderPane {
                 controls.setVisible(false);
                 break;
             case FREE:
-                mode.setText("Free mode");
+                toolBar.updateTitle("Free mode");
                 imageView.setImage(coin);
                 info.setText(Integer.toString(gameManager.getTempPoints()));
                 controls.setVisible(true);
         }
-    }
-
-    void setGridWithBridges() {
-        setGrid(gameData.getWidth(), gameData.getHeight(), gameData.getIsles(), gameData.getBridges());
     }
 
     private void setGrid(int width, int height, List<IIsle> isles, List<IBridge> bridges) {
@@ -202,6 +225,10 @@ public class Board extends BorderPane {
         grid.setShowMissingBridges(checkBox.isSelected());
     }
 
+    void setGridWithBridges() {
+        setGrid(gameData.getWidth(), gameData.getHeight(), gameData.getIsles(), gameData.getBridges());
+    }
+
     private void handlePoints(PointEvent e) {
         info.setText(e.getPoints());
     }
@@ -210,17 +237,19 @@ public class Board extends BorderPane {
         StatusEvent.Status status = e.getStatus();
         this.status.setText(status.getText());
         if (status == StatusEvent.Status.SOLVED) {
-            if (gameManager.getMode() == Mode.LEVEL) {
-                controller.showAlert(AlertType.INFORMATION, "Solved!", "Level " + gameManager.getLevel() + " solved.");
-                gameManager.savePoints();
-                gameManager.increaseLevel();
-                mode.setText("Level " + gameManager.getLevel() + "/25");
-//                board.createNewGame(gameManager.getLevel());
-            } else if (gameManager.getMode() == Mode.TIME) {
-                timer.stop();
-                controller.showAlert(AlertType.INFORMATION, "Solved!", "Puzzle solved in " + info.getText() + ".");
-            } else {
-                controller.showAlert(AlertType.INFORMATION, "Solved!", "Solved.");
+            switch (gameManager.getMode()) {
+                case LEVEL:
+                    controller.showAlert(AlertType.INFORMATION, "Solved!", "Level " + gameManager.getLevel() + " solved.");
+                    gameManager.savePoints();
+                    gameManager.increaseLevel();
+                    toolBar.updateTitle("Level " + gameManager.getLevel() + "/25");
+                    break;
+                case TIME:
+                    timer.stop();
+                    controller.showAlert(AlertType.INFORMATION, "Solved!", "Puzzle solved in " + info.getText() + ".");
+                    break;
+                case FREE:
+                    controller.showAlert(AlertType.INFORMATION, "Solved!", "Solved.");
             }
         }
     }

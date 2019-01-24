@@ -7,7 +7,6 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -21,7 +20,7 @@ class HighScore extends BorderPane {
 
     HighScore(SceneController controller) {
         setStyle("-fx-background-color: #282828;");
-        setTop(new TopBar(controller, "Start", "Highscore"));
+        setTop(new ToolBar(controller, "Start", "Highscore"));
         setCenter(setLayout());
     }
 

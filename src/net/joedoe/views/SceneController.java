@@ -60,6 +60,7 @@ public class SceneController {
                 if (highScoreScene == null) {
                     HighScore highScore = new HighScore(this);
                     highScoreScene = new Scene(highScore, width, height);
+                    highScoreScene.getStylesheets().add("file:assets/css/highscores.css");
                 }
                 stage.setScene(highScoreScene);
                 return;

@@ -34,7 +34,7 @@ class BoardFree extends Board {
     @Override
     void setGrid() {
         super.setGrid();
-        info.setText(Integer.toString(gameManager.getTempPoints()));
+        info.setText(Integer.toString(gameManager.getPoints()));
     }
 
     @Override

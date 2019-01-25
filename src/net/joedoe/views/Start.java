@@ -54,7 +54,7 @@ class Start extends BorderPane {
             String text = ((Button) e.getSource()).getText();
             controller.goTo(text);
         });
-        loadGame = new Button("Load Game");
+        loadGame = new Button("Load Level");
         loadGame.setPrefWidth(100);
         loadGame.setOnAction(e -> {
             String text = ((Button) e.getSource()).getText();
@@ -72,7 +72,7 @@ class Start extends BorderPane {
             String text = ((Button) e.getSource()).getText();
             controller.goTo(text);
         });
-        Button exit = new Button("Quit");
+        Button exit = new Button("Quit & Save");
         exit.setPrefWidth(100);
         exit.setOnAction(e -> {
             String text = ((Button) e.getSource()).getText();

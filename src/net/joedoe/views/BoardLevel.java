@@ -2,23 +2,29 @@ package net.joedoe.views;
 
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
+import net.joedoe.logics.Generator;
 import net.joedoe.utils.GameManager;
 
 import java.io.File;
 
 class BoardLevel extends Board {
     private GameManager gameManager = GameManager.getInstance();
+    private Generator generator;
 
     BoardLevel(SceneController controller) {
         super(controller);
+        generator = new Generator();
         setLayout();
     }
 
     @Override
     ToolBar createToolBar() {
-        System.out.println(gameManager);
-        String title = "Level " + gameManager.getLevel() + "/25";
-        return new ToolBar(controller, "Start", title);
+        ToolBar toolbar = new ToolBar(controller, "Start", "Level " + gameManager.getLevel() + "/25");
+        toolbar.setListener(e -> {
+            player.pause();
+            controller.goTo("Start");
+        });
+        return toolbar;
     }
 
     @Override
@@ -45,7 +51,10 @@ class BoardLevel extends Board {
         if (status == StatusEvent.Status.SOLVED) {
             controller.showAlert(Alert.AlertType.INFORMATION, "Solved!", "Level " + gameManager.getLevel() + " solved.");
             gameManager.savePoints();
+            info.setText(Integer.toString(gameManager.getPoints()));
             gameManager.increaseLevel();
+            generator.setData(gameManager.getLevel() * 5);
+            generator.generateGame();
             setGrid();
         }
     }

@@ -73,6 +73,7 @@ public abstract class Board extends BorderPane {
         reset.setAlignment(Pos.CENTER_LEFT);
         reset.setOnAction(e -> {
             gameManager.resetTempPoints();
+            info.setText(getInfoText());
             grid.reset();
         });
         resetBox.getChildren().add(reset);

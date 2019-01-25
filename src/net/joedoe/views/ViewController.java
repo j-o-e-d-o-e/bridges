@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import net.joedoe.logics.Generator;
 import net.joedoe.utils.FileHandler;
 import net.joedoe.utils.GameManager;
+import net.joedoe.utils.GameManager.Mode;
 import net.joedoe.views.board.Board;
 import net.joedoe.views.board.BoardFree;
 import net.joedoe.views.board.BoardLevel;
@@ -21,7 +22,7 @@ import static net.joedoe.views.ViewController.View.START;
 public class ViewController {
     private final Stage stage;
     private final int width = 768, height = 1024;
-    private Scene startScene, boardScene, modeScene, difficultyChooserScene, sizeChooserScene, highScoreScene, rulesScene;
+    private Scene startScene, boardScene, modeScene, difficultyScene, sizeScene, highScoreScene, rulesScene;
     private Start start;
     private Board board;
     private GameManager gameManager = GameManager.getInstance();
@@ -54,7 +55,7 @@ public class ViewController {
                 return;
             case RESUME:
                 if (board == null) return;
-                else if (gameManager.getMode() == GameManager.Mode.TIME) ((BoardTime) board).restartTimer();
+                else if (gameManager.getMode() == Mode.TIME) ((BoardTime) board).restartTimer();
                 board.restartSound();
                 stage.setScene(boardScene);
                 return;
@@ -83,20 +84,19 @@ public class ViewController {
         }
     }
 
-    void createNewGame(GameManager.Mode mode) {
+    void createNewGame(Mode mode) {
         gameManager.setMode(mode);
         switch (mode) {
             case LEVEL:
                 createBoard();
                 break;
             case TIME:
-                if (difficultyChooserScene == null)
-                    difficultyChooserScene = new Scene(new DifficultyChooser(this), width, height);
-                stage.setScene(difficultyChooserScene);
+                if (difficultyScene == null) difficultyScene = new Scene(new DifficultyChooser(this), width, height);
+                stage.setScene(difficultyScene);
                 break;
             case FREE:
-                if (sizeChooserScene == null) sizeChooserScene = new Scene(new SizeChooser(this), width, height);
-                stage.setScene(sizeChooserScene);
+                if (sizeScene == null) sizeScene = new Scene(new SizeChooser(this), width, height);
+                stage.setScene(sizeScene);
         }
     }
 
@@ -163,7 +163,7 @@ public class ViewController {
             try {
                 gameManager.savePoints();
                 FileHandler.saveUser();
-                if (gameManager.getMode() == GameManager.Mode.LEVEL) {
+                if (gameManager.getMode() == Mode.LEVEL) {
                     board.savePuzzle();
                     FileHandler.savePuzzle();
                 }

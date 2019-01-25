@@ -44,7 +44,8 @@ public abstract class Board extends BorderPane {
     public Board(ViewController controller) {
         getStylesheets().add("file:assets/css/board.css");
         this.controller = controller;
-//        setSound();
+        setSound();
+        player.stop();
     }
 
     private void setSound() {

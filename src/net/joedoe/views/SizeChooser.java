@@ -1,5 +1,7 @@
 package net.joedoe.views;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -23,6 +25,7 @@ public class SizeChooser extends BorderPane {
     private Label heightLabel, widthLabel, islesLabel;
     private TextField heightTxt, widthTxt, islesTxt;
     private CheckBox checkBox;
+    private EventHandler<Event> listener;
 
     /**
      * Erzeugt einen Dialog, in dem der Nutzer Angaben bzgl. Breite und Höhe des
@@ -175,7 +178,7 @@ public class SizeChooser extends BorderPane {
             }
         }
         generator.generateGame();
-        controller.createBoard();
+        listener.handle(new Event(null));
     }
 
     private void setAlert(String text) {
@@ -185,4 +188,12 @@ public class SizeChooser extends BorderPane {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) alert.close();
     }
+
+    void setListener(EventHandler<Event> listener) {
+        this.listener = listener;
+    }
+
+//    class SizeEvent extends Event{
+//        private int width, height, isles
+//    }
 }

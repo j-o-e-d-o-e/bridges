@@ -1,5 +1,7 @@
 package net.joedoe.views;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -13,11 +15,10 @@ import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 import static net.joedoe.views.ViewController.View.NEW;
 
 class DifficultyChooser extends BorderPane {
-    private ViewController controller;
     private Generator generator = new Generator();
+    private EventHandler<Event> listener;
 
     DifficultyChooser(ViewController controller) {
-        this.controller = controller;
         setStyle("-fx-background-color: #282828;");
         ToolBar toolBar = new ToolBar("Time mode");
         toolBar.setListener(e -> controller.goTo(NEW));
@@ -84,6 +85,10 @@ class DifficultyChooser extends BorderPane {
     private void handleInput(Difficulty difficulty) {
         generator.setData(difficulty.getLevel() * 5);
         generator.generateGame();
-        controller.createBoard();
+        listener.handle(new Event(null));
+    }
+
+    void setListener(EventHandler<Event> listener) {
+        this.listener = listener;
     }
 }

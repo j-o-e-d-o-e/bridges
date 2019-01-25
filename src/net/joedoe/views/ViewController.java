@@ -88,21 +88,6 @@ public class ViewController {
         gameManager.setMode(mode);
         switch (mode) {
             case LEVEL:
-                createBoard();
-                break;
-            case TIME:
-                if (difficultyScene == null) difficultyScene = new Scene(new DifficultyChooser(this), width, height);
-                stage.setScene(difficultyScene);
-                break;
-            case FREE:
-                if (sizeScene == null) sizeScene = new Scene(new SizeChooser(this), width, height);
-                stage.setScene(sizeScene);
-        }
-    }
-
-    void createBoard() {
-        switch (gameManager.getMode()) {
-            case LEVEL:
                 if (!showAlert(AlertType.CONFIRMATION, "New game", "Previous progress will be deleted. Continue?"))
                     return;
                 gameManager.setLevel(1);
@@ -116,16 +101,31 @@ public class ViewController {
                 stage.setScene(boardScene);
                 break;
             case TIME:
-                board = new BoardTime(this);
-                board.setGrid();
-                boardScene = new Scene(board, width, height);
+                if (difficultyScene == null) {
+                    DifficultyChooser difficulty = new DifficultyChooser(this);
+                    difficulty.setListener(e -> {
+                        board = new BoardTime(this);
+                        board.setGrid();
+                        boardScene = new Scene(board, width, height);
+                        stage.setScene(boardScene);
+                    });
+                    difficultyScene = new Scene(difficulty, width, height);
+                }
+                stage.setScene(difficultyScene);
                 break;
             case FREE:
-                board = new BoardFree(this);
-                board.setGrid();
-                boardScene = new Scene(board, width, height);
+                if (sizeScene == null) {
+                    SizeChooser size = new SizeChooser(this);
+                    size.setListener(e -> {
+                        board = new BoardFree(this);
+                        board.setGrid();
+                        boardScene = new Scene(board, width, height);
+                        stage.setScene(boardScene);
+                    });
+                    sizeScene = new Scene(size, width, height);
+                }
+                stage.setScene(sizeScene);
         }
-        stage.setScene(boardScene);
     }
 
     void loadPuzzle() {

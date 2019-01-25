@@ -7,6 +7,8 @@ import net.joedoe.utils.GameManager;
 
 import java.io.File;
 
+import static net.joedoe.views.SceneController.Screen.START;
+
 class BoardLevel extends Board {
     private GameManager gameManager = GameManager.getInstance();
     private Generator generator;
@@ -19,10 +21,10 @@ class BoardLevel extends Board {
 
     @Override
     ToolBar createToolBar() {
-        ToolBar toolbar = new ToolBar(controller, "Start", "Level " + gameManager.getLevel() + "/25");
+        ToolBar toolbar = new ToolBar("Level " + gameManager.getLevel() + "/25");
         toolbar.setListener(e -> {
             player.pause();
-            controller.goTo("Start");
+            controller.goTo(START);
         });
         return toolbar;
     }

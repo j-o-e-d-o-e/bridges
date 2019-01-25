@@ -8,22 +8,19 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import net.joedoe.utils.FileHandler;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
+import static net.joedoe.views.SceneController.Screen.*;
 
 class Start extends BorderPane {
     private final SceneController controller;
-    private Button loadGame, resume;
+    private Button load, resume;
 
     Start(SceneController controller) {
         this.controller = controller;
         setStyle("-fx-background-color: #282828;");
-        setTop(new ToolBar(controller, "Start"));
+        setTop(new ToolBar("Start", false));
         setCenter(setLayout());
-        if (FileHandler.fileExists()) {
-            loadGame.setDisable(true);
-        }
     }
 
     @SuppressWarnings("Duplicates")
@@ -44,43 +41,33 @@ class Start extends BorderPane {
 
         Button newGame = new Button("New Game");
         newGame.setPrefWidth(100);
-        newGame.setOnAction(e -> {
-            String text = ((Button) e.getSource()).getText();
-            controller.goTo(text);
-        });
+        newGame.setOnAction(e -> controller.goTo(NEW));
         resume = new Button("Resume");
         resume.setPrefWidth(100);
-        resume.setOnAction(e -> {
-            String text = ((Button) e.getSource()).getText();
-            controller.goTo(text);
-        });
-        loadGame = new Button("Load Level");
-        loadGame.setPrefWidth(100);
-        loadGame.setOnAction(e -> {
-            String text = ((Button) e.getSource()).getText();
-            controller.goTo(text);
-        });
+        resume.setOnAction(e -> controller.goTo(RESUME));
+        load = new Button("Load Level");
+        load.setPrefWidth(100);
+        load.setOnAction(e -> controller.goTo(LOAD));
         Button highScore = new Button("Highscore");
         highScore.setPrefWidth(100);
-        highScore.setOnAction(e -> {
-            String text = ((Button) e.getSource()).getText();
-            controller.goTo(text);
-        });
+        highScore.setOnAction(e -> controller.goTo(HIGHSCORE));
         Button tutorial = new Button("Rules");
         tutorial.setPrefWidth(100);
-        tutorial.setOnAction(e -> {
-            String text = ((Button) e.getSource()).getText();
-            controller.goTo(text);
-        });
+        tutorial.setOnAction(e -> controller.goTo(RULES));
         Button exit = new Button("Quit & Save");
         exit.setPrefWidth(100);
-        exit.setOnAction(e -> {
-            String text = ((Button) e.getSource()).getText();
-            controller.goTo(text);
-        });
-        box.getChildren().addAll(title, newGame, resume, loadGame, highScore, tutorial, exit);
+        exit.setOnAction(e -> controller.goTo(QUIT));
+        box.getChildren().addAll(title, newGame, resume, load, highScore, tutorial, exit);
         innerPane.getChildren().add(box);
         outerPane.getChildren().add(innerPane);
         return outerPane;
+    }
+
+    void disableResume(boolean disable) {
+        resume.setDisable(disable);
+    }
+
+    void disableLoad(boolean disable) {
+        load.setDisable(disable);
     }
 }

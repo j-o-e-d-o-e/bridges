@@ -11,6 +11,7 @@ import net.joedoe.logics.Generator;
 import java.util.Optional;
 
 import static net.joedoe.utils.GameInfo.*;
+import static net.joedoe.views.SceneController.Screen.NEW;
 
 /**
  * Dialog zur Generierung eines neuen Spiels.
@@ -34,7 +35,9 @@ public class SizeChooser extends BorderPane {
     public SizeChooser(SceneController controller) {
         this.controller = controller;
         setStyle("-fx-background-color: #282828;");
-        setTop(new ToolBar(controller, "New Game", "Free mode"));
+        ToolBar toolBar = new ToolBar("Free mode");
+        toolBar.setListener(e -> controller.goTo(NEW));
+        setTop(toolBar);
         setCenter(setLayout());
     }
 
@@ -131,7 +134,7 @@ public class SizeChooser extends BorderPane {
         buttons.setPrefWidth(100);
         Button cancelBtn = new Button("Cancel");
         cancelBtn.setMinWidth(buttons.getPrefWidth());
-        cancelBtn.setOnAction(e -> controller.goTo("New Game"));
+        cancelBtn.setOnAction(e -> controller.goTo(NEW));
         Button confirmBtn = new Button("OK");
         confirmBtn.setOnAction(e -> handleInput());
         confirmBtn.setMinWidth(buttons.getPrefWidth());

@@ -10,46 +10,53 @@ import net.joedoe.utils.FileHandler;
 import net.joedoe.utils.GameManager;
 import net.joedoe.utils.GameManager.Mode;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
+
+import static net.joedoe.views.SceneController.Screen.START;
 
 public class SceneController {
     private final Stage stage;
     private GameManager gameManager = GameManager.getInstance();
     private final int width = 768, height = 1024;
     private Board board;
+    private Start start;
     private Scene startScene, boardScene, modeScene, difficultyChooserScene, sizeChooserScene, highScoreScene, rulesScene;
     private Generator generator = new Generator();
 
     public SceneController(Stage stage) {
         this.stage = stage;
-        startScene = new Scene(new Start(this), width, height);
-        stage.setScene(startScene);
+        start = new Start(this);
+        startScene = new Scene(start, width, height);
+        goTo(START);
         stage.show();
     }
 
-
-    public enum Screen{
+    public enum Screen {
         START, NEW, RESUME, LOAD, HIGHSCORE, RULES, QUIT
-
     }
 
-    void goTo(String btn) {
-        switch (btn) {
-            case "Start":
+    void goTo(Screen screen) {
+        switch (screen) {
+            case START:
+                if (board == null) start.disableResume(true);
+                else start.disableResume(false);
+                if(FileHandler.fileExists()) start.disableLoad(true);
+                else start.disableLoad(false);
                 stage.setScene(startScene);
                 return;
-            case "New Game":
+            case NEW:
                 if (modeScene == null) modeScene = new Scene(new ModeChooser(this), width, height);
                 stage.setScene(modeScene);
                 return;
-            case "Resume":
+            case RESUME:
                 if (board == null) return;
                 else if (gameManager.getMode() == Mode.TIME) ((BoardTime) board).restartTimer();
                 board.restartSound();
                 stage.setScene(boardScene);
                 return;
-            case "Load Game":
+            case LOAD:
                 try {
                     FileHandler.loadUser();
                     FileHandler.loadPuzzle();
@@ -59,17 +66,17 @@ public class SceneController {
                 board.setGridWithBridges();
                 stage.setScene(boardScene);
                 return;
-            case "Highscore":
+            case HIGHSCORE:
                 if (highScoreScene == null) highScoreScene = new Scene(new HighScore(this), width, height);
                 stage.setScene(highScoreScene);
                 return;
-            case "Rules":
+            case RULES:
                 if (rulesScene == null) {
                     rulesScene = new Scene(new Rules(this), width, height);
                 }
                 stage.setScene(rulesScene);
                 return;
-            case "Quit":
+            case QUIT:
                 close();
         }
     }

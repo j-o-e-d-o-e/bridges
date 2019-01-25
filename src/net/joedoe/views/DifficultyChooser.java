@@ -2,13 +2,15 @@ package net.joedoe.views;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import net.joedoe.logics.Generator;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
+import static net.joedoe.views.SceneController.Screen.NEW;
 
 class DifficultyChooser extends BorderPane {
     private SceneController controller;
@@ -17,7 +19,9 @@ class DifficultyChooser extends BorderPane {
     DifficultyChooser(SceneController controller) {
         this.controller = controller;
         setStyle("-fx-background-color: #282828;");
-        setTop(new ToolBar(controller, "New Game", "Time mode"));
+        ToolBar toolBar = new ToolBar("Time mode");
+        toolBar.setListener(e -> controller.goTo(NEW));
+        setTop(toolBar);
         setCenter(setLayout());
     }
 
@@ -35,28 +39,28 @@ class DifficultyChooser extends BorderPane {
 
         Label title = new Label("Choose a difficulty:");
         title.setFont(Font.font(20));
-        title.setPadding(new Insets(0,0, CONTAINER_OFFSET, 0));
+        title.setPadding(new Insets(0, 0, CONTAINER_OFFSET, 0));
         title.setStyle("-fx-text-fill: ghostwhite");
 
         Button veryEasy = new Button("Very easy (5 isles)");
         veryEasy.setPrefWidth(180);
-        veryEasy.setOnAction(e-> handleInput(Difficulty.VERY_EASY));
+        veryEasy.setOnAction(e -> handleInput(Difficulty.VERY_EASY));
 
         Button easy = new Button("Easy (25 isles)");
         easy.setPrefWidth(180);
-        easy.setOnAction(e-> handleInput(Difficulty.EASY));
+        easy.setOnAction(e -> handleInput(Difficulty.EASY));
 
         Button medium = new Button("Medium (50 isles)");
         medium.setPrefWidth(180);
-        medium.setOnAction(e-> handleInput(Difficulty.MEDIUM));
+        medium.setOnAction(e -> handleInput(Difficulty.MEDIUM));
 
         Button hard = new Button("Hard (75 isles)");
         hard.setPrefWidth(180);
-        hard.setOnAction(e-> handleInput(Difficulty.HARD));
+        hard.setOnAction(e -> handleInput(Difficulty.HARD));
 
         Button challenging = new Button("Challenging (100 isles)");
         challenging.setPrefWidth(180);
-        challenging.setOnAction(e-> handleInput(Difficulty.CHALLENGING));
+        challenging.setOnAction(e -> handleInput(Difficulty.CHALLENGING));
 
         box.getChildren().addAll(title, veryEasy, easy, medium, hard, challenging);
         innerPane.getChildren().addAll(box);
@@ -64,7 +68,7 @@ class DifficultyChooser extends BorderPane {
         return outerPane;
     }
 
-    private void handleInput(Difficulty difficulty){
+    private void handleInput(Difficulty difficulty) {
         generator.setData(difficulty.getLevel() * 5);
         generator.generateGame();
         controller.createBoard();

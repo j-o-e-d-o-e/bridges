@@ -11,6 +11,7 @@ import javafx.scene.text.Font;
 import net.joedoe.utils.GameManager.Mode;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
+import static net.joedoe.views.SceneController.Screen.START;
 
 class ModeChooser extends BorderPane {
     private final SceneController controller;
@@ -18,7 +19,10 @@ class ModeChooser extends BorderPane {
     ModeChooser(SceneController controller) {
         this.controller = controller;
         setStyle("-fx-background-color: #282828;");
-        setTop(new ToolBar(controller, "Start", "New Game"));
+        ToolBar toolBar = new ToolBar("New Game");
+        toolBar.setListener(e -> controller.goTo(START));
+        setTop(toolBar);
+
         setCenter(setLayout());
     }
 

@@ -7,6 +7,9 @@ import net.joedoe.utils.Timer;
 
 import java.io.File;
 
+import static net.joedoe.views.SceneController.Screen.HIGHSCORE;
+import static net.joedoe.views.SceneController.Screen.START;
+
 class BoardTime extends Board {
     private Timer timer;
 
@@ -20,11 +23,11 @@ class BoardTime extends Board {
 
     @Override
     ToolBar createToolBar() {
-        ToolBar toolBar = new ToolBar(controller, "Start", "Time mode");
+        ToolBar toolBar = new ToolBar("Time mode");
         toolBar.setListener(e -> {
             timer.stop();
             player.pause();
-            controller.goTo("Start");
+            controller.goTo(START);
         });
         return toolBar;
     }
@@ -57,7 +60,7 @@ class BoardTime extends Board {
             timer.stop();
             controller.showAlert(Alert.AlertType.INFORMATION, "Solved!", "Puzzle solved in " + info.getText() + ".");
             player.stop();
-            controller.goTo("Highscore");
+            controller.goTo(HIGHSCORE);
         }
     }
 

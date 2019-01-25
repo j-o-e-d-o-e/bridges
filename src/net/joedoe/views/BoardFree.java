@@ -7,6 +7,9 @@ import net.joedoe.views.StatusEvent.Status;
 
 import java.io.File;
 
+import static net.joedoe.views.SceneController.Screen.HIGHSCORE;
+import static net.joedoe.views.SceneController.Screen.START;
+
 class BoardFree extends Board {
     private GameManager gameManager = GameManager.getInstance();
     private Image coin = new Image("file:assets" + File.separator + "images" + File.separator + "coin.png");
@@ -18,10 +21,10 @@ class BoardFree extends Board {
 
     @Override
     ToolBar createToolBar() {
-        ToolBar toolBar = new ToolBar(controller, "Start", "Free mode");
+        ToolBar toolBar = new ToolBar("Free mode");
         toolBar.setListener(e -> {
             player.pause();
-            controller.goTo("Start");
+            controller.goTo(START);
         });
         return toolBar;
     }
@@ -55,7 +58,7 @@ class BoardFree extends Board {
         if (status == Status.SOLVED) {
             controller.showAlert(Alert.AlertType.INFORMATION, "Solved!", "Solved.");
             player.stop();
-            controller.goTo("Highscore");
+            controller.goTo(HIGHSCORE);
         }
     }
 }

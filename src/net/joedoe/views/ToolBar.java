@@ -12,27 +12,26 @@ class ToolBar extends javafx.scene.control.ToolBar {
     private Button back;
     private Label title;
 
-    ToolBar(SceneController controller, String goTo, String titleTxt) {
-        back = null;
-        if (!goTo.equals("")) {
-            back = new Button("<");
-            back.setPrefHeight(10);
-            back.setMinWidth(40);
-            back.setOnAction(e -> controller.goTo(goTo));
-            getItems().add(back);
+    ToolBar(String title, boolean back) {
+        this.back = null;
+        if (back) {
+            this.back = new Button("<");
+            this.back.setPrefHeight(10);
+            this.back.setMinWidth(40);
+            getItems().add(this.back);
         }
-        title = new Label(titleTxt);
-        title.setStyle("-fx-font-weight: bold; -fx-text-fill: black");
+        this.title = new Label(title);
+        this.title.setStyle("-fx-font-weight: bold; -fx-text-fill: black");
         Region regionLeft = new Region();
         HBox.setHgrow(regionLeft, Priority.ALWAYS);
         Region regionRight = new Region();
-        if (back != null) regionRight.setPrefWidth(regionLeft.getWidth() + back.getMinWidth());
+        if (back) regionRight.setPrefWidth(regionLeft.getWidth() + this.back.getMinWidth());
         HBox.setHgrow(regionRight, Priority.ALWAYS);
-        getItems().addAll(regionLeft, title, regionRight);
+        getItems().addAll(regionLeft, this.title, regionRight);
     }
 
-    ToolBar(SceneController controller, String titleTxt) {
-        this(controller, "", titleTxt);
+    ToolBar(String title) {
+        this(title, true);
     }
 
     void updateTitle(String text) {

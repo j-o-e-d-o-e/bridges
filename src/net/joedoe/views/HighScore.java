@@ -15,13 +15,16 @@ import javafx.scene.layout.VBox;
 
 import static javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY;
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
+import static net.joedoe.views.SceneController.Screen.NEW;
 
 class HighScore extends BorderPane {
 
     HighScore(SceneController controller) {
         getStylesheets().add("file:assets/css/highscores.css");
         setStyle("-fx-background-color: #282828;");
-        setTop(new ToolBar(controller, "Start", "Highscore"));
+        ToolBar toolBar = new ToolBar("Highscore");
+        toolBar.setListener(e -> controller.goTo(NEW));
+        setTop(toolBar);
         setCenter(setLayout());
     }
 

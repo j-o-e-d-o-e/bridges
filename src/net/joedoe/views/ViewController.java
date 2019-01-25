@@ -20,11 +20,11 @@ import static net.joedoe.views.ViewController.View.START;
 
 public class ViewController {
     private final Stage stage;
-    private GameManager gameManager = GameManager.getInstance();
     private final int width = 768, height = 1024;
-    private Board board;
-    private Start start;
     private Scene startScene, boardScene, modeScene, difficultyChooserScene, sizeChooserScene, highScoreScene, rulesScene;
+    private Start start;
+    private Board board;
+    private GameManager gameManager = GameManager.getInstance();
     private Generator generator = new Generator();
 
     public ViewController(Stage stage) {

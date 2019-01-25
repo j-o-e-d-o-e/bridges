@@ -28,13 +28,14 @@ class BoardFree extends Board {
 
     @Override
     String getInfoText() {
-        return Integer.toString(gameManager.getPoints());
+        return Integer.toString(gameManager.getTempPoints());
     }
 
     @Override
     void setGrid() {
         super.setGrid();
-        info.setText(Integer.toString(gameManager.getPoints()));
+        gameManager.resetTempPoints();
+        info.setText(Integer.toString(gameManager.getTempPoints()));
     }
 
     @Override
@@ -43,6 +44,8 @@ class BoardFree extends Board {
         this.status.setText(status.getText());
         if (status == Status.SOLVED) {
             controller.showAlert(Alert.AlertType.INFORMATION, "Solved!", "Solved.");
+            player.stop();
+            controller.goTo("Highscore");
         }
     }
 }

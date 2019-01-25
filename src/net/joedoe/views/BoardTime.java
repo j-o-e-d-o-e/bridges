@@ -52,6 +52,7 @@ class BoardTime extends Board {
         if (status == StatusEvent.Status.SOLVED) {
             timer.stop();
             controller.showAlert(Alert.AlertType.INFORMATION, "Solved!", "Puzzle solved in " + info.getText() + ".");
+            player.stop();
             controller.goTo("Highscore");
         }
     }

@@ -14,7 +14,6 @@ import net.joedoe.logics.BridgeController;
 import net.joedoe.logics.Solver;
 import net.joedoe.logics.StatusChecker;
 import net.joedoe.utils.Direction;
-import net.joedoe.utils.GameManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +21,6 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static net.joedoe.utils.GameInfo.ONE_TILE;
-import static net.joedoe.utils.GameManager.Mode;
-import static net.joedoe.utils.GameManager.getInstance;
 import static net.joedoe.views.StatusEvent.Status;
 
 /**
@@ -37,7 +34,6 @@ class Grid extends GridPane {
     private AutoSolver autoSolver;
     private EventHandler<StatusEvent> statusListener;
     private EventHandler<PointEvent> pointListener;
-    private GameManager gameManager = getInstance();
     private boolean showMissingBridges;
 
     /**
@@ -92,20 +88,14 @@ class Grid extends GridPane {
         bridge = controller.addBridge(isle.getPos(), direction);
         if (bridge == null) return;
         addBridge(bridge);
-        if (gameManager.getMode() != Mode.TIME) {
-            gameManager.addPoints(10);
-            pointListener.handle(new PointEvent(gameManager.getPoints()));
-        }
+        pointListener.handle(new PointEvent(10));
     }
 
     private void removeDoubleBridge(IBridge bridge) {
         controller.removeBridge(bridge);
         List<BridgeLine> lines = gridController.removeLines(bridge);
         lines.forEach(l -> getChildren().remove(l.getLine()));
-        if (gameManager.getMode() != Mode.TIME) {
-            gameManager.removePoints(20);
-            pointListener.handle(new PointEvent(gameManager.getPoints()));
-        }
+        pointListener.handle(new PointEvent(-20));
         updateIsles();
         checkStatus();
     }
@@ -117,10 +107,7 @@ class Grid extends GridPane {
      */
     private void addBridgeAuto(IBridge bridge) {
         addBridge(bridge);
-        if (gameManager.getMode() != Mode.TIME) {
-            gameManager.removePoints(10);
-            pointListener.handle(new PointEvent(gameManager.getPoints()));
-        }
+        pointListener.handle(new PointEvent(-10));
     }
 
     /**
@@ -147,10 +134,7 @@ class Grid extends GridPane {
         IBridge bridge = controller.removeBridge(isle.getPos(), direction);
         if (bridge == null) return;
         removeBridge(bridge);
-        if (gameManager.getMode() != Mode.TIME) {
-            gameManager.removePoints(10);
-            pointListener.handle(new PointEvent(gameManager.getPoints()));
-        }
+        pointListener.handle(new PointEvent(-10));
     }
 
     /**
@@ -197,10 +181,7 @@ class Grid extends GridPane {
         } else if (checker.solved()) {
             gridController.updateLines();
             statusListener.handle(new StatusEvent(Status.SOLVED));
-            if (gameManager.getMode() != Mode.TIME) {
-                gameManager.addPoints(50);
-                pointListener.handle(new PointEvent(gameManager.getPoints()));
-            }
+            pointListener.handle(new PointEvent(50));
         } else {
             statusListener.handle(new StatusEvent(Status.NOT_SOLVED));
         }

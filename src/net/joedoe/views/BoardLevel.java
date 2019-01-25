@@ -34,14 +34,14 @@ class BoardLevel extends Board {
 
     @Override
     String getInfoText() {
-        return Integer.toString(gameManager.getPoints());
+        return Integer.toString(gameManager.getAllPoints());
     }
 
     @Override
     void setGrid() {
         super.setGrid();
         toolBar.updateTitle("Level " + gameManager.getLevel() + "/25");
-        info.setText(Integer.toString(gameManager.getPoints()));
+        info.setText(Integer.toString(gameManager.getAllPoints()));
     }
 
     @Override
@@ -51,7 +51,7 @@ class BoardLevel extends Board {
         if (status == StatusEvent.Status.SOLVED) {
             controller.showAlert(Alert.AlertType.INFORMATION, "Solved!", "Level " + gameManager.getLevel() + " solved.");
             gameManager.savePoints();
-            info.setText(Integer.toString(gameManager.getPoints()));
+            info.setText(Integer.toString(gameManager.getAllPoints()));
             gameManager.increaseLevel();
             generator.setData(gameManager.getLevel() * 5);
             generator.generateGame();

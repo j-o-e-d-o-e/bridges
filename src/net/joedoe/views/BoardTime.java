@@ -46,6 +46,10 @@ class BoardTime extends Board {
     }
 
     @Override
+    void handlePoints(PointEvent e){
+    }
+
+    @Override
     void handleStatus(StatusEvent e) {
         StatusEvent.Status status = e.getStatus();
         this.status.setText(status.getText());

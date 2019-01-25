@@ -175,8 +175,9 @@ public abstract class Board extends BorderPane {
         setGrid(gameData.getWidth(), gameData.getHeight(), gameData.getIsles(), gameData.getBridges());
     }
 
-    private void handlePoints(PointEvent e) {
-        info.setText(e.getPoints());
+    void handlePoints(PointEvent e) {
+        gameManager.addPoints(e.getPoints());
+        info.setText(Integer.toString(gameManager.getAllPoints()));
     }
 
     abstract ToolBar createToolBar();

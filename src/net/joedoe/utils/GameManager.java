@@ -15,11 +15,19 @@ public class GameManager {
         return gameManager;
     }
 
+    public Mode getMode() {
+        return mode;
+    }
+
     public void setMode(Mode mode) {
         this.mode = mode;
     }
 
-    public int getPoints() {
+    public void addPoints(int points) {
+        tempPoints += points;
+    }
+
+    public int getAllPoints() {
         return points + tempPoints;
     }
 
@@ -27,24 +35,20 @@ public class GameManager {
         return tempPoints;
     }
 
-    public void addPoints(int points) {
-        tempPoints += points;
-    }
-
-    public void removePoints(int points) {
-        tempPoints -= points;
-    }
-
-    public void resetTempPoints() {
-        tempPoints = 0;
-    }
-
-    public void resetPoints() {
-        points = 0;
+    void setPoints(int points) {
+        this.points = points;
     }
 
     public void savePoints() {
         points += tempPoints;
+        tempPoints = 0;
+    }
+
+    public void resetAllPoints() {
+        points = 0;
+    }
+
+    public void resetTempPoints() {
         tempPoints = 0;
     }
 
@@ -54,14 +58,6 @@ public class GameManager {
 
     public void increaseLevel() {
         level++;
-    }
-
-    public Mode getMode() {
-        return mode;
-    }
-
-    void setPoints(int points) {
-        this.points = points;
     }
 
     public void setLevel(int level) {

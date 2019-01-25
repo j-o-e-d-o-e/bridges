@@ -7,7 +7,7 @@ import javafx.event.Event;
  * {@link Board} informiert wird.
  */
 class PointEvent extends Event {
-    private String points;
+    private int points;
 
     /**
      * Werden aktuelle Punkte übergeben.
@@ -16,7 +16,7 @@ class PointEvent extends Event {
      */
     PointEvent(int points) {
         super(null);
-        this.points = String.valueOf(points);
+        this.points = points;
     }
 
     /**
@@ -24,7 +24,7 @@ class PointEvent extends Event {
      *
      * @return Punkte des Spielers
      */
-    String getPoints() {
+    int getPoints() {
         return points;
     }
 }

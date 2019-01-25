@@ -28,6 +28,12 @@ public class SceneController {
         stage.show();
     }
 
+
+    public enum Screen{
+        START, NEW, RESUME, LOAD, HIGHSCORE, RULES, QUIT
+
+    }
+
     void goTo(String btn) {
         switch (btn) {
             case "Start":
@@ -91,7 +97,7 @@ public class SceneController {
                 if (!showAlert(AlertType.CONFIRMATION, "New game", "Previous progress will be deleted. Continue?"))
                     return;
                 gameManager.setLevel(1);
-                gameManager.resetPoints();
+                gameManager.resetAllPoints();
                 gameManager.resetTempPoints();
                 generator.setData(5);
                 generator.generateGame();

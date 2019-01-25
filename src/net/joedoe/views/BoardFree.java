@@ -18,7 +18,12 @@ class BoardFree extends Board {
 
     @Override
     ToolBar createToolBar() {
-        return new ToolBar(controller, "Start", "Free mode");
+        ToolBar toolBar = new ToolBar(controller, "Start", "Free mode");
+        toolBar.setListener(e -> {
+            player.pause();
+            controller.goTo("Start");
+        });
+        return toolBar;
     }
 
     @Override
@@ -28,13 +33,18 @@ class BoardFree extends Board {
 
     @Override
     String getInfoText() {
-        return Integer.toString(gameManager.getTempPoints());
+        return "0";
     }
 
     @Override
     void setGrid() {
         super.setGrid();
         gameManager.resetTempPoints();
+    }
+
+    @Override
+    void handlePoints(PointEvent e) {
+        gameManager.addPoints(e.getPoints());
         info.setText(Integer.toString(gameManager.getTempPoints()));
     }
 

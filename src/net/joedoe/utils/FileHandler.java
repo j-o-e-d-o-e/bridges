@@ -194,7 +194,7 @@ public class FileHandler {
 
     public static void saveUser() throws IOException {
         BufferedWriter out = new BufferedWriter(new FileWriter(filepathUser));
-        String sb = "#User" + System.lineSeparator() + "Points: " + gameManager.getPoints() +
+        String sb = "#User" + System.lineSeparator() + "Points: " + gameManager.getAllPoints() +
                 System.lineSeparator() + "Level: " + gameManager.getLevel();
         out.write(sb);
         out.close();

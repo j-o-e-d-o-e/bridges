@@ -29,19 +29,20 @@ public abstract class Board extends BorderPane {
     private GameData gameData = GameData.getInstance();
     private GameManager gameManager = GameManager.getInstance();
     private int width, height;
-    private StackPane board;
-    private Grid grid;
     private CheckBox checkBox;
-    private MediaPlayer player;
+    private boolean soundOn;
+    private StackPane innerPane;
+    private Grid grid;
+    MediaPlayer player;
     ToolBar toolBar;
     Label info;
     HBox controls;
     Label status = new Label();
 
     public Board(SceneController controller) {
-        getStylesheets().add("file:assets/css/dracula.css");
+        getStylesheets().add("file:assets/css/board.css");
         this.controller = controller;
-//        setSound();
+        setSound();
     }
 
     private void setSound() {
@@ -49,19 +50,20 @@ public abstract class Board extends BorderPane {
         Media sound = new Media(new File(soundUrl).toURI().toString());
         player = new MediaPlayer(sound);
         player.setOnEndOfMedia(() -> player.seek(Duration.ZERO));
+        soundOn = true;
         player.play();
     }
 
     void setLayout() {
         toolBar = createToolBar();
         setTop(toolBar);
-        BorderPane borderPane = new BorderPane();
-        borderPane.setTop(createTop());
-        board = new StackPane();
-        board.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, 0, CONTAINER_OFFSET));
-        borderPane.setCenter(board);
-        borderPane.setBottom(createBottom());
-        setCenter(borderPane);
+        BorderPane outerPane = new BorderPane();
+        outerPane.setTop(createTop());
+        innerPane = new StackPane();
+        innerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, 0, CONTAINER_OFFSET));
+        outerPane.setCenter(innerPane);
+        outerPane.setBottom(createBottom());
+        setCenter(outerPane);
     }
 
     private HBox createTop() {
@@ -102,11 +104,14 @@ public abstract class Board extends BorderPane {
         Button sound = new Button("\uD83D\uDD0A");
         sound.setMinWidth(30);
         sound.setOnAction(e -> {
-            String txt = sound.getText();
-            if (txt.equals("\uD83D\uDD07")) sound.setText("\uD83D\uDD0A");
-            else sound.setText("\uD83D\uDD07");
-            if (player.getStatus() == MediaPlayer.Status.PLAYING) player.pause();
-            else player.play();
+            soundOn = !soundOn;
+            if (soundOn) {
+                sound.setText("\uD83D\uDD0A");
+                player.play();
+            } else {
+                sound.setText("\uD83D\uDD07");
+                player.pause();
+            }
         });
         controlsBox.getChildren().addAll(zoomIn, zoomOut, sound);
 
@@ -149,7 +154,7 @@ public abstract class Board extends BorderPane {
     private void setGrid(int width, int height, List<IIsle> isles, List<IBridge> bridges) {
         this.width = width;
         this.height = height;
-        board.getChildren().remove(grid);
+        innerPane.getChildren().remove(grid);
         if (grid != null) grid.shutdownAutoSolve();
         grid = new Grid(this::handleStatus, width, height, isles, bridges);
         grid.setPointListener(this::handlePoints);
@@ -157,7 +162,7 @@ public abstract class Board extends BorderPane {
         scroll.setContent(grid);
         scroll.setFitToHeight(true);
         scroll.setFitToWidth(true);
-        board.getChildren().add(scroll);
+        innerPane.getChildren().add(scroll);
         grid.setShowMissingBridges(checkBox.isSelected());
     }
 
@@ -181,11 +186,16 @@ public abstract class Board extends BorderPane {
 
     abstract void handleStatus(StatusEvent e);
 
+    void savePuzzle() {
+        grid.savePuzzle();
+    }
+
+    void restartSound() {
+        if (soundOn) player.play();
+    }
+
     void close() {
         if (grid != null) grid.shutdownAutoSolve();
     }
 
-    void savePuzzle() {
-        grid.savePuzzle();
-    }
 }

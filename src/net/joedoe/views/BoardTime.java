@@ -23,6 +23,7 @@ class BoardTime extends Board {
         ToolBar toolBar = new ToolBar(controller, "Start", "Time mode");
         toolBar.setListener(e -> {
             timer.stop();
+            player.pause();
             controller.goTo("Start");
         });
         return toolBar;

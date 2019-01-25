@@ -40,6 +40,7 @@ public class SceneController {
             case "Resume":
                 if (board == null) return;
                 else if (gameManager.getMode() == Mode.TIME) ((BoardTime) board).restartTimer();
+                board.restartSound();
                 stage.setScene(boardScene);
                 return;
             case "Load Game":

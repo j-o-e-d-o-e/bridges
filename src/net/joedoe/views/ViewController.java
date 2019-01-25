@@ -17,6 +17,8 @@ import net.joedoe.views.board.BoardTime;
 import java.io.IOException;
 import java.util.Optional;
 
+import static net.joedoe.views.SizeChooser.Type.AUTO;
+import static net.joedoe.views.SizeChooser.Type.WIDTH_HEIGHT;
 import static net.joedoe.views.ViewController.View.START;
 
 public class ViewController {
@@ -104,6 +106,8 @@ public class ViewController {
                 if (difficultyScene == null) {
                     DifficultyChooser difficulty = new DifficultyChooser(this);
                     difficulty.setListener(e -> {
+                        generator.setData(e.getDifficulty().getLevel() * 5);
+                        generator.generateGame();
                         board = new BoardTime(this);
                         board.setGrid();
                         boardScene = new Scene(board, width, height);
@@ -117,6 +121,10 @@ public class ViewController {
                 if (sizeScene == null) {
                     SizeChooser size = new SizeChooser(this);
                     size.setListener(e -> {
+                        if (e.getType() == AUTO) generator.setData();
+                        else if (e.getType() == WIDTH_HEIGHT) generator.setData(e.getWidth(), e.getHeight());
+                        else generator.setData(e.getWidth(), e.getHeight(), e.getIsles());
+                        generator.generateGame();
                         board = new BoardFree(this);
                         board.setGrid();
                         boardScene = new Scene(board, width, height);

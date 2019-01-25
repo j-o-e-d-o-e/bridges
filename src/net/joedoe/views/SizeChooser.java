@@ -8,7 +8,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import net.joedoe.logics.Generator;
 
 import java.util.Optional;
 
@@ -20,12 +19,15 @@ import static net.joedoe.views.ViewController.View.NEW;
  */
 public class SizeChooser extends BorderPane {
     private final ViewController controller;
-    private Generator generator = new Generator();
     private RadioButton autoBtn;
     private Label heightLabel, widthLabel, islesLabel;
     private TextField heightTxt, widthTxt, islesTxt;
     private CheckBox checkBox;
-    private EventHandler<Event> listener;
+    private EventHandler<SizeEvent> listener;
+
+    enum Type {
+        AUTO, WIDTH_HEIGHT, WIDTH_HEIGHT_ISLES
+    }
 
     /**
      * Erzeugt einen Dialog, in dem der Nutzer Angaben bzgl. Breite und Höhe des
@@ -152,33 +154,75 @@ public class SizeChooser extends BorderPane {
     }
 
     private void handleInput() {
-        if (autoBtn.isSelected()) generator.setData();
+        if (autoBtn.isSelected()) listener.handle(new SizeEvent());
         else {
             if (!checkBox.isSelected()) {
                 try {
                     int width = Integer.parseInt(widthTxt.getText().trim());
                     int height = Integer.parseInt(heightTxt.getText().trim());
-                    generator.setData(width, height);
+                    listener.handle(new SizeEvent(width, height));
                 } catch (IllegalArgumentException e) {
                     setAlert("Width and height must be \u2265 " + MIN_WIDTH + " and \u2264 " + MAX_WIDTH + ".");
-                    return;
                 }
             } else {
                 try {
                     int width = Integer.parseInt(widthTxt.getText().trim());
                     int height = Integer.parseInt(heightTxt.getText().trim());
-                    int islesCount = Integer.parseInt(islesTxt.getText().trim());
-                    generator.setData(width, height, islesCount);
+                    int isles = Integer.parseInt(islesTxt.getText().trim());
+                    listener.handle(new SizeEvent(width, height, isles));
                 } catch (IllegalArgumentException e) {
                     setAlert("Width and height must be \u2265 " + MIN_WIDTH + " and \u2264 " + MAX_WIDTH
                             + ".\nNumber of isles must be \u2265 " + MIN_ISLES_COUNT
                             + " and \u2264 Width * Height * 0.2.");
-                    return;
                 }
             }
         }
-        generator.generateGame();
-        listener.handle(new Event(null));
+    }
+
+    class SizeEvent extends Event {
+        private Type type;
+        private int width, height, isles;
+
+
+        SizeEvent(Integer width, Integer height, Integer isles) {
+            super(null);
+            type = Type.WIDTH_HEIGHT_ISLES;
+            this.width = width;
+            this.height = height;
+            this.isles = isles;
+        }
+
+        SizeEvent(int width, int height) {
+            super(null);
+            type = Type.WIDTH_HEIGHT;
+            this.width = width;
+            this.height = height;
+        }
+
+        SizeEvent() {
+            super(null);
+            type = Type.AUTO;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public int getIsles() {
+            return isles;
+        }
+
+        public Type getType() {
+            return type;
+        }
+    }
+
+    void setListener(EventHandler<SizeEvent> listener) {
+        this.listener = listener;
     }
 
     private void setAlert(String text) {
@@ -188,12 +232,4 @@ public class SizeChooser extends BorderPane {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) alert.close();
     }
-
-    void setListener(EventHandler<Event> listener) {
-        this.listener = listener;
-    }
-
-//    class SizeEvent extends Event{
-//        private int width, height, isles
-//    }
 }

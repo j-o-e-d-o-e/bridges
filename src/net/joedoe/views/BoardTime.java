@@ -35,7 +35,7 @@ class BoardTime extends Board {
 
     @Override
     String getInfoText() {
-        return timer.getStartTime();
+        return timer.getTime();
     }
 
     @Override
@@ -56,7 +56,7 @@ class BoardTime extends Board {
     }
 
     void restartTimer() {
-        timer.restart();
+        timer.start();
     }
 
     @Override

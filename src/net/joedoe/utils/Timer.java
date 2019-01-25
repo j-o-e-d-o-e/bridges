@@ -8,15 +8,9 @@ public class Timer {
     private final ExecutorService service = Executors.newCachedThreadPool();
     private TimerListener listener;
     private boolean running;
-    private LocalTime startTime = LocalTime.of(0, 0, 0), currentTime;
+    private LocalTime time = LocalTime.of(0, 0, 0);
 
     public void start() {
-        currentTime = startTime;
-        running = true;
-        service.submit(this::run);
-    }
-
-    public void restart() {
         running = true;
         service.submit(this::run);
     }
@@ -33,12 +27,8 @@ public class Timer {
     }
 
     public String getTime() {
-        currentTime = currentTime.plusSeconds(1);
-        return String.format("%02d:%02d", currentTime.getMinute(), currentTime.getSecond());
-    }
-
-    public String getStartTime(){
-        return String.format("%02d:%02d", startTime.getMinute(), startTime.getSecond());
+        time = time.plusSeconds(1);
+        return String.format("%02d:%02d", time.getMinute(), time.getSecond());
     }
 
     public void stop() {

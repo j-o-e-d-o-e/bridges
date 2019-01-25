@@ -1,4 +1,4 @@
-package net.joedoe.views;
+package net.joedoe.views.board;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static net.joedoe.utils.GameInfo.ONE_TILE;
-import static net.joedoe.views.StatusEvent.Status;
+import static net.joedoe.views.board.StatusEvent.Status;
 
 /**
  * Das Raster, auf dem Inseln und Brücken platziert werden.
@@ -74,7 +74,7 @@ class Grid extends GridPane {
 
     /**
      * Fügt eine neue Brücken-Linie hinzu, falls möglich. Aufgerufen von
-     * {@link net.joedoe.views.IsleListener}.
+     * {@link IsleListener}.
      *
      * @param isle      Insel (View), die vom Nutzer angeklickt wurde
      * @param direction Richtung, in die der Nutzer mittels Klick-Sektor geklickt hat
@@ -125,7 +125,7 @@ class Grid extends GridPane {
 
     /**
      * Entfernt Brücken-Linie, falls möglich. Aufgerufen von
-     * {@link net.joedoe.views.IsleListener}.
+     * {@link IsleListener}.
      *
      * @param isle      Insel (View), die vom Nutzer angeklickt wurde
      * @param direction Richtung, in die der Nutzer mittels Klick-Sektor geklickt hat

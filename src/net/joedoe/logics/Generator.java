@@ -53,7 +53,7 @@ public class Generator {
         Isle initialIsle = createIsle(start);
         isles.add(initialIsle);
         LOGGER.info("Height: " + height + " Width: " + width + " Isles: " + islesCount + "\nRandom Index: " + index
-                + " Initial Isle: " + initialIsle.toString() + "\nIndices Size: " + indices.size() + "\n");
+                + " Initial Isle: " + initialIsle.toString() + "\nIndices SizeChooser: " + indices.size() + "\n");
         while (islesCount - isles.size() > 0) {
             Collections.shuffle(isles);
             for (Isle startIsle : isles) {
@@ -117,7 +117,7 @@ public class Generator {
                     Isle endIsle = createIsle(end);
                     LOGGER.info("Start Isle: " + startIsle.toString() + " Direction: " + direction.toString()
                             + " Distance: " + distance + "\nEnd Isle: " + endIsle.toString() + "\nMissing Isles: "
-                            + islesCount + " Indices Size: " + indices.size() + "\n");
+                            + islesCount + " Indices SizeChooser: " + indices.size() + "\n");
                     return endIsle;
                 }
             }

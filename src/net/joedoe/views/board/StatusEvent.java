@@ -1,4 +1,4 @@
-package net.joedoe.views;
+package net.joedoe.views.board;
 
 import javafx.event.Event;
 

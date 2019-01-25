@@ -4,13 +4,12 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 
-import static net.joedoe.views.SceneController.Screen.NEW;
-import static net.joedoe.views.SceneController.Screen.START;
+import static net.joedoe.views.ViewController.View.START;
 
 class Rules extends BorderPane {
-    private SceneController controller;
+    private ViewController controller;
 
-    Rules(SceneController controller) {
+    Rules(ViewController controller) {
         this.controller = controller;
         setStyle("-fx-background-color: #282828;");
         ToolBar toolBar = new ToolBar("Rules");

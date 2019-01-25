@@ -1,4 +1,4 @@
-package net.joedoe.views;
+package net.joedoe.views.board;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
@@ -19,7 +19,7 @@ public class IsleListener implements EventHandler<MouseEvent> {
     private final static Logger LOGGER = Logger.getLogger(IsleListener.class.getName());
 
     /**
-     * Wird {@link net.joedoe.views.Grid} übergeben, die aufgerufen wird,
+     * Wird {@link Grid} übergeben, die aufgerufen wird,
      * nachdem die Insel und ihr angeglickter Klick-Sektor ermittelt wurde.
      *
      * @param grid wird nach Ermittlung des Klick-Sektors aufgerufen

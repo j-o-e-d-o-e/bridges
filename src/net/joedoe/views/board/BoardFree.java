@@ -1,20 +1,22 @@
-package net.joedoe.views;
+package net.joedoe.views.board;
 
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import net.joedoe.utils.GameManager;
-import net.joedoe.views.StatusEvent.Status;
+import net.joedoe.views.ViewController;
+import net.joedoe.views.ToolBar;
+import net.joedoe.views.board.StatusEvent.Status;
 
 import java.io.File;
 
-import static net.joedoe.views.SceneController.Screen.HIGHSCORE;
-import static net.joedoe.views.SceneController.Screen.START;
+import static net.joedoe.views.ViewController.View.HIGHSCORE;
+import static net.joedoe.views.ViewController.View.START;
 
-class BoardFree extends Board {
+public class BoardFree extends Board {
     private GameManager gameManager = GameManager.getInstance();
     private Image coin = new Image("file:assets" + File.separator + "images" + File.separator + "coin.png");
 
-    BoardFree(SceneController controller) {
+    public BoardFree(ViewController controller) {
         super(controller);
         setLayout();
     }
@@ -40,7 +42,7 @@ class BoardFree extends Board {
     }
 
     @Override
-    void setGrid() {
+    public void setGrid() {
         super.setGrid();
         gameManager.resetTempPoints();
     }

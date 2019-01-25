@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.2.2" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
-  <class id="1" language="java" name="net.joedoe.views.Grid" project="Bridges_Doerwald_Joerg" 
+  <class id="1" language="java" name="net.joedoe.views.board.Grid" project="Bridges_Doerwald_Joerg"
     file="/Bridges_Doerwald_Joerg/src/net/joedoe/views/Grid.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1178" y="739"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="false" 
@@ -10,7 +10,7 @@
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="net.joedoe.views.Board" project="Bridges_Doerwald_Joerg"
+  <class id="2" language="java" name="net.joedoe.views.board.Board" project="Bridges_Doerwald_Joerg"
     file="/Bridges_Doerwald_Joerg/src/net/joedoe/views/MainFrame.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1178" y="986"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="false" 
@@ -19,7 +19,7 @@
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="net.joedoe.views.Board" project="Bridges_Doerwald_Joerg" 
+  <class id="3" language="java" name="net.joedoe.views.board.Board" project="Bridges_Doerwald_Joerg"
     file="/Bridges_Doerwald_Joerg/src/net/joedoe/views/Board.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1176" y="832"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="false" 
@@ -37,7 +37,7 @@
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="net.joedoe.views.IsleListener" project="Bridges_Doerwald_Joerg" 
+  <class id="5" language="java" name="net.joedoe.views.board.IsleListener" project="Bridges_Doerwald_Joerg"
     file="/Bridges_Doerwald_Joerg/src/net/joedoe/views/IsleListener.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1329" y="739"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="false" 

@@ -1,4 +1,4 @@
-package net.joedoe.views;
+package net.joedoe.views.board;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,6 +18,8 @@ import net.joedoe.entities.IIsle;
 import net.joedoe.utils.GameData;
 import net.joedoe.utils.GameInfo;
 import net.joedoe.utils.GameManager;
+import net.joedoe.views.ViewController;
+import net.joedoe.views.ToolBar;
 
 import java.io.File;
 import java.util.List;
@@ -25,7 +27,7 @@ import java.util.List;
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 
 public abstract class Board extends BorderPane {
-    protected SceneController controller;
+    protected ViewController controller;
     private GameData gameData = GameData.getInstance();
     private GameManager gameManager = GameManager.getInstance();
     private int width, height;
@@ -39,10 +41,10 @@ public abstract class Board extends BorderPane {
     HBox controls;
     Label status = new Label();
 
-    public Board(SceneController controller) {
+    public Board(ViewController controller) {
         getStylesheets().add("file:assets/css/board.css");
         this.controller = controller;
-        setSound();
+//        setSound();
     }
 
     private void setSound() {
@@ -167,11 +169,11 @@ public abstract class Board extends BorderPane {
         grid.setShowMissingBridges(checkBox.isSelected());
     }
 
-    void setGrid() {
+    public void setGrid() {
         setGrid(gameData.getWidth(), gameData.getHeight(), gameData.getIsles(), null);
     }
 
-    void setGridWithBridges() {
+    public void setGridWithBridges() {
         setGrid(gameData.getWidth(), gameData.getHeight(), gameData.getIsles(), gameData.getBridges());
     }
 
@@ -188,15 +190,15 @@ public abstract class Board extends BorderPane {
 
     abstract void handleStatus(StatusEvent e);
 
-    void savePuzzle() {
+    public void savePuzzle() {
         grid.savePuzzle();
     }
 
-    void restartSound() {
+    public void restartSound() {
         if (soundOn) player.play();
     }
 
-    void close() {
+    public void close() {
         if (grid != null) grid.shutdownAutoSolve();
     }
 

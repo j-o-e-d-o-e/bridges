@@ -8,7 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 
-class ToolBar extends javafx.scene.control.ToolBar {
+public class ToolBar extends javafx.scene.control.ToolBar {
     private Button back;
     private Label title;
 
@@ -30,15 +30,15 @@ class ToolBar extends javafx.scene.control.ToolBar {
         getItems().addAll(regionLeft, this.title, regionRight);
     }
 
-    ToolBar(String title) {
+    public ToolBar(String title) {
         this(title, true);
     }
 
-    void updateTitle(String text) {
+    public void updateTitle(String text) {
         title.setText(text);
     }
 
-    void setListener(EventHandler<Event> listener) {
+    public void setListener(EventHandler<Event> listener) {
         back.setOnAction(listener::handle);
     }
 }

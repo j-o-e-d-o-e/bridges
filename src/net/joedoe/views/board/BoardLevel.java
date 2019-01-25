@@ -1,19 +1,21 @@
-package net.joedoe.views;
+package net.joedoe.views.board;
 
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import net.joedoe.logics.Generator;
 import net.joedoe.utils.GameManager;
+import net.joedoe.views.ViewController;
+import net.joedoe.views.ToolBar;
 
 import java.io.File;
 
-import static net.joedoe.views.SceneController.Screen.START;
+import static net.joedoe.views.ViewController.View.START;
 
-class BoardLevel extends Board {
+public class BoardLevel extends Board {
     private GameManager gameManager = GameManager.getInstance();
     private Generator generator;
 
-    BoardLevel(SceneController controller) {
+    public BoardLevel(ViewController controller) {
         super(controller);
         generator = new Generator();
         setLayout();
@@ -40,7 +42,7 @@ class BoardLevel extends Board {
     }
 
     @Override
-    void setGrid() {
+    public void setGrid() {
         super.setGrid();
         toolBar.updateTitle("Level " + gameManager.getLevel() + "/25");
         info.setText(Integer.toString(gameManager.getAllPoints()));

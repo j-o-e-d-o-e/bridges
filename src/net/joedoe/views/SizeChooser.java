@@ -11,13 +11,13 @@ import net.joedoe.logics.Generator;
 import java.util.Optional;
 
 import static net.joedoe.utils.GameInfo.*;
-import static net.joedoe.views.SceneController.Screen.NEW;
+import static net.joedoe.views.ViewController.View.NEW;
 
 /**
  * Dialog zur Generierung eines neuen Spiels.
  */
 public class SizeChooser extends BorderPane {
-    private final SceneController controller;
+    private final ViewController controller;
     private Generator generator = new Generator();
     private RadioButton autoBtn;
     private Label heightLabel, widthLabel, islesLabel;
@@ -32,7 +32,7 @@ public class SizeChooser extends BorderPane {
      * @param board Spielfeld, an das die Daten des generierten Spiels zurückgegeben
      *              werden
      */
-    public SizeChooser(SceneController controller) {
+    public SizeChooser(ViewController controller) {
         this.controller = controller;
         setStyle("-fx-background-color: #282828;");
         ToolBar toolBar = new ToolBar("Free mode");

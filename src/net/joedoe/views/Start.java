@@ -10,13 +10,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
-import static net.joedoe.views.SceneController.Screen.*;
+import static net.joedoe.views.ViewController.View.*;
 
 class Start extends BorderPane {
-    private final SceneController controller;
+    private final ViewController controller;
     private Button load, resume;
 
-    Start(SceneController controller) {
+    Start(ViewController controller) {
         this.controller = controller;
         setStyle("-fx-background-color: #282828;");
         setTop(new ToolBar("Start", false));

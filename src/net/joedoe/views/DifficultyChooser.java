@@ -10,19 +10,32 @@ import javafx.scene.text.Font;
 import net.joedoe.logics.Generator;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
-import static net.joedoe.views.SceneController.Screen.NEW;
+import static net.joedoe.views.ViewController.View.NEW;
 
 class DifficultyChooser extends BorderPane {
-    private SceneController controller;
+    private ViewController controller;
     private Generator generator = new Generator();
 
-    DifficultyChooser(SceneController controller) {
+    DifficultyChooser(ViewController controller) {
         this.controller = controller;
         setStyle("-fx-background-color: #282828;");
         ToolBar toolBar = new ToolBar("Time mode");
         toolBar.setListener(e -> controller.goTo(NEW));
         setTop(toolBar);
         setCenter(setLayout());
+    }
+
+    enum Difficulty {
+        VERY_EASY(1), EASY(5), MEDIUM(10), HARD(15), CHALLENGING(20);
+        private int level;
+
+        Difficulty(int level) {
+            this.level = level;
+        }
+
+        public int getLevel() {
+            return level;
+        }
     }
 
     @SuppressWarnings("Duplicates")
@@ -72,19 +85,5 @@ class DifficultyChooser extends BorderPane {
         generator.setData(difficulty.getLevel() * 5);
         generator.generateGame();
         controller.createBoard();
-    }
-
-    enum Difficulty {
-        VERY_EASY(1), EASY(5), MEDIUM(10), HARD(15), CHALLENGING(20);
-
-        private int level;
-
-        Difficulty(int level) {
-            this.level = level;
-        }
-
-        public int getLevel() {
-            return level;
-        }
     }
 }

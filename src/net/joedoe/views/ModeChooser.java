@@ -11,12 +11,12 @@ import javafx.scene.text.Font;
 import net.joedoe.utils.GameManager.Mode;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
-import static net.joedoe.views.SceneController.Screen.START;
+import static net.joedoe.views.ViewController.View.START;
 
 class ModeChooser extends BorderPane {
-    private final SceneController controller;
+    private final ViewController controller;
 
-    ModeChooser(SceneController controller) {
+    ModeChooser(ViewController controller) {
         this.controller = controller;
         setStyle("-fx-background-color: #282828;");
         ToolBar toolBar = new ToolBar("New Game");

@@ -8,15 +8,17 @@ import javafx.stage.Stage;
 import net.joedoe.logics.Generator;
 import net.joedoe.utils.FileHandler;
 import net.joedoe.utils.GameManager;
-import net.joedoe.utils.GameManager.Mode;
+import net.joedoe.views.board.Board;
+import net.joedoe.views.board.BoardFree;
+import net.joedoe.views.board.BoardLevel;
+import net.joedoe.views.board.BoardTime;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
-import static net.joedoe.views.SceneController.Screen.START;
+import static net.joedoe.views.ViewController.View.START;
 
-public class SceneController {
+public class ViewController {
     private final Stage stage;
     private GameManager gameManager = GameManager.getInstance();
     private final int width = 768, height = 1024;
@@ -25,7 +27,7 @@ public class SceneController {
     private Scene startScene, boardScene, modeScene, difficultyChooserScene, sizeChooserScene, highScoreScene, rulesScene;
     private Generator generator = new Generator();
 
-    public SceneController(Stage stage) {
+    public ViewController(Stage stage) {
         this.stage = stage;
         start = new Start(this);
         startScene = new Scene(start, width, height);
@@ -33,16 +35,16 @@ public class SceneController {
         stage.show();
     }
 
-    public enum Screen {
+    public enum View {
         START, NEW, RESUME, LOAD, HIGHSCORE, RULES, QUIT
     }
 
-    void goTo(Screen screen) {
-        switch (screen) {
+    public void goTo(View view) {
+        switch (view) {
             case START:
                 if (board == null) start.disableResume(true);
                 else start.disableResume(false);
-                if(FileHandler.fileExists()) start.disableLoad(true);
+                if (FileHandler.fileExists()) start.disableLoad(true);
                 else start.disableLoad(false);
                 stage.setScene(startScene);
                 return;
@@ -52,7 +54,7 @@ public class SceneController {
                 return;
             case RESUME:
                 if (board == null) return;
-                else if (gameManager.getMode() == Mode.TIME) ((BoardTime) board).restartTimer();
+                else if (gameManager.getMode() == GameManager.Mode.TIME) ((BoardTime) board).restartTimer();
                 board.restartSound();
                 stage.setScene(boardScene);
                 return;
@@ -67,7 +69,7 @@ public class SceneController {
                 stage.setScene(boardScene);
                 return;
             case HIGHSCORE:
-                if (highScoreScene == null) highScoreScene = new Scene(new HighScore(this), width, height);
+                if (highScoreScene == null) highScoreScene = new Scene(new Highscore(this), width, height);
                 stage.setScene(highScoreScene);
                 return;
             case RULES:
@@ -81,7 +83,7 @@ public class SceneController {
         }
     }
 
-    void createNewGame(Mode mode) {
+    void createNewGame(GameManager.Mode mode) {
         gameManager.setMode(mode);
         switch (mode) {
             case LEVEL:
@@ -144,7 +146,7 @@ public class SceneController {
         }
     }
 
-    boolean showAlert(AlertType alertType, String title, String text) {
+    public boolean showAlert(AlertType alertType, String title, String text) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(text);
@@ -161,7 +163,7 @@ public class SceneController {
             try {
                 gameManager.savePoints();
                 FileHandler.saveUser();
-                if (gameManager.getMode() == Mode.LEVEL) {
+                if (gameManager.getMode() == GameManager.Mode.LEVEL) {
                     board.savePuzzle();
                     FileHandler.savePuzzle();
                 }

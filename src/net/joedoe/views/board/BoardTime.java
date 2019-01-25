@@ -1,19 +1,21 @@
-package net.joedoe.views;
+package net.joedoe.views.board;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import net.joedoe.utils.Timer;
+import net.joedoe.views.ViewController;
+import net.joedoe.views.ToolBar;
 
 import java.io.File;
 
-import static net.joedoe.views.SceneController.Screen.HIGHSCORE;
-import static net.joedoe.views.SceneController.Screen.START;
+import static net.joedoe.views.ViewController.View.HIGHSCORE;
+import static net.joedoe.views.ViewController.View.START;
 
-class BoardTime extends Board {
+public class BoardTime extends Board {
     private Timer timer;
 
-    BoardTime(SceneController controller) {
+    public BoardTime(ViewController controller) {
         super(controller);
         timer = new Timer();
         timer.setListener(() -> Platform.runLater(() -> info.setText(timer.getTime())));
@@ -43,7 +45,7 @@ class BoardTime extends Board {
     }
 
     @Override
-    void setGrid() {
+    public void setGrid() {
         super.setGrid();
         timer.start();
     }
@@ -64,12 +66,12 @@ class BoardTime extends Board {
         }
     }
 
-    void restartTimer() {
+    public void restartTimer() {
         timer.start();
     }
 
     @Override
-    void close() {
+    public void close() {
         super.close();
         if (timer != null) timer.shutdown();
     }

@@ -1,5 +1,7 @@
 package net.joedoe.views;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -8,23 +10,22 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import net.joedoe.views.ViewController.View;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 import static net.joedoe.views.ViewController.View.*;
 
 class Start extends BorderPane {
-    private final ViewController controller;
     private Button load, resume;
 
-    Start(ViewController controller) {
-        this.controller = controller;
+    Start(EventHandler<ViewEvent> listener) {
         setStyle("-fx-background-color: #282828;");
         setTop(new ToolBar("Start", false));
-        setCenter(setLayout());
+        setCenter(setLayout(listener));
     }
 
     @SuppressWarnings("Duplicates")
-    private Node setLayout() {
+    private Node setLayout(EventHandler<ViewEvent> listener) {
         StackPane outerPane = new StackPane();
         outerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
         StackPane innerPane = new StackPane();
@@ -41,22 +42,22 @@ class Start extends BorderPane {
 
         Button newGame = new Button("New Game");
         newGame.setPrefWidth(100);
-        newGame.setOnAction(e -> controller.goTo(NEW));
+        newGame.setOnAction(e -> listener.handle(new ViewEvent(NEW)));
         resume = new Button("Resume");
         resume.setPrefWidth(100);
-        resume.setOnAction(e -> controller.goTo(RESUME));
+        resume.setOnAction(e -> listener.handle(new ViewEvent(RESUME)));
         load = new Button("Load Level");
         load.setPrefWidth(100);
-        load.setOnAction(e -> controller.goTo(LOAD));
+        load.setOnAction(e -> listener.handle(new ViewEvent(LOAD)));
         Button highScore = new Button("Highscore");
         highScore.setPrefWidth(100);
-        highScore.setOnAction(e -> controller.goTo(HIGHSCORE));
+        highScore.setOnAction(e -> listener.handle(new ViewEvent(HIGHSCORE)));
         Button tutorial = new Button("Rules");
         tutorial.setPrefWidth(100);
-        tutorial.setOnAction(e -> controller.goTo(RULES));
+        tutorial.setOnAction(e -> listener.handle(new ViewEvent(RULES)));
         Button exit = new Button("Quit & Save");
         exit.setPrefWidth(100);
-        exit.setOnAction(e -> controller.goTo(QUIT));
+        exit.setOnAction(e -> listener.handle(new ViewEvent(QUIT)));
         box.getChildren().addAll(title, newGame, resume, load, highScore, tutorial, exit);
         innerPane.getChildren().add(box);
         outerPane.getChildren().add(innerPane);
@@ -69,5 +70,18 @@ class Start extends BorderPane {
 
     void disableLoad(boolean disable) {
         load.setDisable(disable);
+    }
+
+    class ViewEvent extends Event {
+        private View view;
+
+        ViewEvent(View view) {
+            super(null);
+            this.view = view;
+        }
+
+        public View getView() {
+            return view;
+        }
     }
 }

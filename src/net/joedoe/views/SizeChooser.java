@@ -12,13 +12,11 @@ import javafx.scene.text.Font;
 import java.util.Optional;
 
 import static net.joedoe.utils.GameInfo.*;
-import static net.joedoe.views.ViewController.View.NEW;
 
 /**
  * Dialog zur Generierung eines neuen Spiels.
  */
 public class SizeChooser extends BorderPane {
-    private final ViewController controller;
     private RadioButton autoBtn;
     private Label heightLabel, widthLabel, islesLabel;
     private TextField heightTxt, widthTxt, islesTxt;
@@ -37,17 +35,16 @@ public class SizeChooser extends BorderPane {
      * @param board Spielfeld, an das die Daten des generierten Spiels zurückgegeben
      *              werden
      */
-    public SizeChooser(ViewController controller) {
-        this.controller = controller;
+    public SizeChooser(EventHandler<Event> listener) {
         setStyle("-fx-background-color: #282828;");
         ToolBar toolBar = new ToolBar("Free mode");
-        toolBar.setListener(e -> controller.goTo(NEW));
+        toolBar.setListener(e -> listener.handle(new Event(null)));
         setTop(toolBar);
-        setCenter(setLayout());
+        setCenter(setLayout(listener));
     }
 
     @SuppressWarnings("Duplicates")
-    private StackPane setLayout() {
+    private StackPane setLayout(EventHandler<Event> listener) {
         StackPane outerPane = new StackPane();
         outerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
 
@@ -139,7 +136,7 @@ public class SizeChooser extends BorderPane {
         buttons.setPrefWidth(100);
         Button cancelBtn = new Button("Cancel");
         cancelBtn.setMinWidth(buttons.getPrefWidth());
-        cancelBtn.setOnAction(e -> controller.goTo(NEW));
+        cancelBtn.setOnAction(e -> listener.handle(new Event(null)));
         Button confirmBtn = new Button("OK");
         confirmBtn.setOnAction(e -> handleInput());
         confirmBtn.setMinWidth(buttons.getPrefWidth());

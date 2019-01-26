@@ -30,10 +30,10 @@ class DifficultyChooser extends BorderPane {
         }
     }
 
-    DifficultyChooser(ViewController controller) {
+    DifficultyChooser(EventHandler<Event> listener) {
         setStyle("-fx-background-color: #282828;");
         ToolBar toolBar = new ToolBar("Time mode");
-        toolBar.setListener(e -> controller.goTo(NEW));
+        toolBar.setListener(e -> listener.handle(null));
         setTop(toolBar);
         setCenter(setLayout());
     }

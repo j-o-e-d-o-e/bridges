@@ -1,19 +1,17 @@
 package net.joedoe.views;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 
-import static net.joedoe.views.ViewController.View.START;
-
 class Rules extends BorderPane {
-    private ViewController controller;
 
-    Rules(ViewController controller) {
-        this.controller = controller;
+    Rules(EventHandler<Event> listener) {
         setStyle("-fx-background-color: #282828;");
         ToolBar toolBar = new ToolBar("Rules");
-        toolBar.setListener(e -> controller.goTo(START));
+        toolBar.setListener(e -> listener.handle(new Event(null)));
         setTop(toolBar);
         setCenter(setLayout());
     }
@@ -22,7 +20,7 @@ class Rules extends BorderPane {
 //        TableView
 
         Button ok = new Button("Ok");
-        ok.setOnAction(e -> controller.goTo(START));
+        ok.setOnAction(e -> System.out.println("RULES!"));
         setCenter(ok);
         return ok;
     }

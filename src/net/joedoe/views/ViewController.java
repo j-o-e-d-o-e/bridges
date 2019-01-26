@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static net.joedoe.views.SizeChooser.Type.AUTO;
 import static net.joedoe.views.SizeChooser.Type.WIDTH_HEIGHT;
+import static net.joedoe.views.ViewController.View.NEW;
 import static net.joedoe.views.ViewController.View.START;
 
 public class ViewController {
@@ -32,7 +33,7 @@ public class ViewController {
 
     public ViewController(Stage stage) {
         this.stage = stage;
-        start = new Start(this);
+        start = new Start(e -> goTo(e.getView()));
         startScene = new Scene(start, width, height);
         goTo(START);
         stage.show();
@@ -52,7 +53,11 @@ public class ViewController {
                 stage.setScene(startScene);
                 return;
             case NEW:
-                if (modeScene == null) modeScene = new Scene(new ModeChooser(this), width, height);
+                if (modeScene == null) {
+                    ModeChooser mode = new ModeChooser(e -> goTo(START));
+                    mode.setListener(e -> createNewGame(e.getMode()));
+                    modeScene = new Scene(mode, width, height);
+                }
                 stage.setScene(modeScene);
                 return;
             case RESUME:
@@ -72,13 +77,11 @@ public class ViewController {
                 stage.setScene(boardScene);
                 return;
             case HIGHSCORE:
-                if (highScoreScene == null) highScoreScene = new Scene(new Highscore(this), width, height);
+                if (highScoreScene == null) highScoreScene = new Scene(new Highscore(e -> goTo(START)), width, height);
                 stage.setScene(highScoreScene);
                 return;
             case RULES:
-                if (rulesScene == null) {
-                    rulesScene = new Scene(new Rules(this), width, height);
-                }
+                if (rulesScene == null) rulesScene = new Scene(new Rules(e -> goTo(START)), width, height);
                 stage.setScene(rulesScene);
                 return;
             case QUIT:
@@ -86,7 +89,7 @@ public class ViewController {
         }
     }
 
-    void createNewGame(Mode mode) {
+    private void createNewGame(Mode mode) {
         gameManager.setMode(mode);
         switch (mode) {
             case LEVEL:
@@ -104,7 +107,7 @@ public class ViewController {
                 break;
             case TIME:
                 if (difficultyScene == null) {
-                    DifficultyChooser difficulty = new DifficultyChooser(this);
+                    DifficultyChooser difficulty = new DifficultyChooser(e -> goTo(NEW));
                     difficulty.setListener(e -> {
                         generator.setData(e.getDifficulty().getLevel() * 5);
                         generator.generateGame();
@@ -119,7 +122,7 @@ public class ViewController {
                 break;
             case FREE:
                 if (sizeScene == null) {
-                    SizeChooser size = new SizeChooser(this);
+                    SizeChooser size = new SizeChooser(e -> goTo(NEW));
                     size.setListener(e -> {
                         if (e.getType() == AUTO) generator.setData();
                         else if (e.getType() == WIDTH_HEIGHT) generator.setData(e.getWidth(), e.getHeight());

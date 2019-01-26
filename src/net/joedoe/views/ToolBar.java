@@ -17,6 +17,7 @@ public class ToolBar extends javafx.scene.control.ToolBar {
         if (back) {
             this.back = new Button("<");
             this.back.setPrefHeight(10);
+            this.back.setFocusTraversable(false);
             this.back.setMinWidth(40);
             getItems().add(this.back);
         }

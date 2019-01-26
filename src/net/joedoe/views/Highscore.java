@@ -4,6 +4,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -15,15 +17,14 @@ import javafx.scene.layout.VBox;
 
 import static javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY;
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
-import static net.joedoe.views.ViewController.View.NEW;
 
 class Highscore extends BorderPane {
 
-    Highscore(ViewController controller) {
+    Highscore(EventHandler<Event> listener) {
         getStylesheets().add("file:assets/css/highscores.css");
         setStyle("-fx-background-color: #282828;");
         ToolBar toolBar = new ToolBar("Highscore");
-        toolBar.setListener(e -> controller.goTo(NEW));
+        toolBar.setListener(e -> listener.handle(new Event(null)));
         setTop(toolBar);
         setCenter(setLayout());
     }

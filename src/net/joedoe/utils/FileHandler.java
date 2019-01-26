@@ -200,9 +200,15 @@ public class FileHandler {
         out.close();
     }
 
-    public static boolean fileExists() {
+    public static boolean filesExist() {
         File user = new File(filepathUser);
         File puzzle = new File(filepathPuzzle);
-        return !user.exists() || !puzzle.exists();
+        return user.exists() && puzzle.exists();
+    }
+
+    public static boolean deleteFiles() {
+        File user = new File(filepathUser);
+        File puzzle = new File(filepathPuzzle);
+        return user.delete() && puzzle.delete();
     }
 }

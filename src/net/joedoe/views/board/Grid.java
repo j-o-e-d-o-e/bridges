@@ -88,7 +88,7 @@ class Grid extends GridPane {
         bridge = controller.addBridge(isle.getPos(), direction);
         if (bridge == null) return;
         addBridge(bridge);
-        if(!solved) pointListener.handle(new PointEvent(10));
+        if (!solved) pointListener.handle(new PointEvent(10));
     }
 
     private void removeDoubleBridge(IBridge bridge) {
@@ -107,7 +107,7 @@ class Grid extends GridPane {
      */
     private void addBridgeAuto(IBridge bridge) {
         addBridge(bridge);
-        pointListener.handle(new PointEvent(-10));
+        if (!solved) pointListener.handle(new PointEvent(-10));
     }
 
     /**

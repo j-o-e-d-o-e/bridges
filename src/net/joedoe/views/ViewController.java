@@ -51,7 +51,7 @@ public class ViewController {
                 }
                 if (board == null) start.disableResume(true);
                 else start.disableResume(false);
-                if (FileHandler.fileExists()) start.disableLoad(true);
+                if (!FileHandler.filesExist()) start.disableLoad(true);
                 else start.disableLoad(false);
                 stage.setScene(startScene);
                 return;
@@ -76,8 +76,11 @@ public class ViewController {
                     FileHandler.loadUser();
                     FileHandler.loadPuzzle();
                 } catch (IOException e) {
-                    showAlert(AlertType.ERROR, "Loading Data", "Data could not be loaded.");
+                    showAlert(AlertType.ERROR, "Loading level", "Level progress could not be loaded.");
                 }
+                gameManager.setMode(LEVEL);
+                board = new BoardLevel(e -> goTo(START));
+                createBoardLevel();
                 board.setGridWithBridges();
                 stage.setScene(boardScene);
                 return;
@@ -94,33 +97,49 @@ public class ViewController {
         }
     }
 
+    private void createBoardLevel() {
+        board = new BoardLevel(e -> goTo(START));
+        board.setListenerNext(e -> {
+            if (gameManager.getLevel() == 25) {
+                //noinspection StatementWithEmptyBody, ConstantConditions
+                if (true) { // TODO: if gameManager.getAllPoints > currentBestScoreForLevel
+                    //TODO: edit BestScore
+                }
+                goTo(BEST);
+            } else {
+                gameManager.savePoints();
+                gameManager.increaseLevel();
+                generator.setData(gameManager.getLevel() * 5);
+                generator.generateGame();
+                ((BoardLevel) board).updateToolbar();
+                board.setGrid();
+                try {
+                    board.savePuzzle();
+                    FileHandler.savePuzzle();
+                    FileHandler.saveUser();
+                } catch (IOException ex) {
+                    showAlert(AlertType.ERROR, "Saving Level", "Level progress could not be saved.");
+                }
+            }
+        });
+        boardScene = new Scene(board, width, height);
+    }
+
     private void createNewGame() {
         switch (gameManager.getMode()) {
             case LEVEL:
-                if (!showAlert(AlertType.CONFIRMATION, "New game", "Previous progress will be deleted. Continue?"))
+                if (FileHandler.filesExist())
+                    if (!showAlert(AlertType.CONFIRMATION, "New game", "Previous level progress will be deleted."))
+                        return;
+                if(!FileHandler.deleteFiles()){
+                    showAlert(AlertType.ERROR, "Deleting progress", "Level progress could not be deleted");
                     return;
+                }
                 gameManager.setLevel(1);
                 gameManager.resetAllPoints();
                 generator.setData(5);
                 generator.generateGame();
-                board = new BoardLevel(e -> goTo(START));
-                board.setListenerNext(e -> {
-                    if (gameManager.getLevel() == 25) {
-                        //noinspection StatementWithEmptyBody, ConstantConditions
-                        if (true) { // TODO: if gameManager.getAllPoints > currentBestScoreForLevel
-                            //TODO: edit BestScore
-                        }
-                        goTo(BEST);
-                    } else {
-                        gameManager.savePoints();
-                        gameManager.increaseLevel();
-                        generator.setData(gameManager.getLevel() * 5);
-                        generator.generateGame();
-                        ((BoardLevel)board).updateToolbar();
-                        board.setGrid();
-                    }
-                });
-                boardScene = new Scene(board, width, height);
+                createBoardLevel();
                 board.setGrid();
                 stage.setScene(boardScene);
                 break;
@@ -171,24 +190,6 @@ public class ViewController {
                     sizeScene = new Scene(size, width, height);
                 }
                 stage.setScene(sizeScene);
-        }
-    }
-
-    void loadPuzzle() {
-        try {
-            FileHandler.loadPuzzle();
-        } catch (IOException e) {
-            showAlert(AlertType.ERROR, "Loading Puzzle", "Puzzle could not be loaded.");
-        }
-        board.setGridWithBridges();
-    }
-
-    void savePuzzle() {
-        try {
-            board.savePuzzle();
-            FileHandler.savePuzzle();
-        } catch (IOException e) {
-            showAlert(AlertType.ERROR, "Saving Puzzle", "Puzzle could not be saved.");
         }
     }
 

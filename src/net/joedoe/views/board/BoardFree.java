@@ -1,33 +1,26 @@
 package net.joedoe.views.board;
 
-import javafx.scene.control.Alert;
-import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
-import net.joedoe.utils.GameManager;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import net.joedoe.views.ToolBar;
-import net.joedoe.views.ViewController;
 import net.joedoe.views.board.StatusEvent.Status;
-
-import java.io.File;
-
-import static net.joedoe.views.ViewController.View.HIGHSCORE;
-import static net.joedoe.views.ViewController.View.START;
 
 public class BoardFree extends Board {
 
-    public BoardFree(ViewController controller) {
-        super(controller);
-        setLayout();
+    public BoardFree(EventHandler<Event> listener) {
+        super();
+        setLayout(listener);
     }
 
     @Override
-    ToolBar createToolBar() {
-        ToolBar toolBar = new ToolBar("Free mode");
-        toolBar.setListener(e -> {
+    void setLayout(EventHandler<Event> listener) {
+        setLayout();
+        ToolBar toolbar = new ToolBar("Free mode");
+        toolbar.setListener(e -> {
             player.pause();
-            controller.goTo(START);
+            listener.handle(new Event(null));
         });
-        return toolBar;
+        setTop(toolbar);
     }
 
     @Override
@@ -54,9 +47,8 @@ public class BoardFree extends Board {
         Status status = e.getStatus();
         this.status.setText(status.getText());
         if (status == Status.SOLVED) {
-            controller.showAlert(Alert.AlertType.INFORMATION, "Solved!", "Solved.");
-            player.stop();
-            controller.goTo(HIGHSCORE);
+            showAlert("Solved.");
+            next.handle(new Event(null));
         }
     }
 }

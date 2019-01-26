@@ -18,12 +18,12 @@ import javafx.scene.layout.VBox;
 import static javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY;
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 
-class Highscore extends BorderPane {
+class BestScores extends BorderPane {
 
-    Highscore(EventHandler<Event> listener) {
+    BestScores(EventHandler<Event> listener) {
         getStylesheets().add("file:assets/css/highscores.css");
         setStyle("-fx-background-color: #282828;");
-        ToolBar toolBar = new ToolBar("Highscore");
+        ToolBar toolBar = new ToolBar("Best scores");
         toolBar.setListener(e -> listener.handle(new Event(null)));
         setTop(toolBar);
         setCenter(setLayout());

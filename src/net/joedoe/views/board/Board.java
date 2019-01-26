@@ -1,11 +1,10 @@
 package net.joedoe.views.board;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -18,35 +17,33 @@ import net.joedoe.entities.IIsle;
 import net.joedoe.utils.GameData;
 import net.joedoe.utils.GameInfo;
 import net.joedoe.utils.GameManager;
-import net.joedoe.views.ViewController;
-import net.joedoe.views.ToolBar;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 
 public abstract class Board extends BorderPane {
-    protected ViewController controller;
     private GameData gameData = GameData.getInstance();
     private int width, height;
     private CheckBox checkBox;
     private boolean soundOn;
     private StackPane innerPane;
+    EventHandler<Event> next;
     GameManager gameManager = GameManager.getInstance();
     Grid grid;
     MediaPlayer player;
-    ToolBar toolBar;
     ImageView view;
     Label info;
     HBox controls;
     Label status = new Label();
 
-    public Board(ViewController controller) {
+    public Board() {
         getStylesheets().add("file:assets/css/board.css");
-        this.controller = controller;
         setSound();
-        player.stop();
+//        player.stop();
     }
 
     private void setSound() {
@@ -59,8 +56,6 @@ public abstract class Board extends BorderPane {
     }
 
     void setLayout() {
-        toolBar = createToolBar();
-        setTop(toolBar);
         BorderPane outerPane = new BorderPane();
         outerPane.setTop(createTop());
         innerPane = new StackPane();
@@ -70,7 +65,7 @@ public abstract class Board extends BorderPane {
         setCenter(outerPane);
     }
 
-    HBox createTop() {
+    private HBox createTop() {
         HBox resetBox = new HBox(CONTAINER_OFFSET);
         resetBox.setMinWidth(200);
         Button reset = new Button("\u21BA");
@@ -180,22 +175,38 @@ public abstract class Board extends BorderPane {
         info.setText(Integer.toString(gameManager.getAllPoints()));
     }
 
-    abstract ToolBar createToolBar();
-
-    abstract void reset();
+    abstract void setLayout(EventHandler<Event> listener);
 
     abstract void handleStatus(StatusEvent e);
 
+    abstract void reset();
+
     public void savePuzzle() {
         grid.savePuzzle();
+    }
+
+    public void stopSound() {
+        soundOn = false;
+        player.stop();
     }
 
     public void restartSound() {
         if (soundOn) player.play();
     }
 
+    void showAlert(String text) {
+        Alert alert = new Alert(INFORMATION);
+        alert.setTitle("Solved!");
+        alert.setHeaderText(text);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) alert.close();
+    }
+
+    public void setListenerNext(EventHandler<Event> next) {
+        this.next = next;
+    }
+
     public void close() {
         if (grid != null) grid.shutdownAutoSolve();
     }
-
 }

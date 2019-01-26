@@ -20,8 +20,7 @@ import static net.joedoe.utils.GameManager.Mode.LEVEL;
 import static net.joedoe.utils.GameManager.Mode.TIME;
 import static net.joedoe.views.SizeChooser.Type.AUTO;
 import static net.joedoe.views.SizeChooser.Type.WIDTH_HEIGHT;
-import static net.joedoe.views.ViewController.View.NEW;
-import static net.joedoe.views.ViewController.View.START;
+import static net.joedoe.views.ViewController.View.*;
 
 public class ViewController {
     private final Stage stage;
@@ -33,17 +32,17 @@ public class ViewController {
     private Generator generator = new Generator();
 
     public enum View {
-        START, NEW, RESUME, LOAD, HIGHSCORE, RULES, QUIT
+        START, NEW, RESUME, LOAD, BEST, RULES, QUIT
     }
 
     public ViewController(Stage stage) {
         this.stage = stage;
-//        goTo(START);
-        goTo(NEW);
+        goTo(START);
+//        goTo(NEW);
         stage.show();
     }
 
-    public void goTo(View view) {
+    private void goTo(View view) {
         switch (view) {
             case START:
                 if (startScene == null) {
@@ -82,8 +81,8 @@ public class ViewController {
                 board.setGridWithBridges();
                 stage.setScene(boardScene);
                 return;
-            case HIGHSCORE:
-                if (highScoreScene == null) highScoreScene = new Scene(new Highscore(e -> goTo(START)), width, height);
+            case BEST:
+                if (highScoreScene == null) highScoreScene = new Scene(new BestScores(e -> goTo(START)), width, height);
                 stage.setScene(highScoreScene);
                 return;
             case RULES:
@@ -104,11 +103,22 @@ public class ViewController {
                 gameManager.resetAllPoints();
                 generator.setData(5);
                 generator.generateGame();
-                board = new BoardLevel(this);
-                ((BoardLevel) board).setListener(e-> {
-                    generator.setData(gameManager.getLevel() * 5);
-                    generator.generateGame();
-                    board.setGrid();
+                board = new BoardLevel(e -> goTo(START));
+                board.setListenerNext(e -> {
+                    if (gameManager.getLevel() == 25) {
+                        //noinspection StatementWithEmptyBody, ConstantConditions
+                        if (true) { // TODO: if gameManager.getAllPoints > currentBestScoreForLevel
+                            //TODO: edit BestScore
+                        }
+                        goTo(BEST);
+                    } else {
+                        gameManager.savePoints();
+                        gameManager.increaseLevel();
+                        generator.setData(gameManager.getLevel() * 5);
+                        generator.generateGame();
+                        ((BoardLevel)board).updateToolbar();
+                        board.setGrid();
+                    }
                 });
                 boardScene = new Scene(board, width, height);
                 board.setGrid();
@@ -120,7 +130,15 @@ public class ViewController {
                     difficulty.setListener(e -> {
                         generator.setData(e.getDifficulty().getLevel() * 5);
                         generator.generateGame();
-                        board = new BoardTime(this);
+                        board = new BoardTime(e1 -> goTo(START));
+                        board.setListenerNext(e2 -> {
+                            //noinspection ConstantConditions
+                            if (true) { //TODO: if game.getTempPoints() > currentBestScoreForTime
+                                board.stopSound();
+                                board = null;
+                                goTo(BEST);
+                            }
+                        });
                         boardScene = new Scene(board, width, height);
                         board.setGrid();
                         stage.setScene(boardScene);
@@ -137,7 +155,15 @@ public class ViewController {
                         else if (e.getType() == WIDTH_HEIGHT) generator.setData(e.getWidth(), e.getHeight());
                         else generator.setData(e.getWidth(), e.getHeight(), e.getIsles());
                         generator.generateGame();
-                        board = new BoardFree(this);
+                        board = new BoardFree(e1 -> goTo(START));
+                        board.setListenerNext(e2 -> {
+                            //noinspection ConstantConditions
+                            if (1 > 0) { //TODO: if game.getTempPoints() > currentBestScoreForTime
+                                board.stopSound();
+                                board = null;
+                                goTo(BEST);
+                            }
+                        });
                         boardScene = new Scene(board, width, height);
                         board.setGrid();
                         stage.setScene(boardScene);
@@ -166,7 +192,7 @@ public class ViewController {
         }
     }
 
-    public boolean showAlert(AlertType alertType, String title, String text) {
+    private boolean showAlert(AlertType alertType, String title, String text) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(text);

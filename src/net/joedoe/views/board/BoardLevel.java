@@ -2,28 +2,26 @@ package net.joedoe.views.board;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
 import net.joedoe.views.ToolBar;
-import net.joedoe.views.ViewController;
-
-import static net.joedoe.views.ViewController.View.START;
+import net.joedoe.views.board.StatusEvent.Status;
 
 public class BoardLevel extends Board {
-    private EventHandler<Event> listener;
+    private ToolBar toolbar;
 
-    public BoardLevel(ViewController controller) {
-        super(controller);
-        setLayout();
+    public BoardLevel(EventHandler<Event> listener) {
+        super();
+        setLayout(listener);
     }
 
     @Override
-    ToolBar createToolBar() {
-        ToolBar toolbar = new ToolBar("Level " + gameManager.getLevel() + "/25");
+    void setLayout(EventHandler<Event> listener) {
+        setLayout();
+        toolbar = new ToolBar("Level " + gameManager.getLevel() + "/25");
         toolbar.setListener(e -> {
             player.pause();
-            controller.goTo(START);
+            listener.handle(new Event(null));
         });
-        return toolbar;
+        setTop(toolbar);
     }
 
     @Override
@@ -36,24 +34,21 @@ public class BoardLevel extends Board {
     @Override
     public void setGrid() {
         super.setGrid();
-        toolBar.updateTitle("Level " + gameManager.getLevel() + "/25");
         info.setText(Integer.toString(gameManager.getAllPoints()));
     }
 
     @Override
     void handleStatus(StatusEvent e) {
-        StatusEvent.Status status = e.getStatus();
+        Status status = e.getStatus();
         this.status.setText(status.getText());
-        if (status == StatusEvent.Status.SOLVED) {
-            controller.showAlert(Alert.AlertType.INFORMATION, "Solved!", "Level " + gameManager.getLevel() + " solved.");
-            gameManager.savePoints();
+        if (status == Status.SOLVED) {
+            showAlert("Level " + gameManager.getLevel() + " solved.");
             info.setText(Integer.toString(gameManager.getAllPoints()));
-            gameManager.increaseLevel();
-            listener.handle(new Event(null));
+            next.handle(new Event(null));
         }
     }
 
-    public void setListener(EventHandler<Event> listener) {
-        this.listener = listener;
+    public void updateToolbar() {
+        toolbar.updateTitle("Level " + gameManager.getLevel() + "/25");
     }
 }

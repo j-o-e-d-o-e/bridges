@@ -1,46 +1,38 @@
 package net.joedoe.views.board;
 
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
 import net.joedoe.utils.Timer;
 import net.joedoe.views.ToolBar;
-import net.joedoe.views.ViewController;
+import net.joedoe.views.board.StatusEvent.Status;
 
 import java.io.File;
-
-import static net.joedoe.views.ViewController.View.HIGHSCORE;
-import static net.joedoe.views.ViewController.View.START;
 
 public class BoardTime extends Board {
     private Timer timer;
 
-    public BoardTime(ViewController controller) {
-        super(controller);
+    public BoardTime(EventHandler<Event> listener) {
+        super();
         timer = new Timer();
         timer.setListener(() -> Platform.runLater(() -> info.setText(timer.getTime())));
-        setLayout();
+        setLayout(listener);
         controls.setVisible(false);
     }
 
     @Override
-    ToolBar createToolBar() {
-        ToolBar toolBar = new ToolBar("Time mode");
-        toolBar.setListener(e -> {
+    void setLayout(EventHandler<Event> listener) {
+        setLayout();
+        ToolBar toolbar = new ToolBar("Time mode");
+        toolbar.setListener(e -> {
             timer.stop();
             player.pause();
-            controller.goTo(START);
+            listener.handle(new Event(null));
         });
-        return toolBar;
-    }
-
-    @Override
-    HBox createTop() {
-        HBox box = super.createTop();
+        setTop(toolbar);
         view.setImage(new Image("file:assets" + File.separator + "images" + File.separator + "clock.png"));
         info.setText(timer.getTime());
-        return box;
     }
 
     @Override
@@ -63,13 +55,12 @@ public class BoardTime extends Board {
 
     @Override
     void handleStatus(StatusEvent e) {
-        StatusEvent.Status status = e.getStatus();
+        Status status = e.getStatus();
         this.status.setText(status.getText());
-        if (status == StatusEvent.Status.SOLVED) {
+        if (status == Status.SOLVED) {
             timer.stop();
-            controller.showAlert(Alert.AlertType.INFORMATION, "Solved!", "Puzzle solved in " + info.getText() + ".");
-            player.stop();
-            controller.goTo(HIGHSCORE);
+            showAlert("Puzzle solved in " + info.getText() + ".");
+            next.handle(new Event(null));
         }
     }
 

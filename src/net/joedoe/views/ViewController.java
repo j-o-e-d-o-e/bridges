@@ -105,6 +105,11 @@ public class ViewController {
                 generator.setData(5);
                 generator.generateGame();
                 board = new BoardLevel(this);
+                ((BoardLevel) board).setListener(e-> {
+                    generator.setData(gameManager.getLevel() * 5);
+                    generator.generateGame();
+                    board.setGrid();
+                });
                 boardScene = new Scene(board, width, height);
                 board.setGrid();
                 stage.setScene(boardScene);

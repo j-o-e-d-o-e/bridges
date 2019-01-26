@@ -1,23 +1,18 @@
 package net.joedoe.views.board;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
-import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
-import net.joedoe.logics.Generator;
-import net.joedoe.utils.GameManager;
 import net.joedoe.views.ToolBar;
 import net.joedoe.views.ViewController;
-
-import java.io.File;
 
 import static net.joedoe.views.ViewController.View.START;
 
 public class BoardLevel extends Board {
-    private Generator generator;
+    private EventHandler<Event> listener;
 
     public BoardLevel(ViewController controller) {
         super(controller);
-        generator = new Generator();
         setLayout();
     }
 
@@ -54,9 +49,11 @@ public class BoardLevel extends Board {
             gameManager.savePoints();
             info.setText(Integer.toString(gameManager.getAllPoints()));
             gameManager.increaseLevel();
-            generator.setData(gameManager.getLevel() * 5);
-            generator.generateGame();
-            setGrid();
+            listener.handle(new Event(null));
         }
+    }
+
+    public void setListener(EventHandler<Event> listener) {
+        this.listener = listener;
     }
 }

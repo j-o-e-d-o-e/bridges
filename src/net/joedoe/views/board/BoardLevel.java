@@ -2,6 +2,7 @@ package net.joedoe.views.board;
 
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
+import javafx.scene.layout.HBox;
 import net.joedoe.logics.Generator;
 import net.joedoe.utils.GameManager;
 import net.joedoe.views.ToolBar;
@@ -12,7 +13,6 @@ import java.io.File;
 import static net.joedoe.views.ViewController.View.START;
 
 public class BoardLevel extends Board {
-    private GameManager gameManager = GameManager.getInstance();
     private Generator generator;
 
     public BoardLevel(ViewController controller) {
@@ -34,18 +34,8 @@ public class BoardLevel extends Board {
     @Override
     void reset() {
         gameManager.resetTempPoints();
-        info.setText(getInfoText());
+        info.setText(Integer.toString(gameManager.getAllPoints()));
         grid.reset();
-    }
-
-    @Override
-    Image getInfoImage() {
-        return new Image("file:assets" + File.separator + "images" + File.separator + "coin.png");
-    }
-
-    @Override
-    String getInfoText() {
-        return Integer.toString(gameManager.getAllPoints());
     }
 
     @Override

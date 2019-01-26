@@ -3,6 +3,7 @@ package net.joedoe.views.board;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
+import javafx.scene.layout.HBox;
 import net.joedoe.utils.Timer;
 import net.joedoe.views.ToolBar;
 import net.joedoe.views.ViewController;
@@ -35,20 +36,18 @@ public class BoardTime extends Board {
     }
 
     @Override
+    HBox createTop() {
+        HBox box = super.createTop();
+        view.setImage(new Image("file:assets" + File.separator + "images" + File.separator + "clock.png"));
+        info.setText(timer.getTime());
+        return box;
+    }
+
+    @Override
     void reset() {
         timer.restart();
-        info.setText(getInfoText());
+        info.setText(timer.getTime());
         grid.reset();
-    }
-
-    @Override
-    Image getInfoImage() {
-        return new Image("file:assets" + File.separator + "images" + File.separator + "clock.png");
-    }
-
-    @Override
-    String getInfoText() {
-        return timer.getTime();
     }
 
     @Override
@@ -59,6 +58,7 @@ public class BoardTime extends Board {
 
     @Override
     void handlePoints(PointEvent e) {
+        // Nothing happens
     }
 
     @Override

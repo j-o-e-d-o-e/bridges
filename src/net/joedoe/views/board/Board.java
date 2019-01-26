@@ -29,14 +29,15 @@ import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 public abstract class Board extends BorderPane {
     protected ViewController controller;
     private GameData gameData = GameData.getInstance();
-    private GameManager gameManager = GameManager.getInstance();
     private int width, height;
     private CheckBox checkBox;
     private boolean soundOn;
     private StackPane innerPane;
+    GameManager gameManager = GameManager.getInstance();
     Grid grid;
     MediaPlayer player;
     ToolBar toolBar;
+    ImageView view;
     Label info;
     HBox controls;
     Label status = new Label();
@@ -69,7 +70,7 @@ public abstract class Board extends BorderPane {
         setCenter(outerPane);
     }
 
-    private HBox createTop() {
+    HBox createTop() {
         HBox resetBox = new HBox(CONTAINER_OFFSET);
         resetBox.setMinWidth(200);
         Button reset = new Button("\u21BA");
@@ -80,13 +81,13 @@ public abstract class Board extends BorderPane {
         HBox infoBox = new HBox(CONTAINER_OFFSET);
         infoBox.setAlignment(Pos.CENTER);
         infoBox.setMinWidth(200);
-        ImageView imageView = new ImageView();
-        imageView.setPreserveRatio(true);
-        imageView.setFitHeight(15);
-        imageView.setImage(getInfoImage());
-        info = new Label(getInfoText());
+        view = new ImageView();
+        view.setPreserveRatio(true);
+        view.setFitHeight(15);
+        view.setImage(new Image("file:assets" + File.separator + "images" + File.separator + "coin.png"));
+        info = new Label(Integer.toString(gameManager.getTempPoints()));
         info.setFont(new Font(14));
-        infoBox.getChildren().addAll(imageView, info);
+        infoBox.getChildren().addAll(view, info);
 
         HBox controlsBox = new HBox(CONTAINER_OFFSET);
         controlsBox.setAlignment(Pos.CENTER_RIGHT);
@@ -182,10 +183,6 @@ public abstract class Board extends BorderPane {
     abstract ToolBar createToolBar();
 
     abstract void reset();
-
-    abstract Image getInfoImage();
-
-    abstract String getInfoText();
 
     abstract void handleStatus(StatusEvent e);
 

@@ -2,6 +2,7 @@ package net.joedoe.views.board;
 
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
+import javafx.scene.layout.HBox;
 import net.joedoe.utils.GameManager;
 import net.joedoe.views.ToolBar;
 import net.joedoe.views.ViewController;
@@ -13,8 +14,6 @@ import static net.joedoe.views.ViewController.View.HIGHSCORE;
 import static net.joedoe.views.ViewController.View.START;
 
 public class BoardFree extends Board {
-    private GameManager gameManager = GameManager.getInstance();
-    private Image coin = new Image("file:assets" + File.separator + "images" + File.separator + "coin.png");
 
     public BoardFree(ViewController controller) {
         super(controller);
@@ -34,18 +33,8 @@ public class BoardFree extends Board {
     @Override
     void reset() {
         gameManager.resetTempPoints();
-        info.setText(getInfoText());
+        info.setText(Integer.toString(gameManager.getTempPoints()));
         grid.reset();
-    }
-
-    @Override
-    Image getInfoImage() {
-        return coin;
-    }
-
-    @Override
-    String getInfoText() {
-        return "0";
     }
 
     @Override

@@ -215,7 +215,7 @@ public class ViewController {
                     FileHandler.savePuzzle();
                 }
             } catch (IOException e) {
-                showAlert(AlertType.ERROR, "Saving Data", "Data could not be saved.");
+                showAlert(AlertType.ERROR, "Saving Level", "Level progress could not be saved.");
             }
             board.close();
         }

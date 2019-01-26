@@ -17,6 +17,7 @@ import net.joedoe.views.board.BoardTime;
 import java.io.IOException;
 import java.util.Optional;
 
+import static net.joedoe.utils.GameManager.Mode.*;
 import static net.joedoe.views.SizeChooser.Type.AUTO;
 import static net.joedoe.views.SizeChooser.Type.WIDTH_HEIGHT;
 import static net.joedoe.views.ViewController.View.NEW;
@@ -62,7 +63,7 @@ public class ViewController {
                 return;
             case RESUME:
                 if (board == null) return;
-                else if (gameManager.getMode() == Mode.TIME) ((BoardTime) board).restartTimer();
+                else if (gameManager.getMode() == TIME) ((BoardTime) board).restartTimer();
                 board.restartSound();
                 stage.setScene(boardScene);
                 return;
@@ -174,7 +175,7 @@ public class ViewController {
             try {
                 gameManager.savePoints();
                 FileHandler.saveUser();
-                if (gameManager.getMode() == Mode.LEVEL) {
+                if (gameManager.getMode() == LEVEL) {
                     board.savePuzzle();
                     FileHandler.savePuzzle();
                 }

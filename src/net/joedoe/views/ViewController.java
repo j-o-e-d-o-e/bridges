@@ -8,7 +8,6 @@ import javafx.stage.Stage;
 import net.joedoe.logics.Generator;
 import net.joedoe.utils.FileHandler;
 import net.joedoe.utils.GameManager;
-import net.joedoe.utils.GameManager.Mode;
 import net.joedoe.views.board.Board;
 import net.joedoe.views.board.BoardFree;
 import net.joedoe.views.board.BoardLevel;
@@ -33,15 +32,15 @@ public class ViewController {
     private GameManager gameManager = GameManager.getInstance();
     private Generator generator = new Generator();
 
+    public enum View {
+        START, NEW, RESUME, LOAD, HIGHSCORE, RULES, QUIT
+    }
+
     public ViewController(Stage stage) {
         this.stage = stage;
 //        goTo(START);
         goTo(NEW);
         stage.show();
-    }
-
-    public enum View {
-        START, NEW, RESUME, LOAD, HIGHSCORE, RULES, QUIT
     }
 
     public void goTo(View view) {
@@ -103,7 +102,6 @@ public class ViewController {
                     return;
                 gameManager.setLevel(1);
                 gameManager.resetAllPoints();
-                gameManager.resetTempPoints();
                 generator.setData(5);
                 generator.generateGame();
                 board = new BoardLevel(this);
@@ -118,8 +116,8 @@ public class ViewController {
                         generator.setData(e.getDifficulty().getLevel() * 5);
                         generator.generateGame();
                         board = new BoardTime(this);
-                        board.setGrid();
                         boardScene = new Scene(board, width, height);
+                        board.setGrid();
                         stage.setScene(boardScene);
                     });
                     difficultyScene = new Scene(difficulty, width, height);
@@ -135,8 +133,8 @@ public class ViewController {
                         else generator.setData(e.getWidth(), e.getHeight(), e.getIsles());
                         generator.generateGame();
                         board = new BoardFree(this);
-                        board.setGrid();
                         boardScene = new Scene(board, width, height);
+                        board.setGrid();
                         stage.setScene(boardScene);
                     });
                     sizeScene = new Scene(size, width, height);

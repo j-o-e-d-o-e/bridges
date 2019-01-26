@@ -46,6 +46,7 @@ public class GameManager {
 
     public void resetAllPoints() {
         points = 0;
+        tempPoints = 0;
     }
 
     public void resetTempPoints() {

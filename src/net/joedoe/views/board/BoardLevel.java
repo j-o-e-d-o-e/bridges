@@ -34,6 +34,7 @@ public class BoardLevel extends Board {
     @Override
     public void setGrid() {
         super.setGrid();
+        gameManager.resetTempPoints();
         info.setText(Integer.toString(gameManager.getAllPoints()));
     }
 

@@ -3,8 +3,8 @@ package net.joedoe.views.board;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import net.joedoe.utils.GameManager;
-import net.joedoe.views.ViewController;
 import net.joedoe.views.ToolBar;
+import net.joedoe.views.ViewController;
 import net.joedoe.views.board.StatusEvent.Status;
 
 import java.io.File;
@@ -29,6 +29,13 @@ public class BoardFree extends Board {
             controller.goTo(START);
         });
         return toolBar;
+    }
+
+    @Override
+    void reset() {
+        gameManager.resetTempPoints();
+        info.setText(getInfoText());
+        grid.reset();
     }
 
     @Override

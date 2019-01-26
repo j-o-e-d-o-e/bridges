@@ -4,8 +4,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import net.joedoe.logics.Generator;
 import net.joedoe.utils.GameManager;
-import net.joedoe.views.ViewController;
 import net.joedoe.views.ToolBar;
+import net.joedoe.views.ViewController;
 
 import java.io.File;
 
@@ -29,6 +29,13 @@ public class BoardLevel extends Board {
             controller.goTo(START);
         });
         return toolbar;
+    }
+
+    @Override
+    void reset() {
+        gameManager.resetTempPoints();
+        info.setText(getInfoText());
+        grid.reset();
     }
 
     @Override

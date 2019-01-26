@@ -34,7 +34,7 @@ public abstract class Board extends BorderPane {
     private CheckBox checkBox;
     private boolean soundOn;
     private StackPane innerPane;
-    private Grid grid;
+    Grid grid;
     MediaPlayer player;
     ToolBar toolBar;
     Label info;
@@ -74,11 +74,7 @@ public abstract class Board extends BorderPane {
         resetBox.setMinWidth(200);
         Button reset = new Button("\u21BA");
         reset.setAlignment(Pos.CENTER_LEFT);
-        reset.setOnAction(e -> {
-            gameManager.resetTempPoints();
-            info.setText(getInfoText());
-            grid.reset();
-        });
+        reset.setOnAction(e -> reset());
         resetBox.getChildren().add(reset);
 
         HBox infoBox = new HBox(CONTAINER_OFFSET);
@@ -184,6 +180,8 @@ public abstract class Board extends BorderPane {
     }
 
     abstract ToolBar createToolBar();
+
+    abstract void reset();
 
     abstract Image getInfoImage();
 

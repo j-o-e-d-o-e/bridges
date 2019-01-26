@@ -17,7 +17,8 @@ import net.joedoe.views.board.BoardTime;
 import java.io.IOException;
 import java.util.Optional;
 
-import static net.joedoe.utils.GameManager.Mode.*;
+import static net.joedoe.utils.GameManager.Mode.LEVEL;
+import static net.joedoe.utils.GameManager.Mode.TIME;
 import static net.joedoe.views.SizeChooser.Type.AUTO;
 import static net.joedoe.views.SizeChooser.Type.WIDTH_HEIGHT;
 import static net.joedoe.views.ViewController.View.NEW;
@@ -34,9 +35,8 @@ public class ViewController {
 
     public ViewController(Stage stage) {
         this.stage = stage;
-        start = new Start(e -> goTo(e.getView()));
-        startScene = new Scene(start, width, height);
-        goTo(START);
+//        goTo(START);
+        goTo(NEW);
         stage.show();
     }
 
@@ -47,6 +47,10 @@ public class ViewController {
     public void goTo(View view) {
         switch (view) {
             case START:
+                if (startScene == null) {
+                    start = new Start(e -> goTo(e.getView()));
+                    startScene = new Scene(start, width, height);
+                }
                 if (board == null) start.disableResume(true);
                 else start.disableResume(false);
                 if (FileHandler.fileExists()) start.disableLoad(true);
@@ -56,14 +60,16 @@ public class ViewController {
             case NEW:
                 if (modeScene == null) {
                     ModeChooser mode = new ModeChooser(e -> goTo(START));
-                    mode.setListener(e -> createNewGame(e.getMode()));
+                    mode.setListener(e -> {
+                        gameManager.setMode(e.getMode());
+                        createNewGame();
+                    });
                     modeScene = new Scene(mode, width, height);
                 }
                 stage.setScene(modeScene);
                 return;
             case RESUME:
-                if (board == null) return;
-                else if (gameManager.getMode() == TIME) ((BoardTime) board).restartTimer();
+                if (gameManager.getMode() == TIME) ((BoardTime) board).restartTimer();
                 board.restartSound();
                 stage.setScene(boardScene);
                 return;
@@ -90,9 +96,8 @@ public class ViewController {
         }
     }
 
-    private void createNewGame(Mode mode) {
-        gameManager.setMode(mode);
-        switch (mode) {
+    private void createNewGame() {
+        switch (gameManager.getMode()) {
             case LEVEL:
                 if (!showAlert(AlertType.CONFIRMATION, "New game", "Previous progress will be deleted. Continue?"))
                     return;

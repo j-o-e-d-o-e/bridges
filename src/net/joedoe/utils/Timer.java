@@ -22,13 +22,19 @@ public class Timer {
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-            if (running) listener.onChange();
+            if (running) {
+                time = time.plusSeconds(1);
+                listener.onChange();
+            }
         }
     }
 
     public String getTime() {
-        time = time.plusSeconds(1);
         return String.format("%02d:%02d", time.getMinute(), time.getSecond());
+    }
+
+    public void restart() {
+        time = LocalTime.of(0, 0, 0);
     }
 
     public void stop() {

@@ -4,8 +4,8 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import net.joedoe.utils.Timer;
-import net.joedoe.views.ViewController;
 import net.joedoe.views.ToolBar;
+import net.joedoe.views.ViewController;
 
 import java.io.File;
 
@@ -35,6 +35,13 @@ public class BoardTime extends Board {
     }
 
     @Override
+    void reset() {
+        timer.restart();
+        info.setText(getInfoText());
+        grid.reset();
+    }
+
+    @Override
     Image getInfoImage() {
         return new Image("file:assets" + File.separator + "images" + File.separator + "clock.png");
     }
@@ -51,7 +58,7 @@ public class BoardTime extends Board {
     }
 
     @Override
-    void handlePoints(PointEvent e){
+    void handlePoints(PointEvent e) {
     }
 
     @Override

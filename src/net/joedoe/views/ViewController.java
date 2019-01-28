@@ -16,10 +16,8 @@ import java.io.IOException;
 import java.time.LocalTime;
 import java.util.Optional;
 
-import static net.joedoe.utils.GameManager.Mode.LEVEL;
-import static net.joedoe.utils.GameManager.Mode.TIME;
-import static net.joedoe.views.SizeChooser.Type.AUTO;
-import static net.joedoe.views.SizeChooser.Type.WIDTH_HEIGHT;
+import static net.joedoe.utils.GameManager.Mode.*;
+import static net.joedoe.views.SizeChooser.Type.*;
 import static net.joedoe.views.ViewController.View.*;
 
 public class ViewController {

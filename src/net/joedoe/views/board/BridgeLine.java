@@ -27,6 +27,7 @@ public class BridgeLine {
         this.end = end;
         alignment = Alignment.getAlignment(start.getY(), end.getY());
         line.getStyleClass().add("bridge-first");
+        line.setMouseTransparent(true);
         translateToLayout(offset);
     }
 

@@ -2,14 +2,12 @@ package net.joedoe.views.board;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
-import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
 import net.joedoe.logics.AutoSolver;
@@ -30,6 +28,7 @@ import static net.joedoe.views.board.StatusEvent.Status;
  * Das Raster, auf dem Inseln und Brücken platziert werden.
  */
 class Grid extends GridPane {
+    private int width, height;
     private GridController gridController;
     private BridgeController controller;
     private StatusChecker checker;
@@ -53,6 +52,8 @@ class Grid extends GridPane {
      */
     Grid(EventHandler<StatusEvent> statusListener, int width, int height, List<IIsle> isles, List<IBridge> bridges) {
         setId("grid");
+        this.width = width;
+        this.height = height;
         // Größe des Rasters festlegen
         IntStream.range(0, height).mapToObj(i -> new RowConstraints(ONE_TILE))
                 .forEach(row -> getRowConstraints().add(row));
@@ -197,41 +198,57 @@ class Grid extends GridPane {
      */
     private void setIsles(List<IIsle> isles) {
         gridController.setPanes(isles, new IsleListener(this));
+        ClickListener listener = new ClickListener(this);
         for (IslePane isle : gridController.getPanes()) {
             add(isle, isle.getX(), isle.getY());
-//            if (isle.getX() - 1 >= 0) {
-//                StackPane stack = new StackPane();
-//                stack.setStyle("-fx-background-color: orange;");
-//                stack.setPrefWidth(ONE_TILE >> 1);
-//                add(stack, isle.getX() - 1, isle.getY());
-//                GridPane.setFillWidth(stack, false);
-//                GridPane.setHalignment(stack, HPos.RIGHT);
-//            }
-//            if (isle.getX() + 1 < 5) {
-//                StackPane stack = new StackPane();
-//                stack.setStyle("-fx-background-color: pink;");
-//                stack.setPrefWidth(ONE_TILE >> 1);
-//                add(stack, isle.getX() + 1, isle.getY());
-//                GridPane.setFillWidth(stack, false);
-//            }
-//            if (isle.getY() - 1 >= 0) {
-//                System.out.println("top");
-//                StackPane stack = new StackPane();
-//                stack.setStyle("-fx-background-color: green;");
-//                stack.setPrefHeight(ONE_TILE >> 1);
-//                add(stack, isle.getX(), isle.getY() - 1);
-//                GridPane.setFillHeight(stack, false);
-//                GridPane.setValignment(stack, VPos.BOTTOM);
-//            }
-//            if (isle.getY() + 1 < 5) {
-//                StackPane stack = new StackPane();
-//                stack.setStyle("-fx-background-color: yellow;");
-//                stack.setPrefHeight(ONE_TILE >> 1);
-//                add(stack, isle.getX(), isle.getY() + 1);
-//                GridPane.setFillHeight(stack, false);
-//                GridPane.setValignment(stack, VPos.TOP);
-//            }
+            addClickPane(listener, isle);
         }
+    }
+
+    private void addClickPane(ClickListener listener, IslePane isle) {
+        if (isle.getX() - 1 >= 0) {
+            int x = isle.getX() - 1;
+            int y = isle.getY();
+            ClickPane click = addClickPane(listener, x, y);
+            click.setRight(isle);
+        }
+        if (isle.getX() + 1 < width) {
+            int x = isle.getX() + 1;
+            int y = isle.getY();
+            ClickPane click = addClickPane(listener, x, y);
+            click.setLeft(isle);
+        }
+        if (isle.getY() - 1 >= 0) {
+            int x = isle.getX();
+            int y = isle.getY() - 1;
+            ClickPane click = addClickPane(listener, x, y);
+            click.setDown(isle);
+        }
+        if (isle.getY() + 1 < height) {
+            int x = isle.getX();
+            int y = isle.getY() + 1;
+            ClickPane click = addClickPane(listener, x, y);
+            click.setUp(isle);
+        }
+    }
+
+    private ClickPane addClickPane(ClickListener listener, int x, int y) {
+        ClickPane click = (ClickPane) getNode(x, y);
+        if (click == null) {
+            click = new ClickPane();
+            click.setOnMouseClicked(listener);
+            add(click, x, y);
+        }
+        return click;
+    }
+
+    private Node getNode(int col, int row) {
+        for (Node node : getChildren()) {
+            if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
+                return node;
+            }
+        }
+        return null;
     }
 
     /**

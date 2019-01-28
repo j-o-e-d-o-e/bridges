@@ -17,7 +17,7 @@ class DifficultyChooser extends BorderPane {
     private EventHandler<DifficultyEvent> listener;
 
     enum Difficulty {
-        VERY_EASY(1, "very easy"), EASY(5, "easy"), MEDIUM(10, "medium"), HARD(15, "hard"), CHALLENGING(20, "c   challenging");
+        VERY_EASY(1, "very easy"), EASY(5, "easy"), MEDIUM(10, "medium"), HARD(15, "hard"), CHALLENGING(20, "challenging");
         private int level;
         private String name;
 

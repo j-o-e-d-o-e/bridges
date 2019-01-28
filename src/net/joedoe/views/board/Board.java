@@ -151,6 +151,7 @@ public abstract class Board extends BorderPane {
         this.width = width;
         this.height = height;
         innerPane.getChildren().remove(grid);
+        Zoom.zoom(isles.size());
         if (grid != null) grid.shutdownAutoSolve();
         grid = new Grid(this::handleStatus, width, height, isles, bridges);
         grid.setPointListener(this::handlePoints);

@@ -34,7 +34,7 @@ class Grid extends GridPane {
     private AutoSolver autoSolver;
     private EventHandler<StatusEvent> statusListener;
     private EventHandler<PointEvent> pointListener;
-    private boolean showMissingBridges, solved;
+    private boolean showMissingBridges;
 
     /**
      * Grid wird der StatusListener, der die Status-Zeile im
@@ -68,8 +68,8 @@ class Grid extends GridPane {
         if (bridges != null) {
             controller.setBridges(bridges);
             setBridges(bridges);
-            checkStatus();
         }
+        checkStatus();
     }
 
     /**
@@ -87,8 +87,8 @@ class Grid extends GridPane {
         }
         bridge = controller.addBridge(isle.getPos(), direction);
         if (bridge == null) return;
+        pointListener.handle(new PointEvent(10));
         addBridge(bridge);
-        if (!solved) pointListener.handle(new PointEvent(10));
     }
 
     private void removeDoubleBridge(IBridge bridge) {
@@ -106,8 +106,8 @@ class Grid extends GridPane {
      * @param bridge hinzuzufügende Brücke (Modell)
      */
     private void addBridgeAuto(IBridge bridge) {
+        pointListener.handle(new PointEvent(-10));
         addBridge(bridge);
-        if (!solved) pointListener.handle(new PointEvent(-10));
     }
 
     /**
@@ -182,7 +182,6 @@ class Grid extends GridPane {
             gridController.updateLines();
             pointListener.handle(new PointEvent(50));
             statusListener.handle(new StatusEvent(Status.SOLVED));
-            solved = true;
         } else {
             statusListener.handle(new StatusEvent(Status.NOT_SOLVED));
         }

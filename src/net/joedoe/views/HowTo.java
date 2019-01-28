@@ -6,11 +6,11 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 
-class Rules extends BorderPane {
+class HowTo extends BorderPane {
 
-    Rules(EventHandler<Event> listener) {
+    HowTo(EventHandler<Event> listener) {
         setStyle("-fx-background-color: #282828;");
-        ToolBar toolBar = new ToolBar("Rules");
+        ToolBar toolBar = new ToolBar("HowTo");
         toolBar.setListener(e -> listener.handle(new Event(null)));
         setTop(toolBar);
         setCenter(setLayout());
@@ -20,7 +20,7 @@ class Rules extends BorderPane {
 //        TableView
 
         Button ok = new Button("Ok");
-        ok.setOnAction(e -> System.out.println("RULES!"));
+        ok.setOnAction(e -> System.out.println("HOWTO!"));
         setCenter(ok);
         return ok;
     }

@@ -9,6 +9,7 @@ import net.joedoe.views.ToolBar;
 import net.joedoe.views.board.StatusEvent.Status;
 
 import java.io.File;
+import java.time.LocalTime;
 
 public class BoardTime extends Board {
     private Timer timer;
@@ -16,7 +17,7 @@ public class BoardTime extends Board {
     public BoardTime(EventHandler<Event> listener) {
         super();
         timer = new Timer();
-        timer.setListener(() -> Platform.runLater(() -> info.setText(timer.getTime())));
+        timer.setListener(() -> Platform.runLater(() -> info.setText(timer.getStringTime())));
         setLayout(listener);
         controls.setVisible(false);
     }
@@ -32,13 +33,13 @@ public class BoardTime extends Board {
         });
         setTop(toolbar);
         view.setImage(new Image("file:assets" + File.separator + "images" + File.separator + "clock.png"));
-        info.setText(timer.getTime());
+        info.setText(timer.getStringTime());
     }
 
     @Override
     void reset() {
         timer.restart();
-        info.setText(timer.getTime());
+        info.setText(timer.getStringTime());
         grid.reset();
     }
 
@@ -66,6 +67,10 @@ public class BoardTime extends Board {
 
     public void restartTimer() {
         timer.start();
+    }
+
+    public LocalTime getTime(){
+        return timer.getTime();
     }
 
     @Override

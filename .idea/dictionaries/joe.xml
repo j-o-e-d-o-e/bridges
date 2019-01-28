@@ -2,6 +2,7 @@
   <dictionary name="joe">
     <words>
       <w>automatisch</w>
+      <w>bestscores</w>
       <w>brücke</w>
       <w>connectable</w>
       <w>connectables</w>
@@ -12,6 +13,7 @@
       <w>hgap</w>
       <w>highscore</w>
       <w>highscores</w>
+      <w>howto</w>
       <w>joedoe</w>
       <w>joerg</w>
       <w>nächste</w>

@@ -49,12 +49,12 @@ class Start extends BorderPane {
         load = new Button("Load Level");
         load.setPrefWidth(100);
         load.setOnAction(e -> listener.handle(new ViewEvent(LOAD)));
-        Button bestScores = new Button("Best scores");
+        Button bestScores = new Button("Best Scores");
         bestScores.setPrefWidth(100);
         bestScores.setOnAction(e -> listener.handle(new ViewEvent(BEST)));
-        Button tutorial = new Button("Rules");
+        Button tutorial = new Button("How To");
         tutorial.setPrefWidth(100);
-        tutorial.setOnAction(e -> listener.handle(new ViewEvent(RULES)));
+        tutorial.setOnAction(e -> listener.handle(new ViewEvent(HOWTO)));
         Button exit = new Button("Quit & Save");
         exit.setPrefWidth(100);
         exit.setOnAction(e -> listener.handle(new ViewEvent(QUIT)));

@@ -2,6 +2,8 @@ package net.joedoe.utils;
 
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
+import net.joedoe.views.PointEntry;
+import net.joedoe.views.TimeEntry;
 
 import java.util.List;
 
@@ -16,6 +18,8 @@ public class GameData {
     private List<IIsle> isles;
     private List<IBridge> bridges;
     private Object[][] bridgesData;
+    private PointEntry bestLevel;
+    private TimeEntry bestVeryEasy, bestEasy, bestMedium, bestHard, bestChallenging;
 
     /**
      * Gibt Singleton-Instanz dieser Klasse zurück.
@@ -134,5 +138,53 @@ public class GameData {
      */
     void setBridgesData(Object[][] bridgesData) {
         this.bridgesData = bridgesData;
+    }
+
+    public PointEntry getBestLevel() {
+        return bestLevel;
+    }
+
+    public void setBestLevel(PointEntry bestLevel) {
+        this.bestLevel = bestLevel;
+    }
+
+    public TimeEntry getBestVeryEasy() {
+        return bestVeryEasy;
+    }
+
+    public void setBestVeryEasy(TimeEntry bestVeryEasy) {
+        this.bestVeryEasy = bestVeryEasy;
+    }
+
+    public TimeEntry getBestEasy() {
+        return bestEasy;
+    }
+
+    public void setBestEasy(TimeEntry bestEasy) {
+        this.bestEasy = bestEasy;
+    }
+
+    public TimeEntry getBestMedium() {
+        return bestMedium;
+    }
+
+    public void setBestMedium(TimeEntry bestMedium) {
+        this.bestMedium = bestMedium;
+    }
+
+    public TimeEntry getBestHard() {
+        return bestHard;
+    }
+
+    public void setBestHard(TimeEntry bestHard) {
+        this.bestHard = bestHard;
+    }
+
+    public TimeEntry getBestChallenging() {
+        return bestChallenging;
+    }
+
+    public void setBestChallenging(TimeEntry bestChallenging) {
+        this.bestChallenging = bestChallenging;
     }
 }

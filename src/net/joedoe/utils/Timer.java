@@ -29,8 +29,12 @@ public class Timer {
         }
     }
 
-    public String getTime() {
+    public String getStringTime() {
         return String.format("%02d:%02d", time.getMinute(), time.getSecond());
+    }
+
+    public LocalTime getTime() {
+        return time;
     }
 
     public void restart() {

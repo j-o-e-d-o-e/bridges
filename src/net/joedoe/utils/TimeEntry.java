@@ -1,4 +1,4 @@
-package net.joedoe.views;
+package net.joedoe.utils;
 
 import java.time.LocalTime;
 

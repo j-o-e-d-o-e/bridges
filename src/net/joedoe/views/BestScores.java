@@ -12,6 +12,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import net.joedoe.utils.GameData;
+import net.joedoe.utils.PointEntry;
+import net.joedoe.utils.TimeEntry;
 import net.joedoe.views.DifficultyChooser.Difficulty;
 
 import java.time.LocalTime;

@@ -2,11 +2,14 @@ package net.joedoe.views.board;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
 import net.joedoe.logics.AutoSolver;
@@ -194,8 +197,41 @@ class Grid extends GridPane {
      */
     private void setIsles(List<IIsle> isles) {
         gridController.setPanes(isles, new IsleListener(this));
-        for (IslePane isle : gridController.getPanes())
+        for (IslePane isle : gridController.getPanes()) {
             add(isle, isle.getX(), isle.getY());
+//            if (isle.getX() - 1 >= 0) {
+//                StackPane stack = new StackPane();
+//                stack.setStyle("-fx-background-color: orange;");
+//                stack.setPrefWidth(ONE_TILE >> 1);
+//                add(stack, isle.getX() - 1, isle.getY());
+//                GridPane.setFillWidth(stack, false);
+//                GridPane.setHalignment(stack, HPos.RIGHT);
+//            }
+//            if (isle.getX() + 1 < 5) {
+//                StackPane stack = new StackPane();
+//                stack.setStyle("-fx-background-color: pink;");
+//                stack.setPrefWidth(ONE_TILE >> 1);
+//                add(stack, isle.getX() + 1, isle.getY());
+//                GridPane.setFillWidth(stack, false);
+//            }
+//            if (isle.getY() - 1 >= 0) {
+//                System.out.println("top");
+//                StackPane stack = new StackPane();
+//                stack.setStyle("-fx-background-color: green;");
+//                stack.setPrefHeight(ONE_TILE >> 1);
+//                add(stack, isle.getX(), isle.getY() - 1);
+//                GridPane.setFillHeight(stack, false);
+//                GridPane.setValignment(stack, VPos.BOTTOM);
+//            }
+//            if (isle.getY() + 1 < 5) {
+//                StackPane stack = new StackPane();
+//                stack.setStyle("-fx-background-color: yellow;");
+//                stack.setPrefHeight(ONE_TILE >> 1);
+//                add(stack, isle.getX(), isle.getY() + 1);
+//                GridPane.setFillHeight(stack, false);
+//                GridPane.setValignment(stack, VPos.TOP);
+//            }
+        }
     }
 
     /**

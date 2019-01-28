@@ -2,8 +2,6 @@ package net.joedoe.utils;
 
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
-import net.joedoe.views.PointEntry;
-import net.joedoe.views.TimeEntry;
 
 import java.util.List;
 

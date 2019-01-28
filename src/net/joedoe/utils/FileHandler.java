@@ -4,8 +4,6 @@ import net.joedoe.entities.Bridge;
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
 import net.joedoe.entities.Isle;
-import net.joedoe.views.PointEntry;
-import net.joedoe.views.TimeEntry;
 
 import java.io.*;
 import java.time.LocalTime;

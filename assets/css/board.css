@@ -19,7 +19,7 @@
     -fx-background-image: url("../images/waterBG.gif");
     -fx-background-size: 750 850;
     -fx-border-color: grey;
-    /*-fx-grid-lines-visible: true;*/
+    -fx-grid-lines-visible: true;
 }
 
 /*isles*/

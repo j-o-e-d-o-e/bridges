@@ -112,6 +112,7 @@ public class ViewController {
                     best.setEditableLevel();
                 }
                 board = null;
+                FileHandler.deleteFiles();
                 goTo(BEST);
             } else {
                 gameManager.savePoints();
@@ -174,7 +175,7 @@ public class ViewController {
                     difficulty.setListener(e -> {
                         generator.setData(e.getDifficulty().getLevel() * 5);
                         generator.generateGame();
-                        board = new BoardTime(e1 -> goTo(START));
+                        board = new BoardTime(e1 -> goTo(START), e.getDifficulty().getName());
                         board.setListenerNext(e2 -> {
                             createBestScores();
                             LocalTime time = ((BoardTime) board).getTime();

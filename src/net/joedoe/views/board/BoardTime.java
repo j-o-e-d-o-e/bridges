@@ -12,10 +12,12 @@ import java.io.File;
 import java.time.LocalTime;
 
 public class BoardTime extends Board {
+    private String difficulty;
     private Timer timer;
 
-    public BoardTime(EventHandler<Event> listener) {
+    public BoardTime(EventHandler<Event> listener, String difficulty) {
         super();
+        this.difficulty = difficulty;
         timer = new Timer();
         timer.setListener(() -> Platform.runLater(() -> info.setText(timer.getStringTime())));
         setLayout(listener);
@@ -25,7 +27,7 @@ public class BoardTime extends Board {
     @Override
     void setLayout(EventHandler<Event> listener) {
         setLayout();
-        ToolBar toolbar = new ToolBar("Time mode");
+        ToolBar toolbar = new ToolBar("Time mode (" + difficulty + ")");
         toolbar.setListener(e -> {
             timer.stop();
             player.pause();
@@ -69,7 +71,7 @@ public class BoardTime extends Board {
         timer.start();
     }
 
-    public LocalTime getTime(){
+    public LocalTime getTime() {
         return timer.getTime();
     }
 

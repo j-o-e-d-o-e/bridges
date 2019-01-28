@@ -12,21 +12,26 @@ import javafx.scene.text.Font;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 import static net.joedoe.views.DifficultyChooser.Difficulty.*;
-import static net.joedoe.views.ViewController.View.NEW;
 
 class DifficultyChooser extends BorderPane {
     private EventHandler<DifficultyEvent> listener;
 
     enum Difficulty {
-        VERY_EASY(1), EASY(5), MEDIUM(10), HARD(15), CHALLENGING(20);
+        VERY_EASY(1, "very easy"), EASY(5, "easy"), MEDIUM(10, "medium"), HARD(15, "hard"), CHALLENGING(20, "c   hallenging");
         private int level;
+        private String name;
 
-        Difficulty(int level) {
+        Difficulty(int level, String name) {
             this.level = level;
+            this.name = name;
         }
 
         public int getLevel() {
             return level;
+        }
+
+        public String getName() {
+            return name;
         }
     }
 

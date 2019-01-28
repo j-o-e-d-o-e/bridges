@@ -337,8 +337,8 @@ class Grid extends GridPane {
 
     private void setAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Nächste Brücke");
-        alert.setHeaderText("Keine Brücke gefunden, die sicher ergänzt werden kann.");
+        alert.setTitle("Next bridge");
+        alert.setHeaderText("No bridge found.");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) alert.close();
     }

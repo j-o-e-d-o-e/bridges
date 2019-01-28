@@ -15,8 +15,8 @@ import javafx.util.Duration;
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
 import net.joedoe.utils.GameData;
-import net.joedoe.utils.GameInfo;
 import net.joedoe.utils.GameManager;
+import net.joedoe.utils.Zoom;
 
 import java.io.File;
 import java.util.List;
@@ -89,12 +89,12 @@ public abstract class Board extends BorderPane {
         controlsBox.setMinWidth(200);
         Button zoomIn = new Button("\uD83D\uDD0D+");
         zoomIn.setOnAction(e -> {
-            GameInfo.zoomIn();
+            Zoom.in();
             grid.zoomInOut(width, height, checkBox.isSelected());
         });
         Button zoomOut = new Button("\uD83D\uDD0D-");
         zoomOut.setOnAction(e -> {
-            GameInfo.zoomOut();
+            Zoom.out();
             grid.zoomInOut(width, height, checkBox.isSelected());
         });
         Button sound = new Button("\uD83D\uDD0A");

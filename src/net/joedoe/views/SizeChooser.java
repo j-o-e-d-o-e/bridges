@@ -176,57 +176,15 @@ public class SizeChooser extends BorderPane {
         }
     }
 
-    class SizeEvent extends Event {
-        private Type type;
-        private int width, height, isles;
-
-
-        SizeEvent(Integer width, Integer height, Integer isles) {
-            super(null);
-            type = Type.WIDTH_HEIGHT_ISLES;
-            this.width = width;
-            this.height = height;
-            this.isles = isles;
-        }
-
-        SizeEvent(int width, int height) {
-            super(null);
-            type = Type.WIDTH_HEIGHT;
-            this.width = width;
-            this.height = height;
-        }
-
-        SizeEvent() {
-            super(null);
-            type = Type.AUTO;
-        }
-
-        public int getWidth() {
-            return width;
-        }
-
-        public int getHeight() {
-            return height;
-        }
-
-        public int getIsles() {
-            return isles;
-        }
-
-        public Type getType() {
-            return type;
-        }
-    }
-
-    void setListener(EventHandler<SizeEvent> listener) {
-        this.listener = listener;
-    }
-
     private void setAlert(String text) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Invalid input");
         alert.setHeaderText(text);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) alert.close();
+    }
+
+    void setListener(EventHandler<SizeEvent> listener) {
+        this.listener = listener;
     }
 }

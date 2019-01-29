@@ -12,6 +12,8 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         stage.setTitle("Hashiwokakero");
+        stage.setWidth(768);
+        stage.setHeight(1024);
         ViewController controller = new ViewController(stage);
         stage.setOnCloseRequest(e -> {
             e.consume();

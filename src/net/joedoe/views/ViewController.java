@@ -16,20 +16,21 @@ import java.io.IOException;
 import java.time.LocalTime;
 import java.util.Optional;
 
-import static net.joedoe.utils.GameManager.Mode.*;
-import static net.joedoe.views.SizeChooser.Type.*;
+import static net.joedoe.utils.GameManager.Mode.LEVEL;
+import static net.joedoe.utils.GameManager.Mode.TIME;
+import static net.joedoe.views.SizeChooser.Type.AUTO;
+import static net.joedoe.views.SizeChooser.Type.WIDTH_HEIGHT;
 import static net.joedoe.views.ViewController.View.*;
 
 public class ViewController {
     private final Stage stage;
-    private final int width = 768, height = 1024;
+    private GameManager gameManager = GameManager.getInstance();
+    private GameData gameData = GameData.getInstance();
+    private Generator generator = new Generator();
     private Scene startScene, boardScene, modeScene, difficultyScene, sizeScene, bestScene, howToScene;
     private Start start;
     private Board board;
     private BestScores best;
-    private GameManager gameManager = GameManager.getInstance();
-    private GameData gameData = GameData.getInstance();
-    private Generator generator = new Generator();
 
     public enum View {
         START, NEW, RESUME, LOAD, BEST, HOWTO, QUIT
@@ -51,12 +52,10 @@ public class ViewController {
             case START:
                 if (startScene == null) {
                     start = new Start(e -> goTo(e.getView()));
-                    startScene = new Scene(start, width, height);
+                    startScene = new Scene(start, stage.getWidth(), stage.getHeight());
                 }
-                if (board == null) start.disableResume(true);
-                else start.disableResume(false);
-                if (!FileHandler.filesExist()) start.disableLoad(true);
-                else start.disableLoad(false);
+                start.disableResume(board == null);
+                start.disableLoad(!FileHandler.filesExist());
                 stage.setScene(startScene);
                 return;
             case NEW:
@@ -66,7 +65,7 @@ public class ViewController {
                         gameManager.setMode(e.getMode());
                         createNewGame();
                     });
-                    modeScene = new Scene(mode, width, height);
+                    modeScene = new Scene(mode, stage.getWidth(), stage.getHeight());
                 }
                 stage.setScene(modeScene);
                 return;
@@ -92,7 +91,8 @@ public class ViewController {
                 stage.setScene(bestScene);
                 return;
             case HOWTO:
-                if (howToScene == null) howToScene = new Scene(new HowTo(e -> goTo(START)), width, height);
+                if (howToScene == null)
+                    howToScene = new Scene(new HowTo(e -> goTo(START)), stage.getWidth(), stage.getHeight());
                 stage.setScene(howToScene);
                 return;
             case QUIT:
@@ -131,7 +131,7 @@ public class ViewController {
             }
         });
         ((BoardLevel) board).updateToolbar();
-        boardScene = new Scene(board, width, height);
+        boardScene = new Scene(board, stage.getWidth(), stage.getHeight());
     }
 
 
@@ -146,7 +146,7 @@ public class ViewController {
                     showAlert(AlertType.ERROR, "Saving scores", "Scores could not be saved.");
                 }
             });
-            bestScene = new Scene(best, width, height);
+            bestScene = new Scene(best, stage.getWidth(), stage.getHeight());
         }
     }
 
@@ -220,11 +220,11 @@ public class ViewController {
                             board = null;
                             goTo(BEST);
                         });
-                        boardScene = new Scene(board, width, height);
+                        boardScene = new Scene(board, stage.getWidth(), stage.getHeight());
                         board.setGrid();
                         stage.setScene(boardScene);
                     });
-                    difficultyScene = new Scene(difficulty, width, height);
+                    difficultyScene = new Scene(difficulty, stage.getWidth(), stage.getHeight());
                 }
                 stage.setScene(difficultyScene);
                 break;
@@ -242,11 +242,11 @@ public class ViewController {
                             board = null;
                             goTo(START);
                         });
-                        boardScene = new Scene(board, width, height);
+                        boardScene = new Scene(board, stage.getWidth(), stage.getHeight());
                         board.setGrid();
                         stage.setScene(boardScene);
                     });
-                    sizeScene = new Scene(size, width, height);
+                    sizeScene = new Scene(size, stage.getWidth(), stage.getHeight());
                 }
                 stage.setScene(sizeScene);
         }

@@ -1,6 +1,5 @@
 package net.joedoe.views;
 
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -10,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import net.joedoe.views.ViewController.View;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 import static net.joedoe.views.ViewController.View.*;
@@ -20,7 +18,7 @@ class Start extends BorderPane {
 
     Start(EventHandler<ViewEvent> listener) {
         setStyle("-fx-background-color: #282828;");
-        setTop(new ToolBar("Start", false));
+        setTop(new ToolBar("Hashiwokakero", false));
         setCenter(setLayout(listener));
     }
 
@@ -70,18 +68,5 @@ class Start extends BorderPane {
 
     void disableLoad(boolean disable) {
         load.setDisable(disable);
-    }
-
-    class ViewEvent extends Event {
-        private View view;
-
-        ViewEvent(View view) {
-            super(null);
-            this.view = view;
-        }
-
-        public View getView() {
-            return view;
-        }
     }
 }

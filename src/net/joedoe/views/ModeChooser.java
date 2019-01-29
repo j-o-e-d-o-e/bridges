@@ -15,7 +15,6 @@ import net.joedoe.utils.GameManager.Mode;
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 
 class ModeChooser extends BorderPane {
-
     private EventHandler<ModeEvent> listener;
 
     ModeChooser(EventHandler<Event> listener) {
@@ -61,18 +60,5 @@ class ModeChooser extends BorderPane {
 
     void setListener(EventHandler<ModeEvent> listener) {
         this.listener = listener;
-    }
-
-    class ModeEvent extends Event {
-        private Mode mode;
-
-        ModeEvent(Mode mode) {
-            super(null);
-            this.mode = mode;
-        }
-
-        Mode getMode() {
-            return mode;
-        }
     }
 }

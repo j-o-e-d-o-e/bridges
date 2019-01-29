@@ -14,12 +14,11 @@ import javafx.scene.text.Font;
 import net.joedoe.utils.GameData;
 import net.joedoe.utils.PointEntry;
 import net.joedoe.utils.TimeEntry;
-import net.joedoe.views.DifficultyChooser.Difficulty;
 
 import java.time.LocalTime;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
-import static net.joedoe.views.DifficultyChooser.Difficulty.*;
+import static net.joedoe.views.Difficulty.*;
 
 class BestScores extends BorderPane {
     private GameData gameData = GameData.getInstance();

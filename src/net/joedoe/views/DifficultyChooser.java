@@ -10,30 +10,11 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import static net.joedoe.views.Difficulty.*;
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
-import static net.joedoe.views.DifficultyChooser.Difficulty.*;
 
 class DifficultyChooser extends BorderPane {
     private EventHandler<DifficultyEvent> listener;
-
-    enum Difficulty {
-        VERY_EASY(1, "very easy"), EASY(5, "easy"), MEDIUM(10, "medium"), HARD(15, "hard"), CHALLENGING(20, "challenging");
-        private int level;
-        private String name;
-
-        Difficulty(int level, String name) {
-            this.level = level;
-            this.name = name;
-        }
-
-        public int getLevel() {
-            return level;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
 
     DifficultyChooser(EventHandler<Event> listener) {
         setStyle("-fx-background-color: #282828;");
@@ -84,19 +65,6 @@ class DifficultyChooser extends BorderPane {
         innerPane.getChildren().addAll(box);
         outerPane.getChildren().add(innerPane);
         return outerPane;
-    }
-
-    class DifficultyEvent extends Event {
-        private Difficulty difficulty;
-
-        DifficultyEvent(Difficulty difficulty) {
-            super(null);
-            this.difficulty = difficulty;
-        }
-
-        Difficulty getDifficulty() {
-            return difficulty;
-        }
     }
 
     void setListener(EventHandler<DifficultyEvent> listener) {

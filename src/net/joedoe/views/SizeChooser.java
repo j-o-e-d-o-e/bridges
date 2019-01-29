@@ -23,10 +23,6 @@ public class SizeChooser extends BorderPane {
     private CheckBox checkBox;
     private EventHandler<SizeEvent> listener;
 
-    enum Type {
-        AUTO, WIDTH_HEIGHT, WIDTH_HEIGHT_ISLES
-    }
-
     /**
      * Erzeugt einen Dialog, in dem der Nutzer Angaben bzgl. Breite und Höhe des
      * Spielfelds sowie Anzahl der zu platzierenden Inseln tätigt, um ein neues

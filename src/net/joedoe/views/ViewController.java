@@ -16,11 +16,11 @@ import java.io.IOException;
 import java.time.LocalTime;
 import java.util.Optional;
 
-import static net.joedoe.utils.GameManager.Mode.LEVEL;
-import static net.joedoe.utils.GameManager.Mode.TIME;
-import static net.joedoe.views.SizeChooser.Type.AUTO;
-import static net.joedoe.views.SizeChooser.Type.WIDTH_HEIGHT;
-import static net.joedoe.views.ViewController.View.*;
+import static net.joedoe.views.Mode.LEVEL;
+import static net.joedoe.views.Mode.TIME;
+import static net.joedoe.views.Size.AUTO;
+import static net.joedoe.views.Size.WIDTH_HEIGHT;
+import static net.joedoe.views.View.*;
 
 public class ViewController {
     private final Stage stage;
@@ -31,10 +31,6 @@ public class ViewController {
     private Start start;
     private Board board;
     private BestScores best;
-
-    public enum View {
-        START, NEW, RESUME, LOAD, BEST, HOWTO, QUIT
-    }
 
     public ViewController(Stage stage) {
         this.stage = stage;
@@ -232,8 +228,8 @@ public class ViewController {
                 if (sizeScene == null) {
                     SizeChooser size = new SizeChooser(e -> goTo(NEW));
                     size.setListener(e -> {
-                        if (e.getType() == AUTO) generator.setData();
-                        else if (e.getType() == WIDTH_HEIGHT) generator.setData(e.getWidth(), e.getHeight());
+                        if (e.getSize() == AUTO) generator.setData();
+                        else if (e.getSize() == WIDTH_HEIGHT) generator.setData(e.getWidth(), e.getHeight());
                         else generator.setData(e.getWidth(), e.getHeight(), e.getIsles());
                         generator.generateGame();
                         board = new BoardFree(e1 -> goTo(START));

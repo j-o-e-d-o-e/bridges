@@ -10,7 +10,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import net.joedoe.utils.GameManager.Mode;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 

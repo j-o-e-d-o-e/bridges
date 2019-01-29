@@ -2,14 +2,14 @@ package net.joedoe.views;
 
 import javafx.event.Event;
 
-class SizeEvent extends Event {
-    private SizeChooser.Type type;
-    private int width, height, isles;
+import static net.joedoe.views.Size.*;
 
+class SizeEvent extends Event {
+    private Size size = WIDTH_HEIGHT_ISLES;
+    private int width, height, isles;
 
     SizeEvent(Integer width, Integer height, Integer isles) {
         super(null);
-        type = SizeChooser.Type.WIDTH_HEIGHT_ISLES;
         this.width = width;
         this.height = height;
         this.isles = isles;
@@ -17,14 +17,14 @@ class SizeEvent extends Event {
 
     SizeEvent(int width, int height) {
         super(null);
-        type = SizeChooser.Type.WIDTH_HEIGHT;
+        size = WIDTH_HEIGHT;
         this.width = width;
         this.height = height;
     }
 
     SizeEvent() {
         super(null);
-        type = SizeChooser.Type.AUTO;
+        size = AUTO;
     }
 
     public int getWidth() {
@@ -39,7 +39,7 @@ class SizeEvent extends Event {
         return isles;
     }
 
-    public SizeChooser.Type getType() {
-        return type;
+    public Size getSize() {
+        return size;
     }
 }

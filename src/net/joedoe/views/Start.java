@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
-import static net.joedoe.views.ViewController.View.*;
+import static net.joedoe.views.View.*;
 
 class Start extends BorderPane {
     private Button load, resume;

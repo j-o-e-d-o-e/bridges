@@ -3,14 +3,14 @@ package net.joedoe.views;
 import javafx.event.Event;
 
 class ViewEvent extends Event {
-    private ViewController.View view;
+    private View view;
 
-    ViewEvent(ViewController.View view) {
+    ViewEvent(View view) {
         super(null);
         this.view = view;
     }
 
-    ViewController.View getView() {
+    View getView() {
         return view;
     }
 }

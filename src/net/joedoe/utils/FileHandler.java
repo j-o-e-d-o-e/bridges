@@ -4,6 +4,7 @@ import net.joedoe.entities.Bridge;
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
 import net.joedoe.entities.Isle;
+import net.joedoe.views.Difficulty;
 
 import java.io.*;
 import java.time.LocalTime;
@@ -14,9 +15,6 @@ import java.util.regex.Pattern;
 
 import static net.joedoe.utils.GameInfo.*;
 
-/**
- * Lädt bzw. speichert Daten in bzw. aus dem .bgs-Format.
- */
 public class FileHandler {
     private static GameData gameData = GameData.getInstance();
     private static GameManager gameManager = GameManager.getInstance();
@@ -29,13 +27,6 @@ public class FileHandler {
         loadPuzzle(filepathPuzzle);
     }
 
-    /**
-     * Lädt Spiel-Daten aus Datei.
-     *
-     * @param filepath Dateipfad der Lade-Datei
-     * @throws IOException              falls Ausnahme beim Auslesen auftritt
-     * @throws IllegalArgumentException falls Datei semantische oder syntaktische Fehler aufweist
-     */
     public static void loadPuzzle(String filepathPuzzle) throws IOException, IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         BufferedReader in = new BufferedReader(new FileReader(filepathPuzzle));
@@ -56,28 +47,6 @@ public class FileHandler {
         String input = sb.toString();
         input = input.replaceAll("\\s+", "");
         // Daten laden und semantische Fehlerüberprüfung
-        loadData(input);
-    }
-
-    /**
-     * Syntaktische Fehlerüberprüfung.
-     *
-     * @param line zu überprüfender, eingelesene Zeile
-     * @return true, falls keine syntaktischen Fehler enthalten sind
-     */
-    private static boolean valid(String line) {
-        return line.equals("FIELD") || line.equals("ISLANDS") || line.equals("BRIDGES")
-                || line.matches("\\d+ x \\d+ \\| \\d+") || line.matches("\\( \\d+, \\d+ \\| \\d+ \\)")
-                || line.matches("\\( \\d+, \\d+ \\| (true|false) \\)");
-    }
-
-    /**
-     * Semantische Fehlerüberprüfung und Laden der Spieldaten.
-     *
-     * @param input ausgelesener String
-     * @throws IllegalArgumentException falls semantische Fehler vorhanden sind
-     */
-    private static void loadData(String input) throws IllegalArgumentException {
         // 'FIELD'-Sektion
         Pattern pattern = Pattern.compile("(\\d+)x(\\d+)\\|(\\d+)");
         Matcher matcher = pattern.matcher(input);
@@ -130,28 +99,18 @@ public class FileHandler {
         gameData.setBridges(bridges);
     }
 
+    private static boolean valid(String line) {
+        return line.equals("FIELD") || line.equals("ISLANDS") || line.equals("BRIDGES")
+                || line.matches("\\d+ x \\d+ \\| \\d+") || line.matches("\\( \\d+, \\d+ \\| \\d+ \\)")
+                || line.matches("\\( \\d+, \\d+ \\| (true|false) \\)");
+    }
+
     public static void savePuzzle() throws IOException {
         savePuzzle(filepathPuzzle);
     }
 
-    /**
-     * Speichert Spiel-Daten in Datei.
-     *
-     * @param filepath Dateipfad zu der Speicher-Datei.
-     * @throws IOException falls Ausnahme beim Einlesen auftritt
-     */
     public static void savePuzzle(String filepathPuzzle) throws IOException {
         BufferedWriter out = new BufferedWriter(new FileWriter(filepathPuzzle));
-        out.write(saveData());
-        out.close();
-    }
-
-    /**
-     * Erzeugt Inhalt mit den zu speichernden Daten.
-     *
-     * @return Inhalt der zu speichernden Daten
-     */
-    private static String saveData() {
         StringBuilder sb = new StringBuilder();
         sb.append("#PUZZLE").append(System.lineSeparator());
         // 'FIELD'-Sektion einlesen
@@ -175,7 +134,8 @@ public class FileHandler {
                         .append(System.lineSeparator());
             }
         }
-        return sb.toString();
+        out.write(sb.toString());
+        out.close();
     }
 
     public static void loadUser() throws IOException {
@@ -219,55 +179,17 @@ public class FileHandler {
                 PointEntry bestLevel = new PointEntry(points, name);
                 gameData.setBestLevel(bestLevel);
             }
-            pattern = Pattern.compile("Very easy: (\\d+):(\\d+) (\\S+)");
-            matcher = pattern.matcher(line);
-            if (matcher.find()) {
-                int mins = Integer.parseInt(matcher.group(1));
-                int secs = Integer.parseInt(matcher.group(2));
-                LocalTime time = LocalTime.of(0, mins, secs);
-                String name = matcher.group(3);
-                TimeEntry bestVeryEasy = new TimeEntry(time, name);
-                gameData.setBestVeryEasy(bestVeryEasy);
-            }
-            pattern = Pattern.compile("Easy: (\\d+):(\\d+) (\\S+)");
-            matcher = pattern.matcher(line);
-            if (matcher.find()) {
-                int mins = Integer.parseInt(matcher.group(1));
-                int secs = Integer.parseInt(matcher.group(2));
-                LocalTime time = LocalTime.of(0, mins, secs);
-                String name = matcher.group(3);
-                TimeEntry bestEasy = new TimeEntry(time, name);
-                gameData.setBestEasy(bestEasy);
-            }
-            pattern = Pattern.compile("Medium: (\\d+):(\\d+) (\\S+)");
-            matcher = pattern.matcher(line);
-            if (matcher.find()) {
-                int mins = Integer.parseInt(matcher.group(1));
-                int secs = Integer.parseInt(matcher.group(2));
-                LocalTime time = LocalTime.of(0, mins, secs);
-                String name = matcher.group(3);
-                TimeEntry bestMedium = new TimeEntry(time, name);
-                gameData.setBestMedium(bestMedium);
-            }
-            pattern = Pattern.compile("Hard: (\\d+):(\\d+) (\\S+)");
-            matcher = pattern.matcher(line);
-            if (matcher.find()) {
-                int mins = Integer.parseInt(matcher.group(1));
-                int secs = Integer.parseInt(matcher.group(2));
-                LocalTime time = LocalTime.of(0, mins, secs);
-                String name = matcher.group(3);
-                TimeEntry bestHard = new TimeEntry(time, name);
-                gameData.setBestHard(bestHard);
-            }
-            pattern = Pattern.compile("Challenging: (\\d+):(\\d+) (\\S+)");
-            matcher = pattern.matcher(line);
-            if (matcher.find()) {
-                int mins = Integer.parseInt(matcher.group(1));
-                int secs = Integer.parseInt(matcher.group(2));
-                LocalTime time = LocalTime.of(0, mins, secs);
-                String name = matcher.group(3);
-                TimeEntry bestChallenging = new TimeEntry(time, name);
-                gameData.setBestChallenging(bestChallenging);
+            for (Difficulty difficulty : Difficulty.values()) {
+                pattern = Pattern.compile(difficulty.getName() + ": (\\d+):(\\d+) (\\S+)");
+                matcher = pattern.matcher(line);
+                if (matcher.find()) {
+                    int mins = Integer.parseInt(matcher.group(1));
+                    int secs = Integer.parseInt(matcher.group(2));
+                    LocalTime time = LocalTime.of(0, mins, secs);
+                    String name = matcher.group(3);
+                    TimeEntry bestVeryEasy = new TimeEntry(time, name);
+                    gameData.setBestTime(difficulty, bestVeryEasy);
+                }
             }
             line = in.readLine();
         }
@@ -276,32 +198,16 @@ public class FileHandler {
 
     public static void saveScores() throws IOException {
         BufferedWriter out = new BufferedWriter(new FileWriter(filepathScores));
-        StringBuilder sb = new StringBuilder("#SCORES");
-        sb.append(System.lineSeparator());
+        StringBuilder sb = new StringBuilder("#SCORES").append(System.lineSeparator()).append("#Level").append(System.lineSeparator());
 
         PointEntry bestLevel = gameData.getBestLevel();
         sb.append("Level: ").append(bestLevel.getPoints()).append(" ").append(bestLevel.getName()).append(System.lineSeparator());
-
-        TimeEntry veryEasy = gameData.getBestVeryEasy();
-        LocalTime time = veryEasy.getTime();
-        sb.append("Very easy: ").append(time.getMinute()).append(":").append(time.getSecond()).append(" ").append(veryEasy.getName()).append(System.lineSeparator());
-
-        TimeEntry easy = gameData.getBestEasy();
-        time = easy.getTime();
-        sb.append("Easy: ").append(time.getMinute()).append(":").append(time.getSecond()).append(" ").append(easy.getName()).append(System.lineSeparator());
-
-        TimeEntry medium = gameData.getBestMedium();
-        time = medium.getTime();
-        sb.append("Medium: ").append(time.getMinute()).append(":").append(time.getSecond()).append(" ").append(medium.getName()).append(System.lineSeparator());
-
-        TimeEntry hard = gameData.getBestHard();
-        time = hard.getTime();
-        sb.append("Hard: ").append(time.getMinute()).append(":").append(time.getSecond()).append(" ").append(hard.getName()).append(System.lineSeparator());
-
-        TimeEntry challenging = gameData.getBestChallenging();
-        time = challenging.getTime();
-        sb.append("Challenging: ").append(time.getMinute()).append(":").append(time.getSecond()).append(" ").append(challenging.getName()).append(System.lineSeparator());
-
+        sb.append("#Time").append(System.lineSeparator());
+        for (Difficulty difficulty : Difficulty.values()) {
+            TimeEntry entry = gameData.getBestTime(difficulty);
+            LocalTime time = entry.getTime();
+            sb.append(difficulty.getName()).append(": ").append(time.getMinute()).append(":").append(time.getSecond()).append(" ").append(entry.getName()).append(System.lineSeparator());
+        }
         out.write(sb.toString());
         out.close();
     }

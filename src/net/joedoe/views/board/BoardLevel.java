@@ -52,4 +52,8 @@ public class BoardLevel extends Board {
     public void updateToolbar() {
         toolbar.updateTitle("Level " + gameManager.getLevel() + "/25");
     }
+
+    public void setPoints() {
+        info.setText(Integer.toString(gameManager.getAllPoints()));
+    }
 }

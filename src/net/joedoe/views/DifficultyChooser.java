@@ -67,7 +67,7 @@ class DifficultyChooser extends BorderPane {
         return outerPane;
     }
 
-    void setListener(EventHandler<DifficultyEvent> listener) {
+    void setNext(EventHandler<DifficultyEvent> listener) {
         this.listener = listener;
     }
 }

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.time.LocalTime;
 import java.util.Optional;
 
+import static net.joedoe.views.Difficulty.VERY_EASY;
 import static net.joedoe.views.Mode.LEVEL;
 import static net.joedoe.views.Mode.TIME;
 import static net.joedoe.views.Size.AUTO;
@@ -27,10 +28,9 @@ public class ViewController {
     private GameManager gameManager = GameManager.getInstance();
     private GameData gameData = GameData.getInstance();
     private Generator generator = new Generator();
-    private Scene startScene, boardScene, modeScene, difficultyScene, sizeScene, bestScene, howToScene;
+    private Scene startScene, boardScene, modeScene, difficultyScene, sizeScene, howToScene;
     private Start start;
     private Board board;
-    private BestScores best;
 
     public ViewController(Stage stage) {
         this.stage = stage;
@@ -57,7 +57,7 @@ public class ViewController {
             case NEW:
                 if (modeScene == null) {
                     ModeChooser mode = new ModeChooser(e -> goTo(START));
-                    mode.setListener(e -> {
+                    mode.setNext(e -> {
                         gameManager.setMode(e.getMode());
                         createNewGame();
                     });
@@ -83,7 +83,7 @@ public class ViewController {
                 stage.setScene(boardScene);
                 return;
             case BEST:
-                createBestScores();
+                Scene bestScene = new Scene(new BestScores(e -> goTo(START)), stage.getWidth(), stage.getHeight());
                 stage.setScene(bestScene);
                 return;
             case HOWTO:
@@ -96,20 +96,93 @@ public class ViewController {
         }
     }
 
+    private void createNewGame() {
+        switch (gameManager.getMode()) {
+            case LEVEL:
+                if (FileHandler.filesExist()) {
+                    if (!showAlert(AlertType.CONFIRMATION, "New game", "Previous level progress will be deleted."))
+                        return;
+                    if (!FileHandler.deleteFiles()) {
+                        showAlert(AlertType.ERROR, "Deleting progress", "Level progress could not be deleted");
+                        return;
+                    }
+                }
+                gameManager.setLevel(1);
+                gameManager.resetAllPoints();
+                generator.setData(VERY_EASY.getIsles());
+                generator.generateGame();
+                createBoardLevel();
+                board.setGrid();
+                stage.setScene(boardScene);
+                break;
+            case TIME:
+                if (difficultyScene == null) {
+                    DifficultyChooser difficulty = new DifficultyChooser(e -> goTo(NEW));
+                    difficulty.setNext(e1 -> {
+                        Difficulty diff = e1.getDifficulty();
+                        generator.setData(diff.getIsles());
+                        generator.generateGame();
+                        board = new BoardTime(e2 -> goTo(START), diff.getName());
+                        board.setNext(e3 -> {
+                            LocalTime time = ((BoardTime) board).getTime();
+                            board = null;
+                            TimeEntry bestTime = gameData.getBestTime(diff);
+                            if (time.compareTo(bestTime.getTime()) < 0) {
+                                String timeTxt = String.format("%02d:%02d", time.getMinute(), time.getSecond());
+                                NewScore newScore = new NewScore("New time score (" + diff.getName() + ")", timeTxt);
+                                newScore.setNext(e4 -> {
+                                    gameData.setBestTime(diff, new TimeEntry(time, e4.getName()));
+                                    goTo(BEST);
+                                });
+                                stage.setScene(new Scene(newScore, stage.getWidth(), stage.getHeight()));
+                            } else goTo(BEST);
+                        });
+                        boardScene = new Scene(board, stage.getWidth(), stage.getHeight());
+                        board.setGrid();
+                        stage.setScene(boardScene);
+                    });
+                    difficultyScene = new Scene(difficulty, stage.getWidth(), stage.getHeight());
+                }
+                stage.setScene(difficultyScene);
+                break;
+            case FREE:
+                if (sizeScene == null) {
+                    SizeChooser size = new SizeChooser(e -> goTo(NEW));
+                    size.setNext(e -> {
+                        if (e.getSize() == AUTO) generator.setData();
+                        else if (e.getSize() == WIDTH_HEIGHT) generator.setData(e.getWidth(), e.getHeight());
+                        else generator.setData(e.getWidth(), e.getHeight(), e.getIsles());
+                        generator.generateGame();
+                        board = new BoardFree(e1 -> goTo(START));
+                        board.setNext(e2 -> {
+                            board = null;
+                            goTo(START);
+                        });
+                        boardScene = new Scene(board, stage.getWidth(), stage.getHeight());
+                        board.setGrid();
+                        stage.setScene(boardScene);
+                    });
+                    sizeScene = new Scene(size, stage.getWidth(), stage.getHeight());
+                }
+                stage.setScene(sizeScene);
+        }
+    }
+
     private void createBoardLevel() {
         board = new BoardLevel(e -> goTo(START));
-        board.setListenerNext(e -> {
+        board.setNext(e1 -> {
             if (gameManager.getLevel() == 10) {
-                int points = gameManager.getAllPoints();
-                if (points > gameData.getBestLevel().getPoints()) {
-                    gameData.setBestLevel(new PointEntry(points, ""));
-                    createBestScores();
-                    best.setLevelPoints(points);
-                    best.setEditableLevel();
-                }
                 board = null;
                 FileHandler.deleteFiles();
-                goTo(BEST);
+                int points = gameManager.getAllPoints();
+                if (points > gameData.getBestLevel().getPoints()) {
+                    NewScore newScore = new NewScore("New Level score:", Integer.toString(points));
+                    newScore.setNext(e2 -> {
+                        gameData.setBestLevel(new PointEntry(points, e2.getName()));
+                        goTo(BEST);
+                    });
+                    stage.setScene(new Scene(newScore, stage.getWidth(), stage.getHeight()));
+                } else goTo(BEST);
             } else {
                 gameManager.savePoints();
                 gameManager.increaseLevel();
@@ -127,125 +200,8 @@ public class ViewController {
             }
         });
         ((BoardLevel) board).updateToolbar();
+        ((BoardLevel) board).setPoints();
         boardScene = new Scene(board, stage.getWidth(), stage.getHeight());
-    }
-
-
-    private void createBestScores() {
-        if (bestScene == null) {
-            best = new BestScores(e -> goTo(START));
-            best.setListener(e2 -> {
-                try {
-                    FileHandler.saveScores();
-                    System.out.println("save");
-                } catch (IOException e1) {
-                    showAlert(AlertType.ERROR, "Saving scores", "Scores could not be saved.");
-                }
-            });
-            bestScene = new Scene(best, stage.getWidth(), stage.getHeight());
-        }
-    }
-
-    private void createNewGame() {
-        switch (gameManager.getMode()) {
-            case LEVEL:
-                if (FileHandler.filesExist()) {
-                    if (!showAlert(AlertType.CONFIRMATION, "New game", "Previous level progress will be deleted."))
-                        return;
-                    if (!FileHandler.deleteFiles()) {
-                        showAlert(AlertType.ERROR, "Deleting progress", "Level progress could not be deleted");
-                        return;
-                    }
-                }
-                gameManager.setLevel(1);
-                gameManager.resetAllPoints();
-                generator.setData(5);
-                generator.generateGame();
-                createBoardLevel();
-                board.setGrid();
-                stage.setScene(boardScene);
-                break;
-            case TIME:
-                if (difficultyScene == null) {
-                    DifficultyChooser difficulty = new DifficultyChooser(e -> goTo(NEW));
-                    difficulty.setListener(e -> {
-                        generator.setData(e.getDifficulty().getLevel() * 5);
-                        generator.generateGame();
-                        board = new BoardTime(e1 -> goTo(START), e.getDifficulty().getName());
-                        board.setListenerNext(e2 -> {
-                            createBestScores();
-                            LocalTime time = ((BoardTime) board).getTime();
-                            switch (e.getDifficulty()) {
-                                case VERY_EASY:
-                                    if (time.compareTo(gameData.getBestVeryEasy().getTime()) < 0) {
-                                        gameData.setBestVeryEasy(new TimeEntry(time, ""));
-                                        best.setVeryEasyTime(time);
-                                        best.setEditableVeryEasy();
-                                    }
-                                    break;
-                                case EASY:
-                                    if (time.compareTo(gameData.getBestEasy().getTime()) < 0) {
-                                        gameData.setBestEasy(new TimeEntry(time, ""));
-                                        best.setEasyTime(time);
-                                        best.setEditableEasy();
-                                    }
-                                    break;
-                                case MEDIUM:
-                                    if (time.compareTo(gameData.getBestMedium().getTime()) < 0) {
-                                        gameData.setBestMedium(new TimeEntry(time, ""));
-                                        best.setMediumTime(time);
-                                        best.setEditableMedium();
-                                    }
-                                    break;
-                                case HARD:
-                                    if (time.compareTo(gameData.getBestHard().getTime()) < 0) {
-                                        gameData.setBestHard(new TimeEntry(time, ""));
-                                        best.setHardTime(time);
-                                        best.setEditableHard();
-                                    }
-                                    break;
-                                case CHALLENGING:
-                                    if (time.compareTo(gameData.getBestChallenging().getTime()) < 0) {
-                                        gameData.setBestChallenging(new TimeEntry(time, ""));
-                                        best.setChallengingTime(time);
-                                        best.setEditableChallenging();
-                                    }
-                                    break;
-                            }
-                            board.stopSound();
-                            board = null;
-                            goTo(BEST);
-                        });
-                        boardScene = new Scene(board, stage.getWidth(), stage.getHeight());
-                        board.setGrid();
-                        stage.setScene(boardScene);
-                    });
-                    difficultyScene = new Scene(difficulty, stage.getWidth(), stage.getHeight());
-                }
-                stage.setScene(difficultyScene);
-                break;
-            case FREE:
-                if (sizeScene == null) {
-                    SizeChooser size = new SizeChooser(e -> goTo(NEW));
-                    size.setListener(e -> {
-                        if (e.getSize() == AUTO) generator.setData();
-                        else if (e.getSize() == WIDTH_HEIGHT) generator.setData(e.getWidth(), e.getHeight());
-                        else generator.setData(e.getWidth(), e.getHeight(), e.getIsles());
-                        generator.generateGame();
-                        board = new BoardFree(e1 -> goTo(START));
-                        board.setListenerNext(e2 -> {
-                            board.stopSound();
-                            board = null;
-                            goTo(START);
-                        });
-                        boardScene = new Scene(board, stage.getWidth(), stage.getHeight());
-                        board.setGrid();
-                        stage.setScene(boardScene);
-                    });
-                    sizeScene = new Scene(size, stage.getWidth(), stage.getHeight());
-                }
-                stage.setScene(sizeScene);
-        }
     }
 
     private boolean showAlert(AlertType alertType, String title, String text) {
@@ -269,6 +225,7 @@ public class ViewController {
                     board.savePuzzle();
                     FileHandler.savePuzzle();
                 }
+                FileHandler.saveScores();
             } catch (IOException e) {
                 showAlert(AlertType.ERROR, "Saving Level", "Level progress could not be saved.");
             }

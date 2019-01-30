@@ -57,7 +57,7 @@ class ModeChooser extends BorderPane {
         return outerPane;
     }
 
-    void setListener(EventHandler<ModeEvent> listener) {
+    void setNext(EventHandler<ModeEvent> listener) {
         this.listener = listener;
     }
 }

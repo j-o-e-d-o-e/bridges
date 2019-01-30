@@ -2,6 +2,7 @@ package net.joedoe.utils;
 
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
+import net.joedoe.views.Difficulty;
 
 import java.util.List;
 
@@ -146,43 +147,44 @@ public class GameData {
         this.bestLevel = bestLevel;
     }
 
-    public TimeEntry getBestVeryEasy() {
-        return bestVeryEasy;
+    public TimeEntry getBestTime(Difficulty difficulty) {
+        TimeEntry time = null;
+        switch (difficulty) {
+            case VERY_EASY:
+                time = bestVeryEasy;
+                break;
+            case EASY:
+                time = bestEasy;
+                break;
+            case MEDIUM:
+                time = bestMedium;
+                break;
+            case HARD:
+                time = bestHard;
+                break;
+            case CHALLENGING:
+                time = bestChallenging;
+        }
+        return time;
     }
 
-    public void setBestVeryEasy(TimeEntry bestVeryEasy) {
-        this.bestVeryEasy = bestVeryEasy;
-    }
-
-    public TimeEntry getBestEasy() {
-        return bestEasy;
-    }
-
-    public void setBestEasy(TimeEntry bestEasy) {
-        this.bestEasy = bestEasy;
-    }
-
-    public TimeEntry getBestMedium() {
-        return bestMedium;
-    }
-
-    public void setBestMedium(TimeEntry bestMedium) {
-        this.bestMedium = bestMedium;
-    }
-
-    public TimeEntry getBestHard() {
-        return bestHard;
-    }
-
-    public void setBestHard(TimeEntry bestHard) {
-        this.bestHard = bestHard;
-    }
-
-    public TimeEntry getBestChallenging() {
-        return bestChallenging;
-    }
-
-    public void setBestChallenging(TimeEntry bestChallenging) {
-        this.bestChallenging = bestChallenging;
+    public void setBestTime(Difficulty difficulty, TimeEntry time) {
+        switch (difficulty) {
+            case VERY_EASY:
+                bestVeryEasy = time;
+                break;
+            case EASY:
+                bestEasy = time;
+                break;
+            case MEDIUM:
+                bestMedium = time;
+                break;
+            case HARD:
+                bestHard = time;
+                break;
+            case CHALLENGING:
+                bestChallenging = time;
+                break;
+        }
     }
 }

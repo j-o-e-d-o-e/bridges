@@ -1,17 +1,17 @@
 package net.joedoe.views;
 
-enum Difficulty {
-    VERY_EASY(1, "very easy"), EASY(5, "easy"), MEDIUM(10, "medium"), HARD(15, "hard"), CHALLENGING(20, "challenging");
-    private int level;
+public enum Difficulty {
+    VERY_EASY(5, "very easy"), EASY(25, "easy"), MEDIUM(50, "medium"), HARD(75, "hard"), CHALLENGING(100, "challenging");
+    private int isles;
     private String name;
 
-    Difficulty(int level, String name) {
-        this.level = level;
+    Difficulty(int isles, String name) {
+        this.isles = isles;
         this.name = name;
     }
 
-    public int getLevel() {
-        return level;
+    public int getIsles() {
+        return isles;
     }
 
     public String getName() {

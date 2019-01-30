@@ -180,7 +180,7 @@ public class SizeChooser extends BorderPane {
         if (result.isPresent() && result.get() == ButtonType.OK) alert.close();
     }
 
-    void setListener(EventHandler<SizeEvent> listener) {
+    void setNext(EventHandler<SizeEvent> listener) {
         this.listener = listener;
     }
 }

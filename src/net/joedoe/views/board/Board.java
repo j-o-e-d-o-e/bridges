@@ -43,7 +43,7 @@ public abstract class Board extends BorderPane {
     public Board() {
         getStylesheets().add("file:assets/css/board.css");
         setSound();
-//        player.stop();
+        player.stop();
     }
 
     private void setSound() {
@@ -186,11 +186,6 @@ public abstract class Board extends BorderPane {
         grid.savePuzzle();
     }
 
-    public void stopSound() {
-        soundOn = false;
-        player.stop();
-    }
-
     public void restartSound() {
         if (soundOn) player.play();
     }
@@ -203,7 +198,7 @@ public abstract class Board extends BorderPane {
         if (result.isPresent() && result.get() == ButtonType.OK) alert.close();
     }
 
-    public void setListenerNext(EventHandler<Event> next) {
+    public void setNext(EventHandler<Event> next) {
         this.next = next;
     }
 

@@ -133,14 +133,12 @@ public abstract class Board extends BorderPane {
         controls.setPrefWidth(100);
         Button solveBtn = new Button("_Solve auto");
         solveBtn.setMnemonicParsing(true);
-        solveBtn.setMinWidth(controls.getPrefWidth());
         solveBtn.setOnAction(e -> {
             if (grid.autoSolverIsRunning()) grid.stopAutoSolve();
             else grid.startAutoSolve();
         });
         Button nextBtn = new Button("_Next bridge");
         nextBtn.setMnemonicParsing(true);
-        nextBtn.setMinWidth(controls.getPrefWidth());
         nextBtn.setOnAction(e -> grid.getNextBridge());
         controls.getChildren().addAll(solveBtn, nextBtn);
         vBox.getChildren().addAll(checkBox, controls, status);

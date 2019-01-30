@@ -28,16 +28,16 @@ import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 public abstract class Board extends BorderPane {
     private GameData gameData = GameData.getInstance();
     private int width, height;
-    private CheckBox checkBox;
     private boolean soundOn;
     private StackPane innerPane;
+    CheckBox checkBox;
     EventHandler<Event> next;
     GameManager gameManager = GameManager.getInstance();
     Grid grid;
     MediaPlayer player;
     ImageView view;
     Label info;
-    HBox controls;
+//    HBox controls;
     Label status = new Label();
 
     public Board() {
@@ -122,25 +122,35 @@ public abstract class Board extends BorderPane {
         return box;
     }
 
-    private VBox createBottom() {
+    @SuppressWarnings("Duplicates")
+    VBox createBottom() {
         VBox vBox = new VBox(CONTAINER_OFFSET);
         vBox.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
         checkBox = new CheckBox("Show missing bridges");
         checkBox.setSelected(true);
         checkBox.setOnAction(e -> grid.setShowMissingBridges(checkBox.isSelected()));
-        controls = new HBox(CONTAINER_OFFSET);
+        HBox controls = new HBox(CONTAINER_OFFSET);
         controls.setAlignment(Pos.CENTER);
         controls.setPrefWidth(100);
         Button solveBtn = new Button("_Solve auto");
+        solveBtn.setAlignment(Pos.CENTER);
         solveBtn.setMnemonicParsing(true);
+        solveBtn.setMinWidth(100);
         solveBtn.setOnAction(e -> {
             if (grid.autoSolverIsRunning()) grid.stopAutoSolve();
             else grid.startAutoSolve();
         });
         Button nextBtn = new Button("_Next bridge");
+        nextBtn.setAlignment(Pos.CENTER);
         nextBtn.setMnemonicParsing(true);
+        nextBtn.setMinWidth(100);
         nextBtn.setOnAction(e -> grid.getNextBridge());
-        controls.getChildren().addAll(solveBtn, nextBtn);
+        Button undoBtn = new Button("_Undo");
+        undoBtn.setAlignment(Pos.CENTER);
+        undoBtn.setMnemonicParsing(true);
+        undoBtn.setMinWidth(100);
+        undoBtn.setOnAction(e-> grid.undoBridge());
+        controls.getChildren().addAll(solveBtn, nextBtn, undoBtn);
         vBox.getChildren().addAll(checkBox, controls, status);
         return vBox;
     }

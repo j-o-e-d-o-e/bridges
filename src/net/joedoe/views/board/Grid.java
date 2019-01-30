@@ -95,15 +95,6 @@ class Grid extends GridPane {
         addBridge(bridge);
     }
 
-    private void removeDoubleBridge(IBridge bridge) {
-        controller.removeBridge(bridge);
-        List<BridgeLine> lines = gridController.removeLines(bridge);
-        lines.forEach(l -> getChildren().remove(l.getLine()));
-        pointListener.handle(new PointEvent(-20));
-        updateIsles();
-        checkStatus();
-    }
-
     /**
      * Fügt eine neue Brücken-Linie hinzu, falls möglich. Aufgerufen von Programm.
      *
@@ -137,19 +128,29 @@ class Grid extends GridPane {
     void removeBridge(IslePane isle, Direction direction) {
         IBridge bridge = controller.removeBridge(isle.getPos(), direction);
         if (bridge == null) return;
-        removeBridge(bridge);
-        pointListener.handle(new PointEvent(-10));
+        remove(bridge);
     }
 
-    /**
-     * Entfernt Brücken-Linie, falls möglich. Aufgerufen entweder von Nutzer.
-     *
-     * @param bridge zu entferndende Brücke (Modell)
-     */
-    private void removeBridge(IBridge bridge) {
+    private void removeDoubleBridge(IBridge bridge) {
+        controller.removeBridge(bridge);
+        List<BridgeLine> lines = gridController.removeLines(bridge);
+        lines.forEach(l -> getChildren().remove(l.getLine()));
+        pointListener.handle(new PointEvent(-20));
+        updateIsles();
+        checkStatus();
+    }
+
+    void undoBridge() {
+        IBridge bridge = controller.undoBridge();
+        if (bridge == null) return;
+        remove(bridge);
+    }
+
+    private void remove(IBridge bridge) {
         BridgeLine line = gridController.removeLine(bridge);
         if (line == null) return;
         getChildren().remove(line.getLine());
+        pointListener.handle(new PointEvent(-10));
         updateIsles();
         checkStatus();
     }

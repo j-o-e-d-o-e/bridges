@@ -152,6 +152,14 @@ public class BridgeController {
         }
     }
 
+    public Bridge undoBridge() {
+        if (bridges.isEmpty()) return null;
+        Bridge bridge = bridges.get(bridges.size() - 1);
+        if (bridge.isDoubleBridge()) bridge.setDoubleBridge(false);
+        else bridges.remove(bridge);
+        return bridge;
+    }
+
     /**
      * Identifiziert Insel und gibt diese zurück.
      *

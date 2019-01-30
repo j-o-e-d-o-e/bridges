@@ -6,7 +6,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.util.Optional;
@@ -32,7 +31,7 @@ public class SizeChooser extends BorderPane {
      *              werden
      */
     public SizeChooser(EventHandler<Event> listener) {
-        setStyle("-fx-background-color: #282828;");
+        getStylesheets().addAll("file:assets/css/default.css", "file:assets/css/size.css");
         ToolBar toolBar = new ToolBar("Free mode");
         toolBar.setListener(e -> listener.handle(new Event(null)));
         setTop(toolBar);
@@ -45,22 +44,17 @@ public class SizeChooser extends BorderPane {
         outerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
 
         StackPane innerPane = new StackPane();
-        innerPane.setBorder(new Border(
-                new BorderStroke(Color.GREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        innerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
+        innerPane.setId("border");
 
         Label title = new Label("Choose a size:");
         title.setFont(Font.font(20));
         title.setPadding(new Insets(0, 0, CONTAINER_OFFSET, 0));
-        title.setStyle("-fx-text-fill: ghostwhite");
 
-        ToggleGroup radios = new ToggleGroup(); //-fx-text-fill: #F8F8F8;
+        ToggleGroup radios = new ToggleGroup();
         autoBtn = new RadioButton("Generate randomly");
-        autoBtn.setStyle("-fx-text-fill: #F8F8F8;");
         autoBtn.setSelected(true);
         autoBtn.setToggleGroup(radios);
         RadioButton customBtn = new RadioButton("Set size and number of isles yourself");
-        customBtn.setStyle("-fx-text-fill: #F8F8F8;");
         customBtn.setToggleGroup(radios);
         radios.selectedToggleProperty().addListener(e -> {
             if (autoBtn.isSelected()) {
@@ -81,19 +75,16 @@ public class SizeChooser extends BorderPane {
             }
         });
         heightLabel = new Label("Height:");
-        heightLabel.setStyle("-fx-text-fill: #F8F8F8;");
         heightLabel.setDisable(true);
         heightTxt = new TextField();
         heightTxt.setDisable(true);
 
         widthLabel = new Label("Width:");
-        widthLabel.setStyle("-fx-text-fill: #F8F8F8;");
         widthTxt = new TextField();
         widthTxt.setDisable(true);
         widthLabel.setDisable(true);
 
         checkBox = new CheckBox("Set number of isles");
-        checkBox.setStyle("-fx-text-fill: #F8F8F8;");
         checkBox.setDisable(true);
         checkBox.setOnAction(e -> {
             if (islesTxt.isDisabled()) {
@@ -105,7 +96,6 @@ public class SizeChooser extends BorderPane {
             }
         });
         islesLabel = new Label("Isles:");
-        islesLabel.setStyle("-fx-text-fill: #F8F8F8;");
         islesLabel.setDisable(true);
         islesTxt = new TextField();
         islesTxt.setDisable(true);

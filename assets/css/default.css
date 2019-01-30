@@ -1,0 +1,16 @@
+.root {
+     -fx-background-color: #282828;
+ }
+
+#border{
+    -fx-border-color: grey;
+}
+
+.label {
+    -fx-text-fill: ghostwhite;
+}
+
+.button:focused {
+    -fx-focus-color: transparent;
+    -fx-background-insets: -1.4, 0, 1, 2;
+}

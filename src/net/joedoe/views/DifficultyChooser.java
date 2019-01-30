@@ -17,7 +17,7 @@ class DifficultyChooser extends BorderPane {
     private EventHandler<DifficultyEvent> listener;
 
     DifficultyChooser(EventHandler<Event> listener) {
-        setStyle("-fx-background-color: #282828;");
+        getStylesheets().add("file:assets/css/default.css");
         ToolBar toolBar = new ToolBar("Time mode");
         toolBar.setListener(e -> listener.handle(null));
         setTop(toolBar);
@@ -30,8 +30,7 @@ class DifficultyChooser extends BorderPane {
         outerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
 
         StackPane innerPane = new StackPane();
-        innerPane.setBorder(new Border(
-                new BorderStroke(Color.GREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        innerPane.setId("border");
 
         VBox box = new VBox(CONTAINER_OFFSET);
         box.setAlignment(Pos.CENTER);
@@ -39,7 +38,6 @@ class DifficultyChooser extends BorderPane {
         Label title = new Label("Choose a difficulty:");
         title.setFont(Font.font(20));
         title.setPadding(new Insets(0, 0, CONTAINER_OFFSET, 0));
-        title.setStyle("-fx-text-fill: ghostwhite");
 
         Button veryEasy = new Button("Very easy (5 isles)");
         veryEasy.setPrefWidth(180);

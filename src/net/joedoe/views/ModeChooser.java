@@ -17,7 +17,7 @@ class ModeChooser extends BorderPane {
     private EventHandler<ModeEvent> listener;
 
     ModeChooser(EventHandler<Event> listener) {
-        setStyle("-fx-background-color: #282828;");
+        getStylesheets().add("file:assets/css/default.css");
         ToolBar toolBar = new ToolBar("New Game");
         toolBar.setListener(e -> listener.handle(new Event(null)));
         setTop(toolBar);
@@ -31,8 +31,7 @@ class ModeChooser extends BorderPane {
         outerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
 
         StackPane innerPane = new StackPane();
-        innerPane.setBorder(new Border(
-                new BorderStroke(Color.GREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        innerPane.setId("border");
 
         VBox box = new VBox(CONTAINER_OFFSET);
         box.setAlignment(Pos.CENTER);
@@ -40,7 +39,6 @@ class ModeChooser extends BorderPane {
         Label title = new Label("Choose a mode:");
         title.setFont(new Font(20));
         title.setPadding(new Insets(0, 0, CONTAINER_OFFSET, 0));
-        title.setStyle("-fx-text-fill: ghostwhite");
 
         Button level = new Button("Level");
         level.setPrefWidth(100);

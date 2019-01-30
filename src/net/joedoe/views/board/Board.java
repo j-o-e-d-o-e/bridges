@@ -39,7 +39,7 @@ public abstract class Board extends BorderPane {
     Label info, status = new Label();
 
     public Board() {
-        getStylesheets().add("file:assets/css/board.css");
+        getStylesheets().addAll("file:assets/css/default.css", "file:assets/css/board.css");
         setSound();
         player.stop();
     }

@@ -1,9 +1,4 @@
-.root {
-    -fx-background-color: #282828;
-}
-
-/*controls*/
-.label, .check-box {
+.check-box {
     -fx-text-fill: #F8F8F8;
 }
 

@@ -20,7 +20,7 @@ class NewScore extends BorderPane {
     private EventHandler<NewScoreEvent> listener;
 
     NewScore(String title, String score) {
-        setStyle("-fx-background-color: #282828;");
+        getStylesheets().add("file:assets/css/default.css");
         ToolBar toolBar = new ToolBar("New best score", false);
         setTop(toolBar);
         setCenter(setLayout(title, score));
@@ -40,8 +40,7 @@ class NewScore extends BorderPane {
         outerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
 
         StackPane innerPane = new StackPane();
-        innerPane.setBorder(new Border(
-                new BorderStroke(Color.GREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        innerPane.setId("border");
 
         VBox box = new VBox(CONTAINER_OFFSET);
         box.setAlignment(Pos.CENTER);
@@ -49,13 +48,11 @@ class NewScore extends BorderPane {
         Label title = new Label(titleTxt);
         title.setFont(Font.font(20));
         title.setPadding(new Insets(0, 0, CONTAINER_OFFSET, 0));
-        title.setStyle("-fx-text-fill: ghostwhite");
 
         HBox hBox = new HBox();
         hBox.setSpacing(CONTAINER_OFFSET);
         hBox.setAlignment(Pos.CENTER);
         Label score = new Label(scoreTxt);
-        score.setStyle("-fx-text-fill: ghostwhite");
         TextField name = new TextField();
         Button submit = new Button("Submit");
         submit.setPrefWidth(100);

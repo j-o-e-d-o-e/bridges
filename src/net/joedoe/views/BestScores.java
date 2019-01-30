@@ -6,8 +6,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import net.joedoe.utils.GameData;
 import net.joedoe.utils.PointEntry;
@@ -21,7 +23,7 @@ class BestScores extends BorderPane {
     private GameData gameData = GameData.getInstance();
 
     BestScores(EventHandler<Event> listener) {
-        getStylesheets().add("file:assets/css/bestscores.css");
+        getStylesheets().add("file:assets/css/default.css");
         ToolBar toolBar = new ToolBar("Best scores");
         toolBar.setListener(e -> listener.handle(new Event(null)));
         setTop(toolBar);
@@ -34,8 +36,7 @@ class BestScores extends BorderPane {
         outerPane.setPadding(new Insets(CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET, CONTAINER_OFFSET));
 
         StackPane innerPane = new StackPane();
-        innerPane.setBorder(new Border(
-                new BorderStroke(Color.GREY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        innerPane.setId("border");
 
         VBox vBox = new VBox(CONTAINER_OFFSET);
         vBox.setAlignment(Pos.CENTER);

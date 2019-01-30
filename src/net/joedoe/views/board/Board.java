@@ -36,9 +36,7 @@ public abstract class Board extends BorderPane {
     Grid grid;
     MediaPlayer player;
     ImageView view;
-    Label info;
-//    HBox controls;
-    Label status = new Label();
+    Label info, status = new Label();
 
     public Board() {
         getStylesheets().add("file:assets/css/board.css");
@@ -149,7 +147,7 @@ public abstract class Board extends BorderPane {
         undoBtn.setAlignment(Pos.CENTER);
         undoBtn.setMnemonicParsing(true);
         undoBtn.setMinWidth(100);
-        undoBtn.setOnAction(e-> grid.undoBridge());
+        undoBtn.setOnAction(e -> grid.undoBridge());
         controls.getChildren().addAll(solveBtn, nextBtn, undoBtn);
         vBox.getChildren().addAll(checkBox, controls, status);
         return vBox;

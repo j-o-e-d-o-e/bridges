@@ -26,7 +26,7 @@ public class ClickListener implements EventHandler<MouseEvent> {
      */
     ClickListener(Grid grid) {
         this.grid = grid;
-        LOGGER.setLevel(Level.OFF);
+//        LOGGER.setLevel(Level.OFF);
     }
 
     /**

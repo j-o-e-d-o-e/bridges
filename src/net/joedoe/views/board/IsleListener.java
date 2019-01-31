@@ -26,7 +26,7 @@ public class IsleListener implements EventHandler<MouseEvent> {
      */
     IsleListener(Grid grid) {
         this.grid = grid;
-        LOGGER.setLevel(Level.OFF);
+//        LOGGER.setLevel(Level.OFF);
     }
 
     /**

@@ -42,7 +42,7 @@ public class ClickListener implements EventHandler<MouseEvent> {
                 && Math.abs(e.getY() - (ONE_TILE >> 1)) > Math.abs(e.getX() - (ONE_TILE >> 1))) {
             IslePane isle = pane.getUp();
             if(isle == null) return;
-            LOGGER.info(isle.toString() + ": Click Up");
+            LOGGER.info(isle.toString() + ": Click Top -> " + e.getX() + "/" + e.getY());
             if (e.getButton() == MouseButton.PRIMARY) grid.addBridge(isle, Direction.DOWN);
             if (e.getButton() == MouseButton.SECONDARY) grid.removeBridge(isle, Direction.DOWN);
         }
@@ -51,7 +51,7 @@ public class ClickListener implements EventHandler<MouseEvent> {
                 && Math.abs(e.getY() - (ONE_TILE >> 1)) < Math.abs(e.getX() - (ONE_TILE >> 1))) {
             IslePane isle = pane.getLeft();
             if(isle == null) return;
-            LOGGER.info(isle.toString() + ": Click Left");
+            LOGGER.info(isle.toString() + ": Click Left -> " + e.getX() + "/" + e.getY());
             if (e.getButton() == MouseButton.PRIMARY) grid.addBridge(isle, Direction.RIGHT);
             if (e.getButton() == MouseButton.SECONDARY) grid.removeBridge(isle, Direction.RIGHT);
         }
@@ -60,7 +60,7 @@ public class ClickListener implements EventHandler<MouseEvent> {
                 && Math.abs(e.getY() - (ONE_TILE >> 1)) > Math.abs(e.getX() - (ONE_TILE >> 1))) {
             IslePane isle = pane.getDown();
             if(isle == null) return;
-            LOGGER.info(isle.toString() + ": Click Down");
+            LOGGER.info(isle.toString() + ": Click Bottom -> " + e.getX() + "/" + e.getY());
             if (e.getButton() == MouseButton.PRIMARY) grid.addBridge(isle, Direction.UP);
             if (e.getButton() == MouseButton.SECONDARY) grid.removeBridge(isle, Direction.UP);
         }
@@ -69,7 +69,7 @@ public class ClickListener implements EventHandler<MouseEvent> {
                 && Math.abs(e.getY() - (ONE_TILE >> 1)) < Math.abs(e.getX() - (ONE_TILE >> 1))) {
             IslePane isle = pane.getRight();
             if(isle == null) return;
-            LOGGER.info(pane.toString() + ": Click Right");
+            LOGGER.info(isle.toString() + ": Click Right -> " + e.getX() + "/" + e.getY());
             if (e.getButton() == MouseButton.PRIMARY) grid.addBridge(isle, Direction.LEFT);
             if (e.getButton() == MouseButton.SECONDARY) grid.removeBridge(isle, Direction.LEFT);
         }

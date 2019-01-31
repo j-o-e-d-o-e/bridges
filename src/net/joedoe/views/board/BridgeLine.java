@@ -12,7 +12,7 @@ import static net.joedoe.utils.GameInfo.*;
 public class BridgeLine {
     private final Coordinate start, end;
     private final Alignment alignment;
-    private Line line = new Line();
+    private Line line;
 
     /**
      * Brücke werden zwei Koordinaten übergeben und ein boolean, ob sie versetzt
@@ -26,6 +26,7 @@ public class BridgeLine {
         this.start = start;
         this.end = end;
         alignment = Alignment.getAlignment(start.getY(), end.getY());
+        line = new Line();
         line.getStyleClass().add("bridge-first");
         line.setMouseTransparent(true);
         translateToLayout(offset);

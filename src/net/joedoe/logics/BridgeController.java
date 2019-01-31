@@ -104,9 +104,29 @@ public class BridgeController {
         if (bridge == null) {
             return null;
         } // doppelte wird in einfache Brücke umgewandelt
-        else if (bridge.isDoubleBridge()) {
-            bridge.setDoubleBridge(false);
-        } // einfache Brücke wird entfernt
+        return remove(bridge, startIsle, endIsle);
+    }
+
+    public void removeDoubleBridge(IBridge bridge) {
+        Isle startIsle = getIsle(bridge.getStart());
+        Isle endIsle = getIsle(bridge.getEnd());
+        startIsle.removeBridge(true);
+        startIsle.removeNeighbour(endIsle);
+        endIsle.removeBridge(true);
+        endIsle.removeNeighbour(startIsle);
+        bridges.remove((Bridge) bridge);
+    }
+
+    public Bridge undoBridge() {
+        if (bridges.isEmpty()) return null;
+        Bridge bridge = bridges.get(bridges.size() - 1);
+        Isle startIsle = getIsle(bridge.getStart());
+        Isle endIsle = getIsle(bridge.getEnd());
+        return remove(bridge, startIsle, endIsle);
+    }
+
+    private Bridge remove(Bridge bridge, Isle startIsle, Isle endIsle) {
+        if (bridge.isDoubleBridge()) bridge.setDoubleBridge(false);
         else {
             bridges.remove(bridge);
             startIsle.removeNeighbour(endIsle);
@@ -117,16 +137,6 @@ public class BridgeController {
         return bridge;
     }
 
-    public void removeBridge(IBridge bridge) {
-        Isle startIsle = getIsle(bridge.getStart());
-        Isle endIsle = getIsle(bridge.getEnd());
-        startIsle.removeBridge(true);
-        startIsle.removeNeighbour(endIsle);
-        endIsle.removeBridge(true);
-        endIsle.removeNeighbour(startIsle);
-        Bridge bridge1 = (Bridge) bridge;
-        this.bridges.remove(bridge1);
-    }
 
     /**
      * Gibt die nächstgelegene Insel zurück.
@@ -150,14 +160,6 @@ public class BridgeController {
             return isles.stream().filter(i -> i.getY() == startIsle.getY() && i.getX() > startIsle.getX()).findFirst()
                     .orElse(null);
         }
-    }
-
-    public Bridge undoBridge() {
-        if (bridges.isEmpty()) return null;
-        Bridge bridge = bridges.get(bridges.size() - 1);
-        if (bridge.isDoubleBridge()) bridge.setDoubleBridge(false);
-        else bridges.remove(bridge);
-        return bridge;
     }
 
     /**

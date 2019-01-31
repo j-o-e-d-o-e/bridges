@@ -20,7 +20,8 @@ public class Zoom {
         if (islesCount >= 75) scale = X_SMALL;
         else if (islesCount >= 50) scale = SMALL;
         else if (islesCount >= 25) scale = NORMAL;
-        else scale = LARGE;
+        else if (islesCount > 5) scale = LARGE;
+        else scale = X_LARGE;
         zoom();
     }
 

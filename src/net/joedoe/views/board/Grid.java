@@ -132,7 +132,7 @@ class Grid extends GridPane {
     }
 
     private void removeDoubleBridge(IBridge bridge) {
-        controller.removeBridge(bridge);
+        controller.removeDoubleBridge(bridge);
         List<BridgeLine> lines = gridController.removeLines(bridge);
         lines.forEach(l -> getChildren().remove(l.getLine()));
         pointListener.handle(new PointEvent(-20));

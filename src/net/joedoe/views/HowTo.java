@@ -45,8 +45,7 @@ class HowTo extends BorderPane {
 
     private void setImages() {
         for (int i = 0; i < images.length; i++) {
-            String url = "file:assets" + File.separator + "images" + File.separator + "howto" + i + ".gif";
-            Image image = new Image(url);
+            Image image = new Image("file:assets" + File.separator + "images" + File.separator + "howto" + i + ".gif");
             images[i] = image;
         }
     }

@@ -24,15 +24,14 @@ class NewScore extends BorderPane {
         ToolBar toolBar = new ToolBar("New best score", false);
         setTop(toolBar);
         setCenter(setLayout(title, score));
-        setSound();
     }
 
-    private void setSound() {
-        String soundUrl = "assets" + File.separator + "sounds" + File.separator + "win.wav";
-        Media sound = new Media(new File(soundUrl).toURI().toString());
-        MediaPlayer player = new MediaPlayer(sound);
-        player.play();
-    }
+//    private void setSound() {
+//        String soundUrl = "assets" + File.separator + "sounds" + File.separator + "win.wav";
+//        Media sound = new Media(new File(soundUrl).toURI().toString());
+//        MediaPlayer player = new MediaPlayer(sound);
+//        player.play();
+//    }
 
     @SuppressWarnings("Duplicates")
     private StackPane setLayout(String titleTxt, String scoreTxt) {

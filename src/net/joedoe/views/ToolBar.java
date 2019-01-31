@@ -13,10 +13,10 @@ public class ToolBar extends javafx.scene.control.ToolBar {
     private Label title;
 
     ToolBar(String titleTxt, boolean backBtn) {
-        getStylesheets().add("file:assets/css/default.css");
         if (backBtn) {
             back = new Button("<");
             back.setPrefHeight(10);
+            back.setFocusTraversable(false);
             back.setMinWidth(40);
             getItems().add(this.back);
         }

@@ -41,7 +41,6 @@ public abstract class Board extends BorderPane {
     public Board() {
         getStylesheets().addAll("file:assets/css/default.css", "file:assets/css/board.css");
         setSound();
-        player.stop();
     }
 
     private void setSound() {
@@ -190,6 +189,11 @@ public abstract class Board extends BorderPane {
 
     public void savePuzzle() {
         grid.savePuzzle();
+    }
+
+    public void stopSound() {
+        soundOn = false;
+        player.stop();
     }
 
     public void restartSound() {

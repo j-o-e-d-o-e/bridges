@@ -5,11 +5,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
+
+import java.io.File;
 
 import static net.joedoe.utils.GameInfo.CONTAINER_OFFSET;
 import static net.joedoe.views.View.*;
@@ -33,9 +35,8 @@ class Start extends BorderPane {
         VBox box = new VBox(CONTAINER_OFFSET);
         box.setAlignment(Pos.CENTER);
 
-        Label title = new Label("Hashiwokakero");
-        title.setFont(Font.font(40));
-        title.setPadding(new Insets(0, 0, CONTAINER_OFFSET, 0));
+        Image image = new Image("file:assets" + File.separator + "images" + File.separator + "metal.png");
+        ImageView view = new ImageView(image);
 
         Button newGame = new Button("New Game");
         newGame.setPrefWidth(100);
@@ -55,7 +56,7 @@ class Start extends BorderPane {
         Button exit = new Button("Quit & Save");
         exit.setPrefWidth(100);
         exit.setOnAction(e -> listener.handle(new ViewEvent(QUIT)));
-        box.getChildren().addAll(title, newGame, resume, load, bestScores, tutorial, exit);
+        box.getChildren().addAll(view, newGame, resume, load, bestScores, tutorial, exit);
         innerPane.getChildren().add(box);
         outerPane.getChildren().add(innerPane);
         return outerPane;

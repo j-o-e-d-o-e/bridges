@@ -125,6 +125,7 @@ public class ViewController {
                         board = new BoardTime(e2 -> goTo(START), diff.getName());
                         board.setNext(e3 -> {
                             LocalTime time = ((BoardTime) board).getTime();
+                            board.stopSound();
                             board = null;
                             TimeEntry bestTime = gameData.getBestTime(diff);
                             if (time.compareTo(bestTime.getTime()) < 0) {
@@ -217,6 +218,11 @@ public class ViewController {
     }
 
     public void close() {
+        try {
+            FileHandler.saveScores();
+        } catch (IOException e) {
+            showAlert(AlertType.ERROR, "Saving scores", "Best scores could not be saved.");
+        }
         if (board != null) {
             try {
                 gameManager.savePoints();
@@ -225,7 +231,6 @@ public class ViewController {
                     board.savePuzzle();
                     FileHandler.savePuzzle();
                 }
-                FileHandler.saveScores();
             } catch (IOException e) {
                 showAlert(AlertType.ERROR, "Saving Level", "Level progress could not be saved.");
             }

@@ -128,7 +128,7 @@ class Grid extends GridPane {
     private void removeBridge(IslePane isle, Direction direction) {
         IBridge bridge = controller.removeBridge(isle.getPos(), direction);
         if (bridge == null) return;
-        remove(bridge);
+        removeBridge(bridge);
     }
 
     private void removeDoubleBridge(IBridge bridge) {
@@ -141,12 +141,16 @@ class Grid extends GridPane {
     }
 
     void undoBridge() {
-        IBridge bridge = controller.undoBridge();
-        if (bridge == null) return;
-        remove(bridge);
+        Command command = controller.undoBridge();
+        if (command == null) return;
+        if (command.isAdd()) removeBridge(command.getBridge());
+        else {
+            pointListener.handle(new PointEvent(10));
+            addBridge(command.getBridge());
+        }
     }
 
-    private void remove(IBridge bridge) {
+    private void removeBridge(IBridge bridge) {
         BridgeLine line = gridController.removeLine(bridge);
         if (line == null) return;
         getChildren().remove(line.getLine());

@@ -7,6 +7,8 @@ import net.joedoe.entities.Isle;
 import net.joedoe.utils.Converter;
 import net.joedoe.utils.Coordinate;
 import net.joedoe.utils.Direction;
+import net.joedoe.views.board.Command;
+import net.joedoe.views.board.CommandController;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,6 +22,7 @@ import java.util.logging.Logger;
  */
 public class BridgeController {
     private BridgeDetector detector;
+    private CommandController commandController;
     private List<Isle> isles = new ArrayList<>();
     private List<Bridge> bridges = new ArrayList<>();
 
@@ -27,6 +30,7 @@ public class BridgeController {
 
     public BridgeController() {
         detector = new BridgeDetector(bridges);
+        commandController = new CommandController();
         LOGGER.setLevel(Level.OFF);
     }
 
@@ -78,7 +82,7 @@ public class BridgeController {
         }
         startIsle.addBridge(false);
         endIsle.addBridge(false);
-        bridges.forEach(b -> LOGGER.info(b.toString()));
+        commandController.addCommand(new Command(bridge, true));
         return bridge;
     }
 
@@ -104,7 +108,16 @@ public class BridgeController {
         if (bridge == null) {
             return null;
         } // doppelte wird in einfache Brücke umgewandelt
-        return remove(bridge, startIsle, endIsle);
+        if (bridge.isDoubleBridge()) bridge.setDoubleBridge(false);
+        else {
+            bridges.remove(bridge);
+            startIsle.removeNeighbour(endIsle);
+            endIsle.removeNeighbour(startIsle);
+        }
+        startIsle.removeBridge(false);
+        endIsle.removeBridge(false);
+        commandController.addCommand(new Command(bridge, false));
+        return bridge;
     }
 
     public void removeDoubleBridge(IBridge bridge) {
@@ -117,26 +130,34 @@ public class BridgeController {
         bridges.remove((Bridge) bridge);
     }
 
-    public Bridge undoBridge() {
-        if (bridges.isEmpty()) return null;
-        Bridge bridge = bridges.get(bridges.size() - 1);
+    public Command undoBridge() {
+        Command command = commandController.getCommand();
+        if (command == null) return null;
+        Bridge bridge = (Bridge) command.getBridge();
         Isle startIsle = getIsle(bridge.getStart());
+        if (startIsle == null) return null;
         Isle endIsle = getIsle(bridge.getEnd());
-        return remove(bridge, startIsle, endIsle);
-    }
-
-    private Bridge remove(Bridge bridge, Isle startIsle, Isle endIsle) {
-        if (bridge.isDoubleBridge()) bridge.setDoubleBridge(false);
-        else {
-            bridges.remove(bridge);
-            startIsle.removeNeighbour(endIsle);
-            endIsle.removeNeighbour(startIsle);
+        if (endIsle == null) return null;
+        if (command.isAdd()) { // undo added bridge
+            startIsle.removeBridge(false);
+            endIsle.removeBridge(false);
+            if (bridge.isDoubleBridge()) bridge.setDoubleBridge(false);
+            else {
+                startIsle.removeNeighbour(endIsle);
+                endIsle.removeNeighbour(startIsle);
+                bridges.remove(bridge);
+            }
+        } else { // undo removed bridge
+            startIsle.addBridge(false);
+            endIsle.addBridge(false);
+            if (!bridges.contains(bridge)) {
+                startIsle.addNeighbour(endIsle);
+                endIsle.addNeighbour(startIsle);
+                bridges.add(bridge);
+            } else bridge.setDoubleBridge(true);
         }
-        startIsle.removeBridge(false);
-        endIsle.removeBridge(false);
-        return bridge;
+        return command;
     }
-
 
     /**
      * Gibt die nächstgelegene Insel zurück.

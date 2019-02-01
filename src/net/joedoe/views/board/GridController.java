@@ -147,11 +147,10 @@ public class GridController {
      *
      * @param isles Liste mit zu ladenen Inseln
      */
-    void setPanes(List<IIsle> isles, IsleListener listener) {
+    void setPanes(List<IIsle> isles) {
         for (IIsle i : isles) {
             IslePane isle = new IslePane(i.getPos(), i.getBridges());
-            isle.setOnMouseClicked(listener);
-            this.panes.add(isle);
+            panes.add(isle);
         }
     }
 

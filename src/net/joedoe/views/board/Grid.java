@@ -2,12 +2,17 @@ package net.joedoe.views.board;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
 import net.joedoe.entities.IBridge;
 import net.joedoe.entities.IIsle;
 import net.joedoe.logics.AutoSolver;
@@ -28,7 +33,6 @@ import static net.joedoe.views.board.StatusEvent.Status;
  * Das Raster, auf dem Inseln und Brücken platziert werden.
  */
 class Grid extends GridPane {
-    private int width, height;
     private GridController gridController;
     private BridgeController controller;
     private StatusChecker checker;
@@ -52,8 +56,6 @@ class Grid extends GridPane {
      */
     Grid(EventHandler<StatusEvent> statusListener, int width, int height, List<IIsle> isles, List<IBridge> bridges) {
         setId("grid");
-        this.width = width;
-        this.height = height;
         // Größe des Rasters festlegen
         IntStream.range(0, height).mapToObj(i -> new RowConstraints(ONE_TILE))
                 .forEach(row -> getRowConstraints().add(row));
@@ -77,13 +79,12 @@ class Grid extends GridPane {
     }
 
     /**
-     * Fügt eine neue Brücken-Linie hinzu, falls möglich. Aufgerufen von
-     * {@link IsleListener}.
+     * Fügt eine neue Brücken-Linie hinzu, falls möglich. Aufgerufen von Nutzer.
      *
      * @param isle      Insel (View), die vom Nutzer angeklickt wurde
      * @param direction Richtung, in die der Nutzer mittels Klick-Sektor geklickt hat
      */
-    void addBridge(IslePane isle, Direction direction) {
+    private void addBridge(IslePane isle, Direction direction) {
         IBridge bridge = controller.getBridge(isle.getPos(), direction);
         if (bridge != null && bridge.isDoubleBridge()) {
             removeDoubleBridge(bridge);
@@ -119,13 +120,12 @@ class Grid extends GridPane {
     }
 
     /**
-     * Entfernt Brücken-Linie, falls möglich. Aufgerufen von
-     * {@link IsleListener}.
+     * Entfernt Brücken-Linie, falls möglich. Aufgerufen von Nutzer.
      *
      * @param isle      Insel (View), die vom Nutzer angeklickt wurde
      * @param direction Richtung, in die der Nutzer mittels Klick-Sektor geklickt hat
      */
-    void removeBridge(IslePane isle, Direction direction) {
+    private void removeBridge(IslePane isle, Direction direction) {
         IBridge bridge = controller.removeBridge(isle.getPos(), direction);
         if (bridge == null) return;
         remove(bridge);
@@ -198,58 +198,49 @@ class Grid extends GridPane {
      * @param isles Liste mit zu ladenen Inseln
      */
     private void setIsles(List<IIsle> isles) {
-        gridController.setPanes(isles, new IsleListener(this));
-        ClickListener listener = new ClickListener(this);
+        gridController.setPanes(isles);
         for (IslePane isle : gridController.getPanes()) {
             add(isle, isle.getX(), isle.getY());
-            addClickPane(listener, isle);
+            addDiamonds(isle);
         }
     }
 
-    private void addClickPane(ClickListener listener, IslePane isle) {
-        if (isle.getX() - 1 >= 0) {
-            int x = isle.getX() - 1;
-            int y = isle.getY();
-            ClickPane click = addClickPane(listener, x, y);
-            click.setRight(isle);
-        }
-        if (isle.getX() + 1 < width) {
-            int x = isle.getX() + 1;
-            int y = isle.getY();
-            ClickPane click = addClickPane(listener, x, y);
-            click.setLeft(isle);
-        }
-        if (isle.getY() - 1 >= 0) {
-            int x = isle.getX();
-            int y = isle.getY() - 1;
-            ClickPane click = addClickPane(listener, x, y);
-            click.setDown(isle);
-        }
-        if (isle.getY() + 1 < height) {
-            int x = isle.getX();
-            int y = isle.getY() + 1;
-            ClickPane click = addClickPane(listener, x, y);
-            click.setUp(isle);
-        }
-    }
-
-    private ClickPane addClickPane(ClickListener listener, int x, int y) {
-        ClickPane click = (ClickPane) getNode(x, y);
-        if (click == null) {
-            click = new ClickPane();
-            click.setOnMouseClicked(listener);
-            add(click, x, y);
-        }
-        return click;
-    }
-
-    private Node getNode(int col, int row) {
-        for (Node node : getChildren()) {
-            if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
-                return node;
+    /**
+     * Vier "Diamanten" für jede Insel als Klick-Sektoren. Sie sind transparente Quadrate,
+     * die auf einer Ecke stehen und zur Hälfte in die nächste angrenzende Zelle reinragen.
+     * Sie bestehen also quasi aus zwei Dreiecken - eins in der Zelle der Inseln, das andere
+     * in der nächsten Zelle. Jeder "Diamant" repräsentiert eine Richtung. Drauf geklickt,
+     * werden Brücken hinzugefügt bzw. entfernt.
+     *
+     * @param isle Insel, für die die vier Klick-Sektoren erstellt werden
+     */
+    private void addDiamonds(IslePane isle) {
+        double len = Math.sqrt((ONE_TILE * ONE_TILE) >> 1);
+        for (Direction direction : Direction.values()) {
+            Rectangle diamond = new Rectangle(0, 0, len, len);
+            setHalignment(diamond, HPos.CENTER);
+            setValignment(diamond, VPos.CENTER);
+            diamond.getTransforms().add(new Rotate(45, len / 2, len / 2));
+            diamond.setOnMouseClicked(e -> {
+                if (e.getButton() == MouseButton.PRIMARY) addBridge(isle, direction);
+                else removeBridge(isle, direction);
+            });
+            diamond.setFill(Color.TRANSPARENT);
+            switch (direction) {
+                case UP:
+                    diamond.setTranslateY(-ONE_TILE >> 1);
+                    break;
+                case LEFT:
+                    diamond.setTranslateX(-ONE_TILE >> 1);
+                    break;
+                case DOWN:
+                    diamond.setTranslateY(ONE_TILE >> 1);
+                    break;
+                case RIGHT:
+                    diamond.setTranslateX(ONE_TILE >> 1);
             }
+            add(diamond, isle.getX(), isle.getY());
         }
-        return null;
     }
 
     /**

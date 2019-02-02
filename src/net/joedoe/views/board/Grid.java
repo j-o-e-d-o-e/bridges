@@ -142,7 +142,10 @@ class Grid extends GridPane {
 
     void undoBridge() {
         Command command = controller.undoBridge();
-        if (command == null) return;
+        if (command == null) {
+            setAlert("Undo","No bridge found to undo." );
+            return;
+        }
         if (command.isAdd()) removeBridge(command.getBridge());
         else {
             pointListener.handle(new PointEvent(10));
@@ -302,11 +305,11 @@ class Grid extends GridPane {
     void getNextBridge() {
         boolean solved = checker.solved();
         if (checker.error() || checker.unsolvable() || solved) {
-            if (!solved) setAlert();
+            if (!solved) setAlert("Next bridge", "No bridge found.");
             return;
         }
         IBridge next = solver.getNextBridge();
-        if (next == null && !checker.solved()) setAlert();
+        if (next == null && !checker.solved()) setAlert("Next bridge", "No bridge found.");
         else addBridgeAuto(next);
     }
 
@@ -317,22 +320,22 @@ class Grid extends GridPane {
         boolean solved = checker.solved();
         if (checker.error() || checker.unsolvable() || solved) {
             autoSolver.stop();
-            if (!solved) setAlert();
+            if (!solved) setAlert("Solve auto", "No bridge found.");
             return;
         }
         IBridge next = autoSolver.getNextBridge();
         if (next == null) {
             autoSolver.stop();
-            if (!checker.solved()) setAlert();
+            if (!checker.solved()) setAlert("Solve auto", "No bridge found.");
         } else {
             addBridgeAuto(next);
         }
     }
 
-    private void setAlert() {
+    private void setAlert(String title, String text) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Next bridge");
-        alert.setHeaderText("No bridge found.");
+        alert.setTitle(title);
+        alert.setHeaderText(text);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) alert.close();
     }

@@ -128,6 +128,7 @@ public class BridgeController {
         endIsle.removeBridge(true);
         endIsle.removeNeighbour(startIsle);
         bridges.remove((Bridge) bridge);
+        commandController.addCommand(new Command(bridge, false));
     }
 
     public Command undoBridge() {

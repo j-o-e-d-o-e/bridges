@@ -129,11 +129,10 @@ public abstract class Board extends BorderPane {
         checkBox.setOnAction(e -> grid.setShowMissingBridges(checkBox.isSelected()));
         HBox controls = new HBox(CONTAINER_OFFSET);
         controls.setAlignment(Pos.CENTER);
-        controls.setPrefWidth(100);
         Button solveBtn = new Button("_Solve auto");
         solveBtn.setAlignment(Pos.CENTER);
         solveBtn.setMnemonicParsing(true);
-        solveBtn.setMinWidth(100);
+        solveBtn.setMinWidth(80);
         solveBtn.setOnAction(e -> {
             if (grid.autoSolverIsRunning()) grid.stopAutoSolve();
             else grid.startAutoSolve();
@@ -141,12 +140,12 @@ public abstract class Board extends BorderPane {
         Button nextBtn = new Button("_Next bridge");
         nextBtn.setAlignment(Pos.CENTER);
         nextBtn.setMnemonicParsing(true);
-        nextBtn.setMinWidth(100);
+        nextBtn.setMinWidth(80);
         nextBtn.setOnAction(e -> grid.getNextBridge());
         Button undoBtn = new Button("_Undo");
         undoBtn.setAlignment(Pos.CENTER);
         undoBtn.setMnemonicParsing(true);
-        undoBtn.setMinWidth(100);
+        undoBtn.setMinWidth(80);
         undoBtn.setOnAction(e -> grid.undoBridge());
         controls.getChildren().addAll(solveBtn, nextBtn, undoBtn);
         vBox.getChildren().addAll(checkBox, controls, status);

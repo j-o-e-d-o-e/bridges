@@ -41,7 +41,7 @@ public abstract class Board extends BorderPane {
     public Board() {
         getStylesheets().addAll("file:assets/css/default.css", "file:assets/css/board.css");
         setSound();
-        player.stop();
+//        player.stop();
     }
 
     private void setSound() {

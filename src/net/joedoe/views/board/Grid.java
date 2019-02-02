@@ -226,13 +226,18 @@ class Grid extends GridPane {
      *
      * @param isle Insel, für die die vier Klick-Sektoren erstellt werden
      */
+    //TODO: Zwei Diamonds mit selber Ausrichtung können sich anscheinend gegenseitig stören
+    //TODO: Für mobile: Diamonds und Insel zu einer größeren Fläche, Richtung über Swipe
+    //TODO: Alternativ kein Listener mehr für Inseln od Diamonds, statt dessen die beiden Inseln anhand Koordinaten und Richtung des Swipes ermitteln
     private void addDiamonds(IslePane isle) {
         double len = Math.sqrt((ONE_TILE * ONE_TILE) >> 1);
         for (Direction direction : Direction.values()) {
+//            if(direction != Direction.DOWN) continue;
             Rectangle diamond = new Rectangle(0, 0, len, len);
             setHalignment(diamond, HPos.CENTER);
             setValignment(diamond, VPos.CENTER);
             diamond.getTransforms().add(new Rotate(45, len / 2, len / 2));
+//            diamond.setOnSwipeDown(e -> System.out.println(e.getSceneX()));
             diamond.setOnMouseClicked(e -> {
                 if (e.getButton() == MouseButton.PRIMARY) addBridge(isle, direction);
                 else removeBridge(isle, direction);
@@ -240,15 +245,19 @@ class Grid extends GridPane {
             diamond.setFill(Color.TRANSPARENT);
             switch (direction) {
                 case UP:
+//                    diamond.setFill(Color.BLANCHEDALMOND);
                     diamond.setTranslateY(-ONE_TILE >> 1);
                     break;
                 case LEFT:
+//                    diamond.setFill(Color.DARKGOLDENROD);
                     diamond.setTranslateX(-ONE_TILE >> 1);
                     break;
                 case DOWN:
+//                    diamond.setFill(Color.DARKMAGENTA);
                     diamond.setTranslateY(ONE_TILE >> 1);
                     break;
                 case RIGHT:
+//                    diamond.setFill(Color.DARKOLIVEGREEN);
                     diamond.setTranslateX(ONE_TILE >> 1);
             }
             add(diamond, isle.getX(), isle.getY());

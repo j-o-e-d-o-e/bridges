@@ -140,7 +140,7 @@ public class GridController {
             return;
         }
         line.getLine().getStyleClass().clear();
-        line.getLine().getStyleClass().add("bridge-first");
+//        line.getLine().getStyleClass().add("bridge-first");
     }
 
     /**

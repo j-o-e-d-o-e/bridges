@@ -143,14 +143,19 @@ class Grid extends GridPane {
     void undoBridge() {
         Command command = controller.undoBridge();
         if (command == null) {
-            setAlert("Undo","No bridge found to undo." );
+            setAlert("Undo", "No bridge found to undo.");
             return;
         }
         if (command.isAdd()) removeBridge(command.getBridge());
-        else {
+        else if (command.isDoubleRemove()) {
+            List<BridgeLine> lines = gridController.addLines(command.getBridge());
+            lines.forEach(l -> add(l.getLine(), l.getStartX(), l.getStartY()));
+            pointListener.handle(new PointEvent(20));
+        } else {
             pointListener.handle(new PointEvent(10));
             addBridge(command.getBridge());
         }
+        gridController.getLines().forEach(BridgeLine::setStdColor);
     }
 
     private void removeBridge(IBridge bridge) {

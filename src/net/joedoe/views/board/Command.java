@@ -4,11 +4,12 @@ import net.joedoe.entities.IBridge;
 
 public class Command {
     private IBridge bridge;
-    private boolean add;
+    private boolean add, doubleRemove;
 
     public Command(IBridge bridge, boolean add) {
         this.bridge = bridge;
         this.add = add;
+        if (!add && bridge.isDoubleBridge()) doubleRemove = true;
     }
 
     public IBridge getBridge() {
@@ -17,6 +18,15 @@ public class Command {
 
     public boolean isAdd() {
         return add;
+    }
+
+    /**
+     * If double bridge was removed by one additional click.
+     *
+     * @return true if bridge was removed by one click
+     */
+    public boolean isDoubleRemove() {
+        return doubleRemove;
     }
 
     @Override

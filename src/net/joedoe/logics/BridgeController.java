@@ -148,6 +148,12 @@ public class BridgeController {
                 endIsle.removeNeighbour(startIsle);
                 bridges.remove(bridge);
             }
+        } else if (command.isDoubleRemove()) {
+            startIsle.addBridge(true);
+            startIsle.addNeighbour(endIsle);
+            endIsle.addBridge(true);
+            endIsle.addNeighbour(startIsle);
+            bridges.add(bridge);
         } else { // undo removed bridge
             startIsle.addBridge(false);
             endIsle.addBridge(false);

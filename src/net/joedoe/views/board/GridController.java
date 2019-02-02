@@ -46,6 +46,16 @@ public class GridController {
         }
     }
 
+    List<BridgeLine> addLines(IBridge bridge) {
+        List<BridgeLine> lines = new ArrayList<>();
+        BridgeLine line = new BridgeLine(bridge.getStart(), bridge.getEnd(), true);
+        lines.add(line);
+        line = new BridgeLine(bridge.getEnd(), bridge.getStart(), true);
+        lines.add(line);
+        this.lines.addAll(lines);
+        return lines;
+    }
+
     /**
      * Entfernt Brücken-Linie, falls möglich. Falls zwei Brücken mit den beiden
      * Koordinaten existieren, wird die erste entfernt und die zweite zentriert

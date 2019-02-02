@@ -172,7 +172,7 @@ public class ViewController {
     private void createBoardLevel() {
         board = new BoardLevel(e -> goTo(START));
         board.setNext(e1 -> {
-            if (gameManager.getLevel() == 10) {
+            if (gameManager.getLevel() == 20) {
                 board = null;
                 FileHandler.deleteFiles();
                 int points = gameManager.getAllPoints();
